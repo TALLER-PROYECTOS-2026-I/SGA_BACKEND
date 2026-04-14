@@ -1,6 +1,6 @@
 -- Current sql file was generated after introspecting the database
 -- If you want to run this migration please uncomment this code before executing migrations
-/*
+
 CREATE TYPE "public"."aporte_enum" AS ENUM('K', 'R');--> statement-breakpoint
 CREATE TABLE "silabo_unidad_contenido" (
 	"id" serial PRIMARY KEY NOT NULL,
@@ -178,4 +178,3 @@ CREATE INDEX "idx_silabo_asignado" ON "silabo" USING btree ("asignado_a_usuario_
 CREATE INDEX "idx_silabo_creado_por" ON "silabo" USING btree ("creado_por_usuario_autorizado_id" int4_ops);--> statement-breakpoint
 CREATE INDEX "idx_ra_curso_silabo" ON "silabo_resultado_aprendizaje_curso" USING btree ("silabo_id" int4_ops);--> statement-breakpoint
 CREATE INDEX "idx_unidad_silabo" ON "silabo_unidad" USING btree ("silabo_id" int4_ops);
-*/

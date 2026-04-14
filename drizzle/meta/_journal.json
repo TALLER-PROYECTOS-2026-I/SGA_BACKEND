@@ -8,6 +8,13 @@
       "when": 1758216326629,
       "tag": "0000_far_alex_wilder",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776146143832,
+      "tag": "0001_next_sunfire",
+      "breakpoints": true
     }
   ]
 }

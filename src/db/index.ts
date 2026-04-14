@@ -7,9 +7,9 @@ export function getDb() {
   try {
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+
+
+
     });
     return drizzle(pool);
   } catch (error) {

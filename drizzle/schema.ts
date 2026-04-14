@@ -279,7 +279,7 @@ export const silabo = pgTable(
   (table) => [
     index("idx_silabo_estado").using(
       "btree",
-      table.estadoRevision.asc().nullsLast().op("text_ops"),
+      table.estadoRevision.asc().nullsLast(),
     ),
     uniqueIndex("uq_silabo_curso_sem_prog").using(
       "btree",
@@ -463,8 +463,8 @@ export const planEvaluacionOferta = pgTable(
   (table) => [
     uniqueIndex("uq_plan_eval_silabo_componente").using(
       "btree",
-      table.silaboId.asc().nullsLast().op("text_ops"),
-      table.componenteNombre.asc().nullsLast().op("text_ops"),
+      table.silaboId.asc().nullsLast(),
+      table.componenteNombre.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.silaboId],
@@ -560,8 +560,8 @@ export const silaboFuente = pgTable(
     uniqueIndex("uq_silabo_fuente").using(
       "btree",
       table.silaboId.asc().nullsLast().op("int4_ops"),
-      table.titulo.asc().nullsLast().op("text_ops"),
-      table.anio.asc().nullsLast().op("text_ops"),
+      table.titulo.asc().nullsLast(),
+      table.anio.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.silaboId],
@@ -624,7 +624,7 @@ export const auditEvent = pgTable(
   (table) => [
     index("idx_audit_event_accion").using(
       "btree",
-      table.accion.asc().nullsLast().op("text_ops"),
+      table.accion.asc().nullsLast(),
     ),
     index("idx_audit_event_docente").using(
       "btree",
@@ -640,8 +640,8 @@ export const auditEvent = pgTable(
     ),
     index("idx_audit_event_tabla_pk").using(
       "btree",
-      table.tabla.asc().nullsLast().op("text_ops"),
-      table.registroPk.asc().nullsLast().op("text_ops"),
+      table.tabla.asc().nullsLast(),
+      table.registroPk.asc().nullsLast(),
     ),
     foreignKey({
       columns: [table.docenteId],
@@ -792,7 +792,7 @@ export const silaboRevisionHistorial = pgTable(
   (table) => [
     index("idx_rev_hist_accion").using(
       "btree",
-      table.accion.asc().nullsLast().op("text_ops"),
+      table.accion.asc().nullsLast(),
     ),
     index("idx_rev_hist_fecha").using(
       "btree",
@@ -834,7 +834,7 @@ export const silaboRevisionSeccion = pgTable(
   (table) => [
     index("idx_rev_estado").using(
       "btree",
-      table.estado.asc().nullsLast().op("text_ops"),
+      table.estado.asc().nullsLast(),
     ),
     uniqueIndex("uq_silabo_rev_seccion").using(
       "btree",
