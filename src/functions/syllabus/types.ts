@@ -353,6 +353,34 @@ export const UnidadSemanaSchema = z.object({
   actualizadoEn: z.string().optional(),
 });
 
+// Schema para crear un contenido conceptual
+export const ContenidoConceptualCreateSchema = z.object({
+  descripcion: z
+    .string()
+    .trim()
+    .min(1, "La descripción es obligatoria")
+    .max(400, "La descripción no debe exceder 400 caracteres"),
+  orden: z.number().int().positive().optional(),
+});
+
+export const ContenidoConceptualUpdateSchema = z.object({
+  descripcion: z
+    .string()
+    .trim()
+    .min(1, "La descripción es obligatoria")
+    .max(400, "La descripción no debe exceder 400 caracteres"),
+  orden: z.number().int().positive().optional(),
+});
+
+export const ContenidoConceptualResponseSchema = z.object({
+  id: z.number().int(),
+  silaboUnidadSemanaId: z.number().int(),
+  descripcion: z.string(),
+  orden: z.number().int(),
+  creadoEn: z.string().optional(),
+  actualizadoEn: z.string().optional(),
+});
+
 export const UnidadCreateSchema = z.object({
   numero: z.number().int().positive(),
   titulo: z.string().min(1, "El título es obligatorio"),
@@ -537,4 +565,16 @@ export type FormulaEvaluacionCreate = z.infer<
 >;
 export type FormulaEvaluacionUpdate = z.infer<
   typeof FormulaEvaluacionUpdateSchema
+>;
+
+export type ContenidoConceptualCreate = z.infer<
+  typeof ContenidoConceptualCreateSchema
+>;
+
+export type ContenidoConceptualUpdate = z.infer<
+  typeof ContenidoConceptualUpdateSchema
+>;
+
+export type ContenidoConceptualResponse = z.infer<
+  typeof ContenidoConceptualResponseSchema
 >;

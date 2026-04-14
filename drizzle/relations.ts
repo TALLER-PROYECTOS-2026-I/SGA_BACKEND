@@ -11,6 +11,7 @@ import {
   formulaEvaluacionSubformula,
   formulaEvaluacionVariable,
   silaboUnidadSemana,
+  silaboContenidoConceptual,
   formulaEvaluacionVariablePlan,
   planEvaluacionOferta,
   silaboCompetenciaComponente,
@@ -182,6 +183,26 @@ export const silaboUnidadSemanaRelations = relations(
     silaboUnidad: one(silaboUnidad, {
       fields: [silaboUnidadSemana.silaboUnidadId],
       references: [silaboUnidad.id],
+    }),
+  }),
+);
+
+export const silaboContenidoConceptualRelations = relations(
+  silaboContenidoConceptual,
+  ({ one }) => ({
+    silaboUnidadSemana: one(silaboUnidadSemana, {
+      fields: [silaboContenidoConceptual.silaboUnidadSemanaId],
+      references: [silaboUnidadSemana.id],
+    }),
+    creadoPorDocente: one(docente, {
+      fields: [silaboContenidoConceptual.creadoPorDocenteId],
+      references: [docente.id],
+      relationName: "contenido_conceptual_creado_por_docente_id",
+    }),
+    actualizadoPorDocente: one(docente, {
+      fields: [silaboContenidoConceptual.actualizadoPorDocenteId],
+      references: [docente.id],
+      relationName: "contenido_conceptual_actualizado_por_docente_id",
     }),
   }),
 );

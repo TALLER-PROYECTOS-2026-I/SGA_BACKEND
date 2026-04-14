@@ -15,6 +15,8 @@ import {
   UnidadCreateSchema,
   UnidadUpdateSchema,
   DatosGeneralesUpdateSchema,
+  ContenidoConceptualCreateSchema,
+  ContenidoConceptualUpdateSchema,
 } from "./types";
 import { STATUS_CODES } from "../../status-codes";
 
@@ -617,6 +619,129 @@ export class SyllabusController implements Updatable {
     await syllabusService.deleteUnidad(id, unidadId);
 
     return response.ok("Unidad eliminada correctamente", null);
+  }
+
+  // ========================================
+  // SECCIÓN IV-BIS: CONTENIDOS CONCEPTUALES
+  // ========================================
+
+  @route(
+    "/{id}/unidades/{unidadId}/semanas/{semana}/contenidos-conceptuales",
+    "GET",
+  )
+  async getContenidosConceptualesBySemana(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const id = Number(req.params.id);
+    const unidadId = Number(req.params.unidadId);
+    const semana = Number(req.params.semana);
+
+    if ([id, unidadId, semana].some(Number.isNaN)) {
+      return response.badRequest("IDs o semana inválidos");
+    }
+
+    const result = await syllabusService.getContenidosConceptualesBySemana(
+      id,
+      unidadId,
+      semana,
+    );
+
+    return response.ok(
+      "Contenidos conceptuales obtenidos correctamente",
+      result,
+    );
+  }
+
+  @route(
+    "/{id}/unidades/{unidadId}/semanas/{semana}/contenidos-conceptuales",
+    "POST",
+  )
+  async createContenidoConceptual(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const id = Number(req.params.id);
+    const unidadId = Number(req.params.unidadId);
+    const semana = Number(req.params.semana);
+
+    if ([id, unidadId, semana].some(Number.isNaN)) {
+      return response.badRequest("IDs o semana inválidos");
+    }
+
+    const body = await req.json();
+
+    const result = await syllabusService.createContenidoConceptual(
+      id,
+      unidadId,
+      semana,
+      body,
+    );
+
+    return response.created(
+      "Contenido conceptual creado correctamente",
+      result,
+    );
+  }
+
+  @route(
+    "/{id}/unidades/{unidadId}/semanas/{semana}/contenidos-conceptuales/{contenidoId}",
+    "PUT",
+  )
+  async updateContenidoConceptual(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const id = Number(req.params.id);
+    const unidadId = Number(req.params.unidadId);
+    const semana = Number(req.params.semana);
+    const contenidoId = Number(req.params.contenidoId);
+
+    if ([id, unidadId, semana, contenidoId].some(Number.isNaN)) {
+      return response.badRequest("IDs o semana inválidos");
+    }
+
+    const body = await req.json();
+
+    const result = await syllabusService.updateContenidoConceptual(
+      id,
+      unidadId,
+      semana,
+      contenidoId,
+      body,
+    );
+
+    return response.ok(
+      "Contenido conceptual actualizado correctamente",
+      result,
+    );
+  }
+
+  @route(
+    "/{id}/unidades/{unidadId}/semanas/{semana}/contenidos-conceptuales/{contenidoId}",
+    "DELETE",
+  )
+  async deleteContenidoConceptual(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const id = Number(req.params.id);
+    const unidadId = Number(req.params.unidadId);
+    const semana = Number(req.params.semana);
+    const contenidoId = Number(req.params.contenidoId);
+
+    if ([id, unidadId, semana, contenidoId].some(Number.isNaN)) {
+      return response.badRequest("IDs o semana inválidos");
+    }
+
+    const result = await syllabusService.deleteContenidoConceptual(
+      id,
+      unidadId,
+      semana,
+      contenidoId,
+    );
+
+    return response.ok(result.message, result);
   }
 
   // ========================================

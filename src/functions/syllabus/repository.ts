@@ -12,6 +12,9 @@ import {
   silaboRevisionSeccion,
   silaboRevisionComentario,
   silaboSeccionPermiso,
+  silaboContenidoConceptual,
+  silaboUnidadSemana,
+  silaboUnidad,
 } from "../../../drizzle/schema";
 import { AppError } from "../../error";
 import { z } from "zod";
@@ -1759,6 +1762,171 @@ export class SyllabusRepository extends BaseRepository {
       .returning();
 
     return result[0] || null;
+  }
+
+  // Permite encontrar una semana específica dentro de una unidad, dado el ID del sílabo, ID de la unidad y número de semana
+  async findUnidadSemana(silaboId: number, unidadId: number, semana: number) {
+    const [result] = await this.db
+      .select({
+        id: schema.silaboUnidadSemana.id,
+        silaboUnidadId: schema.silaboUnidadSemana.silaboUnidadId,
+        semana: schema.silaboUnidadSemana.semana,
+      })
+      .from(schema.silaboUnidadSemana)
+      .innerJoin(
+        schema.silaboUnidad,
+        eq(schema.silaboUnidadSemana.silaboUnidadId, schema.silaboUnidad.id),
+      )
+      .where(
+        and(
+          eq(schema.silaboUnidad.id, unidadId),
+          eq(schema.silaboUnidad.silaboId, silaboId),
+          eq(schema.silaboUnidadSemana.semana, semana),
+        ),
+      )
+      .limit(1);
+
+    return result || null;
+  }
+
+  // listar los contenidos conceptuales asociados a una semana específica dentro de una unidad
+  async findContenidosConceptualesBySemana(
+    silaboId: number,
+    unidadId: number,
+    semana: number,
+  ) {
+    const semanaRow = await this.findUnidadSemana(silaboId, unidadId, semana);
+
+    if (!semanaRow) {
+      return null;
+    }
+
+    return await this.db
+      .select()
+      .from(schema.silaboContenidoConceptual)
+      .where(
+        eq(schema.silaboContenidoConceptual.silaboUnidadSemanaId, semanaRow.id),
+      )
+      .orderBy(
+        asc(schema.silaboContenidoConceptual.orden),
+        asc(schema.silaboContenidoConceptual.id),
+      );
+  }
+
+  // crear contenido conceptual asociado a una semana específica dentro de una unidad
+  async insertContenidoConceptual(
+    silaboId: number,
+    unidadId: number,
+    semana: number,
+    data: { descripcion: string; orden?: number },
+  ) {
+    const semanaRow = await this.findUnidadSemana(silaboId, unidadId, semana);
+
+    if (!semanaRow) {
+      return null;
+    }
+
+    const [result] = await this.db
+      .insert(schema.silaboContenidoConceptual)
+      .values({
+        silaboUnidadSemanaId: semanaRow.id,
+        descripcion: data.descripcion,
+        orden: data.orden ?? 1,
+        creadoEn: new Date().toISOString(),
+        actualizadoEn: new Date().toISOString(),
+      })
+      .returning();
+
+    return result;
+  }
+
+  // buscar conenido por id
+  async findContenidoConceptualById(
+    silaboId: number,
+    unidadId: number,
+    semana: number,
+    contenidoId: number,
+  ) {
+    const semanaRow = await this.findUnidadSemana(silaboId, unidadId, semana);
+
+    if (!semanaRow) {
+      return null;
+    }
+
+    const [result] = await this.db
+      .select()
+      .from(schema.silaboContenidoConceptual)
+      .where(
+        and(
+          eq(schema.silaboContenidoConceptual.id, contenidoId),
+          eq(
+            schema.silaboContenidoConceptual.silaboUnidadSemanaId,
+            semanaRow.id,
+          ),
+        ),
+      )
+      .limit(1);
+
+    return result || null;
+  }
+
+  // actualizar contenido conecptula
+
+  async updateContenidoConceptual(
+    silaboId: number,
+    unidadId: number,
+    semana: number,
+    contenidoId: number,
+    data: { descripcion: string; orden?: number },
+  ) {
+    const existing = await this.findContenidoConceptualById(
+      silaboId,
+      unidadId,
+      semana,
+      contenidoId,
+    );
+
+    if (!existing) {
+      return null;
+    }
+
+    const [result] = await this.db
+      .update(schema.silaboContenidoConceptual)
+      .set({
+        descripcion: data.descripcion,
+        orden: data.orden ?? existing.orden,
+        actualizadoEn: new Date().toISOString(),
+      })
+      .where(eq(schema.silaboContenidoConceptual.id, contenidoId))
+      .returning();
+
+    return result || null;
+  }
+
+  // eliminar contenido conecptual
+  async deleteContenidoConceptual(
+    silaboId: number,
+    unidadId: number,
+    semana: number,
+    contenidoId: number,
+  ) {
+    const existing = await this.findContenidoConceptualById(
+      silaboId,
+      unidadId,
+      semana,
+      contenidoId,
+    );
+
+    if (!existing) {
+      return false;
+    }
+
+    const result = await this.db
+      .delete(schema.silaboContenidoConceptual)
+      .where(eq(schema.silaboContenidoConceptual.id, contenidoId))
+      .returning();
+
+    return result.length > 0;
   }
 
   async updateUnidadSemana(semanaId: number, semanaData: any) {

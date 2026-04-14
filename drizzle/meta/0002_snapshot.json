@@ -1,0 +1,3247 @@
+{
+  "id": "3705c36f-548e-4300-8136-a8f5d4d832a5",
+  "prevId": "03b00b98-22cd-43e3-9898-6131e1a01bc9",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.audit_event": {
+      "name": "audit_event",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tabla": {
+          "name": "tabla",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registro_pk": {
+          "name": "registro_pk",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accion": {
+          "name": "accion",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "docente_id": {
+          "name": "docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip_origen": {
+          "name": "ip_origen",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "old_values": {
+          "name": "old_values",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "new_values": {
+          "name": "new_values",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_audit_event_accion": {
+          "name": "idx_audit_event_accion",
+          "columns": [
+            {
+              "expression": "accion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_audit_event_docente": {
+          "name": "idx_audit_event_docente",
+          "columns": [
+            {
+              "expression": "docente_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_audit_event_fecha": {
+          "name": "idx_audit_event_fecha",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "timestamp_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_audit_event_silabo": {
+          "name": "idx_audit_event_silabo",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_audit_event_tabla_pk": {
+          "name": "idx_audit_event_tabla_pk",
+          "columns": [
+            {
+              "expression": "tabla",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            },
+            {
+              "expression": "registro_pk",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "audit_event_docente_id_fkey": {
+          "name": "audit_event_docente_id_fkey",
+          "tableFrom": "audit_event",
+          "tableTo": "docente",
+          "columnsFrom": ["docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "audit_event_silabo_id_fkey": {
+          "name": "audit_event_silabo_id_fkey",
+          "tableFrom": "audit_event",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.categoria_funcion": {
+      "name": "categoria_funcion",
+      "schema": "",
+      "columns": {
+        "categoria_usuario_id": {
+          "name": "categoria_usuario_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "funcion_aplicacion_id": {
+          "name": "funcion_aplicacion_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "categoria_funcion_acceso_categoria_usuario_id_fkey": {
+          "name": "categoria_funcion_acceso_categoria_usuario_id_fkey",
+          "tableFrom": "categoria_funcion",
+          "tableTo": "categoria_usuario",
+          "columnsFrom": ["categoria_usuario_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "categoria_funcion_acceso_funcion_aplicacion_id_fkey": {
+          "name": "categoria_funcion_acceso_funcion_aplicacion_id_fkey",
+          "tableFrom": "categoria_funcion",
+          "tableTo": "funcion_aplicacion",
+          "columnsFrom": ["funcion_aplicacion_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "categoria_funcion_acceso_pk": {
+          "name": "categoria_funcion_acceso_pk",
+          "columns": ["categoria_usuario_id", "funcion_aplicacion_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.categoria_usuario": {
+      "name": "categoria_usuario",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre_categoria": {
+          "name": "nombre_categoria",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "categoria_usuario_nombre_categoria_key": {
+          "name": "categoria_usuario_nombre_categoria_key",
+          "nullsNotDistinct": false,
+          "columns": ["nombre_categoria"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.docente": {
+      "name": "docente",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "correo": {
+          "name": "correo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categoria_usuario_id": {
+          "name": "categoria_usuario_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "azure_ad_object_id": {
+          "name": "azure_ad_object_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ultimo_acceso_en": {
+          "name": "ultimo_acceso_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "grado_academico": {
+          "name": "grado_academico",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "nombre_docente": {
+          "name": "nombre_docente",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "grado_academico_id": {
+          "name": "grado_academico_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numero_celular": {
+          "name": "numero_celular",
+          "type": "varchar(9)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'999999999'"
+        }
+      },
+      "indexes": {
+        "uq_docente_correo": {
+          "name": "uq_docente_correo",
+          "columns": [
+            {
+              "expression": "lower(btrim((correo)::text))",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "docente_categoria_usuario_id_fkey": {
+          "name": "docente_categoria_usuario_id_fkey",
+          "tableFrom": "docente",
+          "tableTo": "categoria_usuario",
+          "columnsFrom": ["categoria_usuario_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "docente_grado_academico_id_fkey": {
+          "name": "docente_grado_academico_id_fkey",
+          "tableFrom": "docente",
+          "tableTo": "grado_academico_catalogo",
+          "columnsFrom": ["grado_academico_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "docente_correo_key": {
+          "name": "docente_correo_key",
+          "nullsNotDistinct": false,
+          "columns": ["correo"]
+        },
+        "uq_docente_numero_celular": {
+          "name": "uq_docente_numero_celular",
+          "nullsNotDistinct": false,
+          "columns": ["numero_celular"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "ck_docente_numero_celular_9dig": {
+          "name": "ck_docente_numero_celular_9dig",
+          "value": "(numero_celular)::text ~ '^[9][0-9]{8}$'::text"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.evaluacion_aprendizaje": {
+      "name": "evaluacion_aprendizaje",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fecha_creacion": {
+          "name": "fecha_creacion",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "formula_regla_id": {
+          "name": "formula_regla_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_ea_silabo_id": {
+          "name": "idx_ea_silabo_id",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_evaluacion_aprendizaje_silabo": {
+          "name": "idx_evaluacion_aprendizaje_silabo",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "evaluacion_aprendizaje_formula_regla_id_fkey": {
+          "name": "evaluacion_aprendizaje_formula_regla_id_fkey",
+          "tableFrom": "evaluacion_aprendizaje",
+          "tableTo": "formula_evaluacion_regla",
+          "columnsFrom": ["formula_regla_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "evaluacion_aprendizaje_silabo_id_fkey": {
+          "name": "evaluacion_aprendizaje_silabo_id_fkey",
+          "tableFrom": "evaluacion_aprendizaje",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.formula_evaluacion_regla": {
+      "name": "formula_evaluacion_regla",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre_regla": {
+          "name": "nombre_regla",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "variable_final_codigo": {
+          "name": "variable_final_codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expresion_final": {
+          "name": "expresion_final",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "lenguaje": {
+          "name": "lenguaje",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'INFIX'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "formula_evaluacion_regla_silabo_id_fkey": {
+          "name": "formula_evaluacion_regla_silabo_id_fkey",
+          "tableFrom": "formula_evaluacion_regla",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "formula_evaluacion_regla_unq": {
+          "name": "formula_evaluacion_regla_unq",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "nombre_regla", "version"]
+        },
+        "uq_regla_silabo_nombre_version": {
+          "name": "uq_regla_silabo_nombre_version",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "nombre_regla", "version"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.formula_evaluacion_subformula": {
+      "name": "formula_evaluacion_subformula",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "formula_evaluacion_regla_id": {
+          "name": "formula_evaluacion_regla_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "variable_codigo": {
+          "name": "variable_codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expresion": {
+          "name": "expresion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "formula_evaluacion_subformula_formula_evaluacion_regla_id_fkey": {
+          "name": "formula_evaluacion_subformula_formula_evaluacion_regla_id_fkey",
+          "tableFrom": "formula_evaluacion_subformula",
+          "tableTo": "formula_evaluacion_regla",
+          "columnsFrom": ["formula_evaluacion_regla_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "formula_evaluacion_subformula_unq": {
+          "name": "formula_evaluacion_subformula_unq",
+          "nullsNotDistinct": false,
+          "columns": ["formula_evaluacion_regla_id", "variable_codigo"]
+        },
+        "uq_subformula_regla_var": {
+          "name": "uq_subformula_regla_var",
+          "nullsNotDistinct": false,
+          "columns": ["formula_evaluacion_regla_id", "variable_codigo"]
+        },
+        "formula_subf_uk": {
+          "name": "formula_subf_uk",
+          "nullsNotDistinct": false,
+          "columns": ["formula_evaluacion_regla_id", "variable_codigo"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.formula_evaluacion_variable": {
+      "name": "formula_evaluacion_variable",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "formula_evaluacion_regla_id": {
+          "name": "formula_evaluacion_regla_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "orden": {
+          "name": "orden",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "formula_evaluacion_variable_formula_evaluacion_regla_id_fkey": {
+          "name": "formula_evaluacion_variable_formula_evaluacion_regla_id_fkey",
+          "tableFrom": "formula_evaluacion_variable",
+          "tableTo": "formula_evaluacion_regla",
+          "columnsFrom": ["formula_evaluacion_regla_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "formula_evaluacion_variable_unq": {
+          "name": "formula_evaluacion_variable_unq",
+          "nullsNotDistinct": false,
+          "columns": ["formula_evaluacion_regla_id", "codigo"]
+        },
+        "uq_variable_regla_codigo": {
+          "name": "uq_variable_regla_codigo",
+          "nullsNotDistinct": false,
+          "columns": ["formula_evaluacion_regla_id", "codigo"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.formula_evaluacion_variable_plan": {
+      "name": "formula_evaluacion_variable_plan",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "formula_evaluacion_regla_id": {
+          "name": "formula_evaluacion_regla_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "variable_codigo": {
+          "name": "variable_codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "plan_evaluacion_oferta_id": {
+          "name": "plan_evaluacion_oferta_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "formula_evaluacion_variable_pl_formula_evaluacion_regla_id_fkey": {
+          "name": "formula_evaluacion_variable_pl_formula_evaluacion_regla_id_fkey",
+          "tableFrom": "formula_evaluacion_variable_plan",
+          "tableTo": "formula_evaluacion_regla",
+          "columnsFrom": ["formula_evaluacion_regla_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "formula_evaluacion_variable_plan_plan_evaluacion_oferta_id_fkey": {
+          "name": "formula_evaluacion_variable_plan_plan_evaluacion_oferta_id_fkey",
+          "tableFrom": "formula_evaluacion_variable_plan",
+          "tableTo": "plan_evaluacion_oferta",
+          "columnsFrom": ["plan_evaluacion_oferta_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "formula_evaluacion_variable_plan_unq": {
+          "name": "formula_evaluacion_variable_plan_unq",
+          "nullsNotDistinct": false,
+          "columns": [
+            "formula_evaluacion_regla_id",
+            "variable_codigo",
+            "plan_evaluacion_oferta_id"
+          ]
+        },
+        "uq_var_plan_regla_var_plan": {
+          "name": "uq_var_plan_regla_var_plan",
+          "nullsNotDistinct": false,
+          "columns": [
+            "formula_evaluacion_regla_id",
+            "variable_codigo",
+            "plan_evaluacion_oferta_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.funcion_aplicacion": {
+      "name": "funcion_aplicacion",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre_publico": {
+          "name": "nombre_publico",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "modulo": {
+          "name": "modulo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "funcion_aplicacion_nombre_funcion_key": {
+          "name": "funcion_aplicacion_nombre_funcion_key",
+          "nullsNotDistinct": false,
+          "columns": ["codigo"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.grado_academico_catalogo": {
+      "name": "grado_academico_catalogo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "abreviatura": {
+          "name": "abreviatura",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "grado_academico_catalogo_codigo_key": {
+          "name": "grado_academico_catalogo_codigo_key",
+          "nullsNotDistinct": false,
+          "columns": ["codigo"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.plan_evaluacion_oferta": {
+      "name": "plan_evaluacion_oferta",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "componente_nombre": {
+          "name": "componente_nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instrumento_nombre": {
+          "name": "instrumento_nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "semana": {
+          "name": "semana",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fecha": {
+          "name": "fecha",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instrucciones": {
+          "name": "instrucciones",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rubrica_url": {
+          "name": "rubrica_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uq_plan_eval_silabo_componente": {
+          "name": "uq_plan_eval_silabo_componente",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "componente_nombre",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "plan_evaluacion_oferta_silabo_id_fkey": {
+          "name": "plan_evaluacion_oferta_silabo_id_fkey",
+          "tableFrom": "plan_evaluacion_oferta",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plan_evaluacion_oferta_unq": {
+          "name": "plan_evaluacion_oferta_unq",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "componente_nombre", "semana"]
+        },
+        "uq_plan_eval_silabo_comp_semana": {
+          "name": "uq_plan_eval_silabo_comp_semana",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "componente_nombre", "semana"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.recurso_didactico_catalogo": {
+      "name": "recurso_didactico_catalogo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "recurso_didactico_catalogo_codigo_key": {
+          "name": "recurso_didactico_catalogo_codigo_key",
+          "nullsNotDistinct": false,
+          "columns": ["codigo"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo": {
+      "name": "silabo",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "departamento_academico": {
+          "name": "departamento_academico",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "escuela_profesional": {
+          "name": "escuela_profesional",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "programa_academico": {
+          "name": "programa_academico",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area_curricular": {
+          "name": "area_curricular",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "curso_codigo": {
+          "name": "curso_codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "curso_nombre": {
+          "name": "curso_nombre",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "semestre_academico": {
+          "name": "semestre_academico",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipo_asignatura": {
+          "name": "tipo_asignatura",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipo_de_estudios": {
+          "name": "tipo_de_estudios",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "modalidad_de_asignatura": {
+          "name": "modalidad_de_asignatura",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "formato_de_curso": {
+          "name": "formato_de_curso",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ciclo": {
+          "name": "ciclo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requisitos": {
+          "name": "requisitos",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_teoria": {
+          "name": "horas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_practica": {
+          "name": "horas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_laboratorio": {
+          "name": "horas_laboratorio",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_teoria_lectiva_presencial": {
+          "name": "horas_teoria_lectiva_presencial",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_teoria_lectiva_distancia": {
+          "name": "horas_teoria_lectiva_distancia",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_teoria_no_lectiva_presencial": {
+          "name": "horas_teoria_no_lectiva_presencial",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_teoria_no_lectiva_distancia": {
+          "name": "horas_teoria_no_lectiva_distancia",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_practica_lectiva_presencial": {
+          "name": "horas_practica_lectiva_presencial",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_practica_lectiva_distancia": {
+          "name": "horas_practica_lectiva_distancia",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_practica_no_lectiva_presencial": {
+          "name": "horas_practica_no_lectiva_presencial",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_practica_no_lectiva_distancia": {
+          "name": "horas_practica_no_lectiva_distancia",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creditos_teoria": {
+          "name": "creditos_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creditos_practica": {
+          "name": "creditos_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estrategias_metodologicas": {
+          "name": "estrategias_metodologicas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recursos_didacticos_notas": {
+          "name": "recursos_didacticos_notas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "politicas": {
+          "name": "politicas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observaciones": {
+          "name": "observaciones",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estado_revision": {
+          "name": "estado_revision",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ASIGNADO'"
+        },
+        "asignado_a_docente_id": {
+          "name": "asignado_a_docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creado_por_docente_id": {
+          "name": "creado_por_docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actualizado_por_docente_id": {
+          "name": "actualizado_por_docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "horasTotales": {
+          "name": "horasTotales",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creditosTotales": {
+          "name": "creditosTotales",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_silabo_estado": {
+          "name": "idx_silabo_estado",
+          "columns": [
+            {
+              "expression": "estado_revision",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "uq_silabo_curso_sem_prog": {
+          "name": "uq_silabo_curso_sem_prog",
+          "columns": [
+            {
+              "expression": "btrim((curso_codigo)::text)",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "btrim((semestre_academico)::text)",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "btrim((programa_academico)::text)",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_actualizado_por_docente_id_fkey": {
+          "name": "silabo_actualizado_por_docente_id_fkey",
+          "tableFrom": "silabo",
+          "tableTo": "docente",
+          "columnsFrom": ["actualizado_por_docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "silabo_asignado_a_docente_id_fkey": {
+          "name": "silabo_asignado_a_docente_id_fkey",
+          "tableFrom": "silabo",
+          "tableTo": "docente",
+          "columnsFrom": ["asignado_a_docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "silabo_creado_por_docente_id_fkey": {
+          "name": "silabo_creado_por_docente_id_fkey",
+          "tableFrom": "silabo",
+          "tableTo": "docente",
+          "columnsFrom": ["creado_por_docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_aporte_resultado_programa": {
+      "name": "silabo_aporte_resultado_programa",
+      "schema": "",
+      "columns": {
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resultado_programa_codigo": {
+          "name": "resultado_programa_codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resultado_programa_descripcion": {
+          "name": "resultado_programa_descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aporte_valor": {
+          "name": "aporte_valor",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "silabo_aporte_resultado_programa_silabo_id_fkey": {
+          "name": "silabo_aporte_resultado_programa_silabo_id_fkey",
+          "tableFrom": "silabo_aporte_resultado_programa",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "silabo_aporte_resultado_programa_pk": {
+          "name": "silabo_aporte_resultado_programa_pk",
+          "columns": ["silabo_id", "resultado_programa_codigo"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_competencia_componente": {
+      "name": "silabo_competencia_componente",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grupo": {
+          "name": "grupo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "competencia_codigo_relacionada": {
+          "name": "competencia_codigo_relacionada",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "orden": {
+          "name": "orden",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "silabo_competencia_componente_silabo_id_fkey": {
+          "name": "silabo_competencia_componente_silabo_id_fkey",
+          "tableFrom": "silabo_competencia_componente",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_competencia_curso": {
+      "name": "silabo_competencia_curso",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "referencia_programa_codigo": {
+          "name": "referencia_programa_codigo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "orden": {
+          "name": "orden",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "silabo_competencia_curso_silabo_id_fkey": {
+          "name": "silabo_competencia_curso_silabo_id_fkey",
+          "tableFrom": "silabo_competencia_curso",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_contenido_conceptual": {
+      "name": "silabo_contenido_conceptual",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_unidad_semana_id": {
+          "name": "silabo_unidad_semana_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "varchar(400)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orden": {
+          "name": "orden",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "creado_por_docente_id": {
+          "name": "creado_por_docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actualizado_por_docente_id": {
+          "name": "actualizado_por_docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_contenido_conceptual_semana": {
+          "name": "idx_contenido_conceptual_semana",
+          "columns": [
+            {
+              "expression": "silabo_unidad_semana_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_contenido_conceptual_semana_orden": {
+          "name": "idx_contenido_conceptual_semana_orden",
+          "columns": [
+            {
+              "expression": "silabo_unidad_semana_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "orden",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "fk_contenido_conceptual_semana": {
+          "name": "fk_contenido_conceptual_semana",
+          "tableFrom": "silabo_contenido_conceptual",
+          "tableTo": "silabo_unidad_semana",
+          "columnsFrom": ["silabo_unidad_semana_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "fk_contenido_conceptual_creado_por_docente": {
+          "name": "fk_contenido_conceptual_creado_por_docente",
+          "tableFrom": "silabo_contenido_conceptual",
+          "tableTo": "docente",
+          "columnsFrom": ["creado_por_docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fk_contenido_conceptual_actualizado_por_docente": {
+          "name": "fk_contenido_conceptual_actualizado_por_docente",
+          "tableFrom": "silabo_contenido_conceptual",
+          "tableTo": "docente",
+          "columnsFrom": ["actualizado_por_docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ck_contenido_conceptual_descripcion_no_vacia": {
+          "name": "ck_contenido_conceptual_descripcion_no_vacia",
+          "value": "length(btrim(descripcion)) > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.silabo_docente": {
+      "name": "silabo_docente",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "docente_id": {
+          "name": "docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "observaciones": {
+          "name": "observaciones",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "rol": {
+          "name": "rol",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "silabo_docente_docente_id_fkey": {
+          "name": "silabo_docente_docente_id_fkey",
+          "tableFrom": "silabo_docente",
+          "tableTo": "docente",
+          "columnsFrom": ["docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "silabo_docente_silabo_id_fkey": {
+          "name": "silabo_docente_silabo_id_fkey",
+          "tableFrom": "silabo_docente",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "silabo_docente_unq": {
+          "name": "silabo_docente_unq",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "docente_id"]
+        },
+        "uq_silabo_docente_silabo_docente": {
+          "name": "uq_silabo_docente_silabo_docente",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "docente_id"]
+        },
+        "uq_silabo_docente": {
+          "name": "uq_silabo_docente",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "docente_id", "rol"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_fuente": {
+      "name": "silabo_fuente",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "autores": {
+          "name": "autores",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anio": {
+          "name": "anio",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "editorial_revista": {
+          "name": "editorial_revista",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ciudad": {
+          "name": "ciudad",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isbn_issn": {
+          "name": "isbn_issn",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "doi_url": {
+          "name": "doi_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notas": {
+          "name": "notas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_silabo_fuente": {
+          "name": "uq_silabo_fuente",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "titulo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            },
+            {
+              "expression": "anio",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_fuente_silabo_id_fkey": {
+          "name": "silabo_fuente_silabo_id_fkey",
+          "tableFrom": "silabo_fuente",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_recurso_didactico": {
+      "name": "silabo_recurso_didactico",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recurso_id": {
+          "name": "recurso_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "silabo_unidad_id": {
+          "name": "silabo_unidad_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "destino": {
+          "name": "destino",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "url_referencia": {
+          "name": "url_referencia",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observaciones": {
+          "name": "observaciones",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "clave_unica": {
+          "name": "clave_unica",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "generated": {
+            "as": "(((((((silabo_id)::text || '-'::text) || (recurso_id)::text) || '-'::text) || COALESCE((silabo_unidad_id)::text, '0'::text)) || '-'::text) || (COALESCE(destino, ''::character varying))::text)",
+            "type": "stored"
+          }
+        }
+      },
+      "indexes": {
+        "idx_silabo_recurso": {
+          "name": "idx_silabo_recurso",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "recurso_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_recurso_didactico_recurso_id_fkey": {
+          "name": "silabo_recurso_didactico_recurso_id_fkey",
+          "tableFrom": "silabo_recurso_didactico",
+          "tableTo": "recurso_didactico_catalogo",
+          "columnsFrom": ["recurso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "silabo_recurso_didactico_silabo_id_fkey": {
+          "name": "silabo_recurso_didactico_silabo_id_fkey",
+          "tableFrom": "silabo_recurso_didactico",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "silabo_recurso_didactico_silabo_unidad_id_fkey": {
+          "name": "silabo_recurso_didactico_silabo_unidad_id_fkey",
+          "tableFrom": "silabo_recurso_didactico",
+          "tableTo": "silabo_unidad",
+          "columnsFrom": ["silabo_unidad_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_recurso_por_silabo": {
+          "name": "uq_recurso_por_silabo",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "recurso_id"]
+        },
+        "uq_silabo_recurso": {
+          "name": "uq_silabo_recurso",
+          "nullsNotDistinct": false,
+          "columns": ["clave_unica"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_resultado_aprendizaje": {
+      "name": "silabo_resultado_aprendizaje",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orden": {
+          "name": "orden",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "silabo_resultado_aprendizaje_curso_silabo_id_fkey": {
+          "name": "silabo_resultado_aprendizaje_curso_silabo_id_fkey",
+          "tableFrom": "silabo_resultado_aprendizaje",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "silabo_ra_uk": {
+          "name": "silabo_ra_uk",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "orden"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_revision_comentario": {
+      "name": "silabo_revision_comentario",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_revision_seccion_id": {
+          "name": "silabo_revision_seccion_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "autor_id": {
+          "name": "autor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mensaje": {
+          "name": "mensaje",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "leido": {
+          "name": "leido",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {
+        "idx_rev_com_autor": {
+          "name": "idx_rev_com_autor",
+          "columns": [
+            {
+              "expression": "autor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_rev_com_seccion": {
+          "name": "idx_rev_com_seccion",
+          "columns": [
+            {
+              "expression": "silabo_revision_seccion_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_revision_comentario_autor_id_fkey": {
+          "name": "silabo_revision_comentario_autor_id_fkey",
+          "tableFrom": "silabo_revision_comentario",
+          "tableTo": "docente",
+          "columnsFrom": ["autor_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "silabo_revision_comentario_silabo_revision_seccion_id_fkey": {
+          "name": "silabo_revision_comentario_silabo_revision_seccion_id_fkey",
+          "tableFrom": "silabo_revision_comentario",
+          "tableTo": "silabo_revision_seccion",
+          "columnsFrom": ["silabo_revision_seccion_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_revision_historial": {
+      "name": "silabo_revision_historial",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revisor_id": {
+          "name": "revisor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accion": {
+          "name": "accion",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_rev_hist_accion": {
+          "name": "idx_rev_hist_accion",
+          "columns": [
+            {
+              "expression": "accion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_rev_hist_fecha": {
+          "name": "idx_rev_hist_fecha",
+          "columns": [
+            {
+              "expression": "creado_en",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "timestamp_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_rev_hist_revisor": {
+          "name": "idx_rev_hist_revisor",
+          "columns": [
+            {
+              "expression": "revisor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_rev_hist_silabo": {
+          "name": "idx_rev_hist_silabo",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_revision_historial_revisor_id_fkey": {
+          "name": "silabo_revision_historial_revisor_id_fkey",
+          "tableFrom": "silabo_revision_historial",
+          "tableTo": "docente",
+          "columnsFrom": ["revisor_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "silabo_revision_historial_silabo_id_fkey": {
+          "name": "silabo_revision_historial_silabo_id_fkey",
+          "tableFrom": "silabo_revision_historial",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_revision_seccion": {
+      "name": "silabo_revision_seccion",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_seccion": {
+          "name": "numero_seccion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre_seccion": {
+          "name": "nombre_seccion",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDIENTE'"
+        },
+        "revisado_por": {
+          "name": "revisado_por",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revisado_en": {
+          "name": "revisado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "comentarios_count": {
+          "name": "comentarios_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        }
+      },
+      "indexes": {
+        "idx_rev_estado": {
+          "name": "idx_rev_estado",
+          "columns": [
+            {
+              "expression": "estado",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "uq_silabo_rev_seccion": {
+          "name": "uq_silabo_rev_seccion",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "numero_seccion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_revision_seccion_revisado_por_fkey": {
+          "name": "silabo_revision_seccion_revisado_por_fkey",
+          "tableFrom": "silabo_revision_seccion",
+          "tableTo": "docente",
+          "columnsFrom": ["revisado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "silabo_revision_seccion_silabo_id_fkey": {
+          "name": "silabo_revision_seccion_silabo_id_fkey",
+          "tableFrom": "silabo_revision_seccion",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_rev_seccion_silabo_num": {
+          "name": "uq_rev_seccion_silabo_num",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "numero_seccion"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_seccion_permiso": {
+      "name": "silabo_seccion_permiso",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "docente_id": {
+          "name": "docente_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_seccion": {
+          "name": "numero_seccion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "puede_editar": {
+          "name": "puede_editar",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "puede_comentar": {
+          "name": "puede_comentar",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "fecha_limite": {
+          "name": "fecha_limite",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bloqueado_por_estado": {
+          "name": "bloqueado_por_estado",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_permiso_seccion": {
+          "name": "idx_permiso_seccion",
+          "columns": [
+            {
+              "expression": "numero_seccion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_permiso_silabo_docente": {
+          "name": "idx_permiso_silabo_docente",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "docente_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_seccion_permiso_docente_id_fkey": {
+          "name": "silabo_seccion_permiso_docente_id_fkey",
+          "tableFrom": "silabo_seccion_permiso",
+          "tableTo": "docente",
+          "columnsFrom": ["docente_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "silabo_seccion_permiso_silabo_id_fkey": {
+          "name": "silabo_seccion_permiso_silabo_id_fkey",
+          "tableFrom": "silabo_seccion_permiso",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "uq_permiso_silabo_docente_seccion": {
+          "name": "uq_permiso_silabo_docente_seccion",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "docente_id", "numero_seccion"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_sumilla": {
+      "name": "silabo_sumilla",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contenido": {
+          "name": "contenido",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "palabras_clave": {
+          "name": "palabras_clave",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "es_actual": {
+          "name": "es_actual",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "silabo_sumilla_silabo_id_fkey": {
+          "name": "silabo_sumilla_silabo_id_fkey",
+          "tableFrom": "silabo_sumilla",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "silabo_sumilla_unq": {
+          "name": "silabo_sumilla_unq",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "version"]
+        },
+        "uq_silabo_sumilla_silabo_version": {
+          "name": "uq_silabo_sumilla_silabo_version",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "version"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_unidad": {
+      "name": "silabo_unidad",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero": {
+          "name": "numero",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "capacidades_text": {
+          "name": "capacidades_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_conceptuales": {
+          "name": "contenidos_conceptuales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_procedimentales": {
+          "name": "contenidos_procedimentales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actividades_aprendizaje": {
+          "name": "actividades_aprendizaje",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_teoria": {
+          "name": "horas_lectivas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_practica": {
+          "name": "horas_lectivas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_no_lectivas_teoria": {
+          "name": "horas_no_lectivas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_no_lectivas_practica": {
+          "name": "horas_no_lectivas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_silabo_unidad": {
+          "name": "uq_silabo_unidad",
+          "columns": [
+            {
+              "expression": "silabo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            },
+            {
+              "expression": "numero",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "silabo_unidad_silabo_id_fkey": {
+          "name": "silabo_unidad_silabo_id_fkey",
+          "tableFrom": "silabo_unidad",
+          "tableTo": "silabo",
+          "columnsFrom": ["silabo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "silabo_unidad_silabo_numero_uk": {
+          "name": "silabo_unidad_silabo_numero_uk",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_id", "numero"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_unidad_backup": {
+      "name": "silabo_unidad_backup",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "silabo_id": {
+          "name": "silabo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numero": {
+          "name": "numero",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "capacidades_text": {
+          "name": "capacidades_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_conceptuales": {
+          "name": "contenidos_conceptuales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_procedimentales": {
+          "name": "contenidos_procedimentales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actividades_aprendizaje": {
+          "name": "actividades_aprendizaje",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_teoria": {
+          "name": "horas_lectivas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_practica": {
+          "name": "horas_lectivas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_no_lectivas_teoria": {
+          "name": "horas_no_lectivas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_no_lectivas_practica": {
+          "name": "horas_no_lectivas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_conceptuales_semana": {
+          "name": "contenidos_conceptuales_semana",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_procedimentales_semana": {
+          "name": "contenidos_procedimentales_semana",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actividades_aprendizaje_semana": {
+          "name": "actividades_aprendizaje_semana",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_teoria_semana_arr": {
+          "name": "horas_lectivas_teoria_semana_arr",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_practica_semana_arr": {
+          "name": "horas_lectivas_practica_semana_arr",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_no_lectivas_teoria_semana_arr": {
+          "name": "horas_no_lectivas_teoria_semana_arr",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_no_lectivas_practica_semana_arr": {
+          "name": "horas_no_lectivas_practica_semana_arr",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.silabo_unidad_semana": {
+      "name": "silabo_unidad_semana",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "silabo_unidad_id": {
+          "name": "silabo_unidad_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "semana": {
+          "name": "semana",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contenidos_conceptuales": {
+          "name": "contenidos_conceptuales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contenidos_procedimentales": {
+          "name": "contenidos_procedimentales",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actividades_aprendizaje": {
+          "name": "actividades_aprendizaje",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "horas_lectivas_teoria": {
+          "name": "horas_lectivas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "horas_lectivas_practica": {
+          "name": "horas_lectivas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "horas_no_lectivas_teoria": {
+          "name": "horas_no_lectivas_teoria",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "horas_no_lectivas_practica": {
+          "name": "horas_no_lectivas_practica",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_silabo_unidad_semana_semana": {
+          "name": "idx_silabo_unidad_semana_semana",
+          "columns": [
+            {
+              "expression": "semana",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int2_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_silabo_unidad_semana_unidad_id": {
+          "name": "idx_silabo_unidad_semana_unidad_id",
+          "columns": [
+            {
+              "expression": "silabo_unidad_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "fk_silabo_unidad": {
+          "name": "fk_silabo_unidad",
+          "tableFrom": "silabo_unidad_semana",
+          "tableTo": "silabo_unidad",
+          "columnsFrom": ["silabo_unidad_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "silabo_unidad_semana_uk": {
+          "name": "silabo_unidad_semana_uk",
+          "nullsNotDistinct": false,
+          "columns": ["silabo_unidad_id", "semana"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "silabo_unidad_semana_semana_check": {
+          "name": "silabo_unidad_semana_semana_check",
+          "value": "(semana >= 1) AND (semana <= 16)"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

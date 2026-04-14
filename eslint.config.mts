@@ -10,7 +10,10 @@ export default defineConfig([
 
   {
     files: ["**/*.ts"],
-    ignores: ["drizzle/**"],  // Agrega esta línea
+    ignores: ["drizzle.config.ts",
+      "drizzle/meta/**",
+      "drizzle/schema.ts",
+      "drizzle/relations.ts"],  // Agrega esta línea
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
