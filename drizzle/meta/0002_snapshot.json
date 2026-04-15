@@ -1,6 +1,6 @@
 {
-  "id": "3705c36f-548e-4300-8136-a8f5d4d832a5",
-  "prevId": "03b00b98-22cd-43e3-9898-6131e1a01bc9",
+  "id": "ef94d2e4-cf4c-4327-815b-8c585de93cda",
+  "prevId": "3705c36f-548e-4300-8136-a8f5d4d832a5",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -90,8 +90,7 @@
               "expression": "accion",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -154,15 +153,13 @@
               "expression": "tabla",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             },
             {
               "expression": "registro_pk",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -1420,8 +1417,7 @@
               "expression": "estado_revision",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2011,15 +2007,13 @@
               "expression": "titulo",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             },
             {
               "expression": "anio",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": true,
@@ -2393,8 +2387,7 @@
               "expression": "accion",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
@@ -2541,8 +2534,7 @@
               "expression": "estado",
               "isExpression": false,
               "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops"
+              "nulls": "last"
             }
           ],
           "isUnique": false,
