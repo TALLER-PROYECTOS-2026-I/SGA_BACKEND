@@ -1,2 +1,0 @@
-DROP INDEX "uq_plan_eval_silabo_componente";--> statement-breakpoint
-CREATE UNIQUE INDEX "uq_plan_eval_silabo_componente" ON "plan_evaluacion_oferta" USING btree ("silabo_id" int4_ops,"componente_nombre" text_ops);
