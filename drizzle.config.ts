@@ -5,6 +5,6 @@ export default defineConfig({
   schema: "./drizzle/schema.ts",
   out: "./drizzle",
   dbCredentials: {
-    url: "postgresql://postgres:root@localhost:5432/sga_db",
+    url: process.env.DATABASE_URL,
   },
 });
