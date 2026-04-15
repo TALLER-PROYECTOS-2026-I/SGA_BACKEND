@@ -607,7 +607,7 @@ export const silaboFuente = pgTable(
       "btree",
       table.silaboId.asc().nullsLast().op("int4_ops"),
       table.titulo.asc().nullsLast().op("text_ops"),
-      table.anio.asc().nullsLast().op("text_ops"),
+      table.anio.asc().nullsLast().op("int4_ops"),
     ),
     foreignKey({
       columns: [table.silaboId],
