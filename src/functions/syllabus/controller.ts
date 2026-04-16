@@ -3,6 +3,7 @@ import {
   InvocationContext,
   HttpResponseInit,
 } from "@azure/functions";
+import type { AssignTeacherBody } from "./types";
 import { Updatable } from "../../types";
 import { controller, route } from "../../lib/decorators";
 import { syllabusService } from "./service";
@@ -1160,5 +1161,45 @@ export class SyllabusController implements Updatable {
         data: result,
       },
     };
+  }
+  // ========================================
+  // ASIGNAR DOCENTE A SÍLABO
+  // ========================================
+
+  /**
+   * POST /api/syllabus/assign-teacher
+   * Asignar docente a un sílabo
+   */
+  @route("/assign-teacher", "POST")
+  async assignTeacher(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    try {
+      const body = (await req.json()) as AssignTeacherBody;
+
+      const result = await syllabusService.assignTeacherToSyllabus(body);
+
+      return {
+        status: 200,
+        jsonBody: {
+          success: true,
+          message: result.message,
+        },
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        return error.toHttpResponse();
+      }
+
+      return {
+        status: 400,
+        jsonBody: {
+          success: false,
+          message:
+            error instanceof Error ? error.message : "Error al asignar docente",
+        },
+      };
+    }
   }
 }

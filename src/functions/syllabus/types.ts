@@ -538,3 +538,12 @@ export type FormulaEvaluacionCreate = z.infer<
 export type FormulaEvaluacionUpdate = z.infer<
   typeof FormulaEvaluacionUpdateSchema
 >;
+// ========================================
+// ASIGNAR DOCENTE A SÍLABO
+// ========================================
+export type AssignTeacherBody = {
+  docenteId: number;
+  silaboId: number;
+  periodoAcademico: string;
+  mensaje?: string;
+};

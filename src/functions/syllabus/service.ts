@@ -14,6 +14,7 @@ import {
   FormulaEvaluacionUpdateSchema,
   FormulaEvaluacionCreate,
   FormulaEvaluacionUpdate,
+  AssignTeacherBody,
 } from "./types";
 import { SyllabusCreateSchema } from "./types";
 import { SumillaSchema } from "./types";
@@ -22,6 +23,70 @@ import { z, ZodError } from "zod";
 import { ContributionCreateType } from "./types";
 
 export class SyllabusService {
+  async assignTeacherToSyllabus(body: AssignTeacherBody) {
+    const docenteId = Number(body.docenteId);
+    const silaboId = Number(body.silaboId);
+    const periodoAcademico = String(body.periodoAcademico ?? "").trim();
+    const mensaje = String(body.mensaje ?? "").trim();
+
+    if (!Number.isFinite(docenteId) || docenteId <= 0) {
+      throw new AppError("BadRequest", "BAD_REQUEST", "Docente inválido");
+    }
+
+    if (!Number.isFinite(silaboId) || silaboId <= 0) {
+      throw new AppError("BadRequest", "BAD_REQUEST", "Sílabo inválido");
+    }
+
+    if (!periodoAcademico) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "Periodo académico requerido",
+      );
+    }
+
+    if (mensaje.length > 400) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "El mensaje no puede superar los 400 caracteres",
+      );
+    }
+
+    const teacher = await syllabusRepository.findTeacherById(docenteId);
+    if (!teacher) {
+      throw new AppError("NotFound", "NOT_FOUND", "Docente no encontrado");
+    }
+
+    const syllabus = await syllabusRepository.findSyllabusBasicById(silaboId);
+    if (!syllabus) {
+      throw new AppError("NotFound", "NOT_FOUND", "Sílabo no encontrado");
+    }
+
+    const existing = await syllabusRepository.findTeacherAssignment(
+      silaboId,
+      docenteId,
+    );
+
+    if (existing) {
+      throw new AppError(
+        "Conflict",
+        "CONFLICT",
+        "El docente ya está asignado a este sílabo",
+      );
+    }
+
+    await syllabusRepository.createTeacherAssignment({
+      silaboId,
+      docenteId,
+      mensaje: mensaje || `Asignado para el periodo ${periodoAcademico}`,
+    });
+
+    return {
+      message: "Docente asignado correctamente",
+    };
+  }
+
   // ---------- COMPETENCIAS ----------
   async getCompetencies(syllabusId: string) {
     return syllabusRepository.listCompetencies(syllabusId);
