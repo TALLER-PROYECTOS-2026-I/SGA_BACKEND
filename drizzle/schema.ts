@@ -273,8 +273,8 @@ export const silabo = pgTable(
     actualizadoPorDocenteId: integer("actualizado_por_docente_id"),
     createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
-    horasTotales: integer(),
-    creditosTotales: integer(),
+    horasTotales: integer("horas_totales"),
+    creditosTotales: integer("creditos_totales"),
   },
   (table) => [
     index("idx_silabo_estado").using(
@@ -414,6 +414,52 @@ export const silaboUnidadSemana = pgTable(
   ],
 );
 
+export const silaboContenidoConceptual = pgTable(
+  "silabo_contenido_conceptual",
+  {
+    id: serial().primaryKey().notNull(),
+    silaboUnidadSemanaId: integer("silabo_unidad_semana_id").notNull(),
+    descripcion: varchar("descripcion", { length: 400 }).notNull(),
+    orden: integer("orden").default(1).notNull(),
+    creadoPorDocenteId: integer("creado_por_docente_id"),
+    actualizadoPorDocenteId: integer("actualizado_por_docente_id"),
+    creadoEn: timestamp("creado_en", { mode: "string" }).defaultNow().notNull(),
+    actualizadoEn: timestamp("actualizado_en", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_contenido_conceptual_semana").using(
+      "btree",
+      table.silaboUnidadSemanaId.asc().nullsLast().op("int4_ops"),
+    ),
+    index("idx_contenido_conceptual_semana_orden").using(
+      "btree",
+      table.silaboUnidadSemanaId.asc().nullsLast().op("int4_ops"),
+      table.orden.asc().nullsLast().op("int4_ops"),
+    ),
+    foreignKey({
+      columns: [table.silaboUnidadSemanaId],
+      foreignColumns: [silaboUnidadSemana.id],
+      name: "fk_contenido_conceptual_semana",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.creadoPorDocenteId],
+      foreignColumns: [docente.id],
+      name: "fk_contenido_conceptual_creado_por_docente",
+    }),
+    foreignKey({
+      columns: [table.actualizadoPorDocenteId],
+      foreignColumns: [docente.id],
+      name: "fk_contenido_conceptual_actualizado_por_docente",
+    }),
+    check(
+      "ck_contenido_conceptual_descripcion_no_vacia",
+      sql`length(btrim(descripcion)) > 0`,
+    ),
+  ],
+);
+
 export const formulaEvaluacionVariablePlan = pgTable(
   "formula_evaluacion_variable_plan",
   {
@@ -463,7 +509,7 @@ export const planEvaluacionOferta = pgTable(
   (table) => [
     uniqueIndex("uq_plan_eval_silabo_componente").using(
       "btree",
-      table.silaboId.asc().nullsLast().op("text_ops"),
+      table.silaboId.asc().nullsLast().op("int4_ops"),
       table.componenteNombre.asc().nullsLast().op("text_ops"),
     ),
     foreignKey({
@@ -561,7 +607,7 @@ export const silaboFuente = pgTable(
       "btree",
       table.silaboId.asc().nullsLast().op("int4_ops"),
       table.titulo.asc().nullsLast().op("text_ops"),
-      table.anio.asc().nullsLast().op("text_ops"),
+      table.anio.asc().nullsLast().op("int4_ops"),
     ),
     foreignKey({
       columns: [table.silaboId],
