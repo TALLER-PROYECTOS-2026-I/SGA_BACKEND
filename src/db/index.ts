@@ -7,9 +7,10 @@ export function getDb() {
   try {
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: false,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     });
-
     return drizzle(pool);
   } catch (error) {
     if (error instanceof Error) {
@@ -19,11 +20,6 @@ export function getDb() {
         "No se pudo conectar a la base de datos",
       );
     }
-
-    throw new AppError(
-      "DatabaseError",
-      "INTERNAL_SERVER_ERROR",
-      "No se pudo conectar a la base de datos",
-    );
   }
+  return null;
 }
