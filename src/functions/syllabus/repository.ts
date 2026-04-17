@@ -2143,7 +2143,7 @@ export class SyllabusRepository extends BaseRepository {
       silaboId: params.silaboId,
       docenteId: params.docenteId,
       observaciones: params.mensaje,
-      rol: "RESPONSABLE",
+      rol: "DOCENTE",
       creadoEn: new Date().toISOString(),
       actualizadoEn: new Date().toISOString(),
     });
