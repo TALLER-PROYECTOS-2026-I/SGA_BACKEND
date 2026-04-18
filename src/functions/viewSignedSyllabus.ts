@@ -1,4 +1,8 @@
-import { app, HttpRequest, HttpResponseInit } from "@azure/functions";
+import {
+  app,
+  HttpRequest,
+  HttpResponseInit,
+} from "@azure/functions"; /* Importa las funciones necesarias de Azure para manejar las peticiones HTTP */
 import { BlobServiceClient } from "@azure/storage-blob";
 import { sql } from "drizzle-orm";
 import { getDb } from "../db";
@@ -28,10 +32,7 @@ type SignedSyllabusRow = {
   fecha_subida: string | null;
 };
 
-const jsonResponse = (
-  status: number,
-  message: string,
-): HttpResponseInit => ({
+const jsonResponse = (status: number, message: string): HttpResponseInit => ({
   status,
   headers: {
     "Content-Type": "application/json",
