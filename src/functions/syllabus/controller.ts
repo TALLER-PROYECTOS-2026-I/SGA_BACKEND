@@ -16,6 +16,8 @@ import {
   UnidadCreateSchema,
   UnidadUpdateSchema,
   DatosGeneralesUpdateSchema,
+  ContenidoConceptualCreateSchema,
+  ContenidoConceptualUpdateSchema,
 } from "./types";
 import { STATUS_CODES } from "../../status-codes";
 
@@ -1302,6 +1304,8 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     try {
       const body = (await req.json()) as AssignTeacherBody;
+
+
       const result = await syllabusService.assignTeacherToSyllabus(body);
 
       return {
@@ -1329,3 +1333,11 @@ export class SyllabusController implements Updatable {
     }
   }
 }
+
+            error instanceof Error ? error.message : "Error al asignar docente",
+        },
+      };
+    }
+  }
+}
+

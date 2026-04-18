@@ -273,8 +273,8 @@ export const silabo = pgTable(
     actualizadoPorDocenteId: integer("actualizado_por_docente_id"),
     createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
-    horasTotales: integer(),
-    creditosTotales: integer(),
+    horasTotales: integer("horas_totales"),
+    creditosTotales: integer("creditos_totales"),
   },
   (table) => [
     index("idx_silabo_estado").using(
