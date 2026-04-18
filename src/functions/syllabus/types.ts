@@ -575,9 +575,6 @@ export type AssignTeacherBody = {
   silaboId: number;
   periodoAcademico: string;
   mensaje?: string;
-
-};
-
 };
 
 export type ContenidoConceptualCreate = z.infer<
@@ -591,4 +588,3 @@ export type ContenidoConceptualUpdate = z.infer<
 export type ContenidoConceptualResponse = z.infer<
   typeof ContenidoConceptualResponseSchema
 >;
-
