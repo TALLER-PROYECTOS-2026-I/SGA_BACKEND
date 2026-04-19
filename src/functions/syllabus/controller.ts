@@ -1320,6 +1320,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     try {
       const body = (await req.json()) as AssignTeacherBody;
+
       const result = await syllabusService.assignTeacherToSyllabus(body);
 
       return {
@@ -1339,6 +1340,16 @@ export class SyllabusController implements Updatable {
         jsonBody: {
           success: false,
           message:
+
+            error instanceof Error
+              ? error.message
+              : "Error al asignar docente",
+        },
+      };
+    }
+  }
+}
+
 
             error instanceof Error ? error.message : "Error al asignar docente",
         },
@@ -1444,3 +1455,4 @@ export class SyllabusController implements Updatable {
     }
   }
 }
+

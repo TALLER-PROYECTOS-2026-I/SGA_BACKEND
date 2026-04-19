@@ -547,6 +547,10 @@ export type AssignTeacherBody = {
   periodoAcademico: string;
   mensaje?: string;
 
+
+};
+
+dev
 };
 /*
 3 prueba
@@ -592,5 +596,7 @@ export type ContenidoConceptualResponse = z.infer<
   typeof ContenidoConceptualResponseSchema
 >;
 
+
 };
+
 
