@@ -33,7 +33,11 @@ jobs:
         if: github.ref == 'refs/heads/qa'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_QA }}
+
         run: npx drizzle-kit push 
+
+        run: npx drizzle-kit push --force
+
 
       - name: 🧹 Preparar paquete para despliegue (QA)
         if: github.ref == 'refs/heads/qa'
@@ -52,7 +56,11 @@ jobs:
         if: github.ref == 'refs/heads/main'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
         run: npx drizzle-kit push 
+
+        run: npx drizzle-kit push --force
+
 
       - name: 🧹 Preparar paquete para despliegue (PROD)
         if: github.ref == 'refs/heads/main'

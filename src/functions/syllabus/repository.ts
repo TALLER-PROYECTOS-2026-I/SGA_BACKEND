@@ -1917,6 +1917,7 @@ export class SyllabusRepository extends BaseRepository {
     return result[0] || null;
   }
 
+
   // ========================================
   // ASIGNAR DOCENTE A SÍLABO
   // ========================================
@@ -2194,5 +2195,73 @@ export class SyllabusRepository extends BaseRepository {
       .set({ rol })
       .where(eq(silaboDocente.id, asignacionId));
   }
+
+
+// ========================================
+// ASIGNAR DOCENTE A SÍLABO
+// ========================================
+
+async findSyllabusBasicById(id: number) {
+  const result = await this.db
+    .select({
+      id: silabo.id,
+      cursoCodigo: silabo.cursoCodigo,
+      cursoNombre: silabo.cursoNombre,
+    })
+    .from(silabo)
+    .where(eq(silabo.id, id))
+    .limit(1);
+
+  return result[0] ?? null;
+}
+
+async findTeacherById(id: number) {
+  const result = await this.db
+    .select({
+      id: docente.id,
+      correo: docente.correo,
+      nombreDocente: docente.nombreDocente,
+    })
+    .from(docente)
+    .where(eq(docente.id, id))
+    .limit(1);
+
+  return result[0] ?? null;
+}
+
+async findTeacherAssignment(silaboId: number, docenteId: number) {
+  const result = await this.db
+    .select({
+      id: silaboDocente.id,
+    })
+    .from(silaboDocente)
+    .where(
+      and(
+        eq(silaboDocente.silaboId, silaboId),
+        eq(silaboDocente.docenteId, docenteId),
+      ),
+    )
+    .limit(1);
+
+  return result[0] ?? null;
+}
+
+async createTeacherAssignment(params: {
+  silaboId: number;
+  docenteId: number;
+  mensaje: string;
+}) {
+  await this.db.insert(silaboDocente).values({
+    silaboId: params.silaboId,
+    docenteId: params.docenteId,
+    observaciones: params.mensaje,
+    rol: "DOCENTE",
+    creadoEn: new Date().toISOString(),
+    actualizadoEn: new Date().toISOString(),
+  });
+
+  return { ok: true };
+}
+
 }
 export const syllabusRepository = new SyllabusRepository();

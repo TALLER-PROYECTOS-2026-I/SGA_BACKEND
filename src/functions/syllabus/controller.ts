@@ -635,12 +635,14 @@ export class SyllabusController implements Updatable {
       semana,
     );
 
+
     if (!result || result.length === 0) {
       return response.ok(
         "No hay contenidos conceptuales registrados para esta semana",
         [],
       );
     }
+
 
     return response.ok(
       "Contenidos conceptuales obtenidos correctamente",
@@ -665,13 +667,20 @@ export class SyllabusController implements Updatable {
     }
 
     const body = await req.json();
+
     const data = ContenidoConceptualCreateSchema.parse(body);
+
+
 
     const result = await syllabusService.createContenidoConceptual(
       id,
       unidadId,
       semana,
+
       data,
+
+      body,
+
     );
 
     return response.created(
@@ -1330,6 +1339,7 @@ export class SyllabusController implements Updatable {
         jsonBody: {
           success: false,
           message:
+
             error instanceof Error ? error.message : "Error al asignar docente",
         },
       };
@@ -1420,6 +1430,15 @@ export class SyllabusController implements Updatable {
         jsonBody: {
           success: false,
           message: "Error interno del servidor",
+        },
+      };
+    }
+  }
+}
+
+            error instanceof Error
+              ? error.message
+              : "Error al asignar docente",
         },
       };
     }

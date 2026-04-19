@@ -546,6 +546,7 @@ export type AssignTeacherBody = {
   silaboId: number;
   periodoAcademico: string;
   mensaje?: string;
+
 };
 /*
 3 prueba
@@ -590,3 +591,6 @@ export type ContenidoConceptualUpdate = z.infer<
 export type ContenidoConceptualResponse = z.infer<
   typeof ContenidoConceptualResponseSchema
 >;
+
+};
+
