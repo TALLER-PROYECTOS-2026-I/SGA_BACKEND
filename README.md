@@ -165,3 +165,15 @@ npx drizzle-kit introspect --config=drizzle.config.ts
 ## Creacion de schema automatico con drizzle
 ## Creacion de schema automatico con drizzle
 ## Creacion de schema automatico con drizzle
+
+## Creacion de schema automatico con drizzle
+## Creacion de schema automatico con drizzle
+## Creacion de schema automatico con drizzle
+
+## Creacion de schema automatico con drizzle
+## Creacion de schema automatico con drizzle
+## Creacion de schema automatico con drizzle
+
+## Creacion de schema automatico con drizzle
+## Creacion de schema automatico con drizzle
+## Creacion de schema automatico con drizzle
