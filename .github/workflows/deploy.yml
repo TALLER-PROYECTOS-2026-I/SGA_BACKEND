@@ -49,17 +49,17 @@ jobs:
 
       # FLUJO PARA PRODUCCIÓN
       - name: 🗄️ Actualizar Base de Datos (PRODUCCIÓN)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/prod'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx drizzle-kit push --force
 
       - name: 🧹 Preparar paquete para despliegue (PROD)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/prod'
         run: npm prune --production
 
       - name: 🚀 Desplegar a Azure Function (PRODUCCIÓN)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/prod'
         uses: Azure/functions-action@v1
         with:
           app-name: 'func-sga-prod'
