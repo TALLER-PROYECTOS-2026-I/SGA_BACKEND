@@ -14,6 +14,7 @@ export class AssignmentsController implements Listable {
     const idSilaboParam = req.query.get("idSilabo")?.trim() || undefined;
     const idDocenteParam = req.query.get("idDocente")?.trim() || undefined;
     const areaCurricular = req.query.get("areaCurricular")?.trim() || undefined;
+    const sinAsignarParam = req.query.get("sinAsignar")?.trim() || undefined;
 
     const filters = listQueryParamsSchema.parse({
       codigo,
@@ -21,6 +22,7 @@ export class AssignmentsController implements Listable {
       idSilabo: idSilaboParam,
       idDocente: idDocenteParam,
       areaCurricular: areaCurricular,
+      sinAsignar: sinAsignarParam,
     });
 
     const items = await assignmentsService.list(filters);
@@ -37,7 +39,9 @@ export class AssignmentsController implements Listable {
 
   @route("/courses", "GET")
   async getAllCourses(req: HttpRequest): Promise<HttpResponseInit> {
-    const courses = await assignmentsService.getAllCourses();
+    const sinAsignarParam = req.query.get("sinAsignar")?.trim();
+    const sinAsignar = sinAsignarParam === "true" || sinAsignarParam === "1";
+    const courses = await assignmentsService.getAllCourses({ sinAsignar });
 
     return {
       status: STATUS_CODES.OK,

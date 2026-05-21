@@ -38,8 +38,7 @@ export const getCookie = (
 
     const value = target.substring(cookieName.length + 1);
     return decodeURIComponent(value);
-  } catch (error) {
-    console.error("Error al leer cookie:", error);
+  } catch {
     return null;
   }
 };

@@ -12,12 +12,50 @@ import * as jwt from "jsonwebtoken";
 import { UserSession } from "../functions/auth/types";
 import { getCookie } from "../functions/auth/utils";
 import { RoleName, roleNamesToIds } from "../constants/roles";
+import { setAuthUser } from "./auth-context";
 
 export type RouteDefinition = {
   path: string;
   method: HttpMethod;
   handlerKey: string;
 };
+
+function getBearerToken(req: HttpRequest) {
+  const authorization = req.headers.get("authorization") || "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  return match?.[1]?.trim() || null;
+}
+
+function getRequestToken(req: HttpRequest) {
+  return (
+    getBearerToken(req) ||
+    getCookie(req.headers, "sessionSGA") ||
+    req.query.get("token") ||
+    null
+  );
+}
+
+export function getAuthenticatedUser(req: HttpRequest): UserSession {
+  const token = getRequestToken(req);
+
+  if (!token) {
+    throw new AppError(
+      "Unauthorized",
+      "UNAUTHORIZED",
+      "Token de autenticación requerido",
+    );
+  }
+
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET!) as UserSession;
+  } catch {
+    throw new AppError(
+      "Unauthorized",
+      "UNAUTHORIZED",
+      "Token inválido o expirado",
+    );
+  }
+}
 
 /**
  * This registers a normal class as a controller class to get started, and also registers the route prefix.
@@ -58,34 +96,7 @@ export function requireRole(...allowedRoles: RoleName[]) {
       req: HttpRequest,
       context: InvocationContext,
     ): Promise<HttpResponseInit> {
-      // Extract token from cookie, query param, or body
-      let token =
-        getCookie(req.headers, "sessionSGA") || req.query.get("token") || null;
-
-      if (!token) {
-        const body = (await req.json().catch(() => ({}))) as { token?: string };
-        token = body.token ?? null;
-      }
-
-      if (!token) {
-        throw new AppError(
-          "Unauthorized",
-          "UNAUTHORIZED",
-          "Token de autenticación requerido",
-        );
-      }
-
-      // Verify and decode JWT
-      let decoded: UserSession;
-      try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserSession;
-      } catch (error) {
-        throw new AppError(
-          "Unauthorized",
-          "UNAUTHORIZED",
-          "Token inválido o expirado",
-        );
-      }
+      const decoded = getAuthenticatedUser(req);
 
       // Check if user role is allowed
       if (!allowedRoleIds.includes(decoded.role)) {
@@ -96,8 +107,7 @@ export function requireRole(...allowedRoles: RoleName[]) {
         );
       }
 
-      // Attach user session to request for use in the handler
-      (req as any).user = decoded;
+      setAuthUser(req, decoded);
 
       // Call original method
       return originalMethod.call(this, req, context);
@@ -140,6 +150,15 @@ export function route(path: string, method: HttpMethod = "GET") {
       }
 
       try {
+        const prefix = Reflect.getMetadata(
+          "controller:prefix",
+          target.constructor,
+        );
+
+        if (prefix === "syllabus") {
+          setAuthUser(req, getAuthenticatedUser(req));
+        }
+
         const result = await originalMethod.call(this, req, context);
 
         if (result?.headers) {
