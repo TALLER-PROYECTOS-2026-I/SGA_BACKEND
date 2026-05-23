@@ -16,8 +16,9 @@ jobs:
       - name: ZAP Scan (API Definition)
         uses: zaproxy/action-api-scan@v0.7.0
         with:
-          target: https://raw.githubusercontent.com/TALLER-PROYECTOS-2026-I/SGA_BACKEND/refs/heads/feature_swagger/docs/swagger.yml
+          target: "https://raw.githubusercontent.com/TALLER-PROYECTOS-2026-I/SGA_BACKEND/refs/heads/feature_swagger/docs/swagger.yml"
           format: "openapi"
+          allow_issue_writing: false
           fail_action: false
 
       - name: Upload ZAP Report
