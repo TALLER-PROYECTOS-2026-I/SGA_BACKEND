@@ -1,0 +1,783 @@
+openapi: 3.0.0
+info:
+  title: API SGA_BACKEND
+  description: Documentación de la API para el sistema de gestión.
+  version: 1.0.0
+servers:
+  - url: http://localhost:7071/api
+    description: Servidor local de Azure Functions
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Auth
+  - name: Health
+  - name: Assignments
+  - name: Permisos
+  - name: Teacher
+  - name: Syllabus
+
+paths:
+  # --- HEALTH ---
+  /health:
+    get:
+      tags: [Health]
+      summary: Verificación de estado
+      responses:
+        "200":
+          description: Servicio operativo
+
+  # --- AUTH ---
+  /auth/me:
+    post:
+      tags: [Auth]
+      summary: Obtener usuario actual
+      responses:
+        "200":
+          description: OK
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Iniciar sesión
+      responses:
+        "200":
+          description: OK
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Cerrar sesión
+      responses:
+        "200":
+          description: OK
+
+  # --- ASSIGNMENTS ---
+  /assignments/:
+    get:
+      tags: [Assignments]
+      summary: Listar asignaciones
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Assignments]
+      summary: Crear asignación
+      responses:
+        "201":
+          description: Creado
+  /assignments/courses:
+    get:
+      tags: [Assignments]
+      summary: Obtener todos los cursos
+      responses:
+        "200":
+          description: OK
+
+  # --- PERMISOS ---
+  /permisos/:
+    post:
+      tags: [Permisos]
+      summary: Asignar permisos
+      responses:
+        "201":
+          description: Creado
+    put:
+      tags: [Permisos]
+      summary: Actualizar permisos
+      responses:
+        "200":
+          description: OK
+  /permisos/{docenteId}/:
+    get:
+      tags: [Permisos]
+      summary: Obtener permisos por docente
+      parameters:
+        - name: docenteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+
+  # --- TEACHER ---
+  /teacher/:
+    get:
+      tags: [Teacher]
+      summary: Listar docentes
+      responses:
+        "200":
+          description: OK
+  /teacher/{teacherId}:
+    get:
+      tags: [Teacher]
+      summary: Obtener un docente
+      parameters:
+        - name: teacherId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    put:
+      tags: [Teacher]
+      summary: Actualizar docente
+      parameters:
+        - name: teacherId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+
+  # --- SYLLABUS (General & No-ID routes) ---
+  /syllabus/:
+    post:
+      tags: [Syllabus]
+      summary: Crear sílabo
+      responses:
+        "201":
+          description: Creado
+    put:
+      tags: [Syllabus]
+      summary: Actualizar sílabo
+      responses:
+        "200":
+          description: OK
+  /syllabus/catalog:
+    get:
+      tags: [Syllabus]
+      summary: Obtener catálogo de sílabos
+      responses:
+        "200":
+          description: OK
+  /syllabus/revision:
+    get:
+      tags: [Syllabus]
+      summary: Obtener sílabos en revisión
+      responses:
+        "200":
+          description: OK
+  /syllabus/revision/{silaboId}:
+    get:
+      tags: [Syllabus]
+      summary: Obtener revisión de sílabo por ID
+      parameters:
+        - name: silaboId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/formula_evaluacion:
+    post:
+      tags: [Syllabus]
+      summary: Crear fórmula de evaluación
+      responses:
+        "201":
+          description: Creado
+  /syllabus/estrategias_metodologicas:
+    post:
+      tags: [Syllabus]
+      summary: Crear estrategias metodológicas
+      responses:
+        "201":
+          description: Creado
+  /syllabus/recursos_didacticos_notas:
+    post:
+      tags: [Syllabus]
+      summary: Crear recursos didácticos
+      responses:
+        "201":
+          description: Creado
+
+  # --- SYLLABUS (ID: id) ---
+  /syllabus/{id}/aprobar:
+    post:
+      tags: [Syllabus]
+      summary: Aprobar sílabo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/desaprobar:
+    post:
+      tags: [Syllabus]
+      summary: Desaprobar sílabo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/complete:
+    get:
+      tags: [Syllabus]
+      summary: Obtener sílabo completo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/datos-generales:
+    put:
+      tags: [Syllabus]
+      summary: Actualizar datos generales
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/analizando:
+    put:
+      tags: [Syllabus]
+      summary: Establecer estado analizando
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/estrategias_metodologicas:
+    get:
+      tags: [Syllabus]
+      summary: Obtener estrategias
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    put:
+      tags: [Syllabus]
+      summary: Actualizar estrategias
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/formula_evaluacion:
+    get:
+      tags: [Syllabus]
+      summary: Obtener fórmula
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    put:
+      tags: [Syllabus]
+      summary: Actualizar fórmula
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/recursos_didacticos_notas:
+    get:
+      tags: [Syllabus]
+      summary: Obtener recursos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    put:
+      tags: [Syllabus]
+      summary: Actualizar recursos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/revision:
+    get:
+      tags: [Syllabus]
+      summary: Obtener datos de revisión
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Syllabus]
+      summary: Guardar datos de revisión
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+  /syllabus/{id}/sumilla:
+    post:
+      tags: [Syllabus]
+      summary: Registrar sumilla
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+    put:
+      tags: [Syllabus]
+      summary: Actualizar sumilla
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/contribution:
+    get:
+      tags: [Syllabus]
+      summary: Obtener contribuciones
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/contribution/{contributionId}:
+    put:
+      tags: [Syllabus]
+      summary: Actualizar contribución
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contributionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/fuentes:
+    get:
+      tags: [Syllabus]
+      summary: Obtener fuentes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Syllabus]
+      summary: Crear fuente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+  /syllabus/{id}/fuentes/{fuenteId}:
+    put:
+      tags: [Syllabus]
+      summary: Actualizar fuente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fuenteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags: [Syllabus]
+      summary: Eliminar fuente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fuenteId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{id}/unidades:
+    get:
+      tags: [Syllabus]
+      summary: Obtener unidades
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Syllabus]
+      summary: Crear unidad
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+  /syllabus/{id}/unidades/{unidadId}:
+    get:
+      tags: [Syllabus]
+      summary: Obtener unidad por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: unidadId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    put:
+      tags: [Syllabus]
+      summary: Actualizar unidad
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: unidadId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags: [Syllabus]
+      summary: Eliminar unidad
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: unidadId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+
+  # --- SYLLABUS (ID: syllabusId / silaboId) ---
+  /syllabus/{silaboId}/sumilla:
+    get:
+      tags: [Syllabus]
+      summary: Obtener sumilla
+      parameters:
+        - name: silaboId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/datos-generales:
+    get:
+      tags: [Syllabus]
+      summary: Obtener datos generales
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/state:
+    put:
+      tags: [Syllabus]
+      summary: Actualizar estado
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/contribution:
+    post:
+      tags: [Syllabus]
+      summary: Crear contribución
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+  /syllabus/{syllabusId}/attitudes:
+    get:
+      tags: [Syllabus]
+      summary: Listar actitudes
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Syllabus]
+      summary: Crear actitudes
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+    put:
+      tags: [Syllabus]
+      summary: Actualizar actitudes
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/attitudes/{id}:
+    delete:
+      tags: [Syllabus]
+      summary: Eliminar actitud
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/competencies:
+    get:
+      tags: [Syllabus]
+      summary: Listar competencias
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Syllabus]
+      summary: Crear competencias
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+    put:
+      tags: [Syllabus]
+      summary: Actualizar competencias
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/competencies/{id}:
+    delete:
+      tags: [Syllabus]
+      summary: Eliminar competencia
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/components:
+    get:
+      tags: [Syllabus]
+      summary: Listar componentes
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags: [Syllabus]
+      summary: Crear componentes
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Creado
+    put:
+      tags: [Syllabus]
+      summary: Actualizar componentes
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+  /syllabus/{syllabusId}/components/{id}:
+    delete:
+      tags: [Syllabus]
+      summary: Eliminar componente
+      parameters:
+        - name: syllabusId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
