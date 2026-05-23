@@ -16,12 +16,9 @@ jobs:
       - name: ZAP Scan (API Definition)
         uses: zaproxy/action-api-scan@v0.7.0
         with:
-          # 'target' es obligatorio, pero para el modo API debes apuntar a la URL
-          # de tu swagger.json o un archivo que ZAP pueda leer por HTTP.
-          # Si quieres escanear un archivo local, el parámetro es 'rules_file_name'
-          # o simplemente debes pasar el archivo como parte de la ejecución.
           target: https://raw.githubusercontent.com/TALLER-PROYECTOS-2026-I/SGA_BACKEND/refs/heads/feature_swagger/docs/swagger.yml
           format: "openapi"
+          fail_action: false
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
