@@ -32,9 +32,7 @@ export class PermissionsRepository {
   }
 
   async findDocenteIdByCorreo(correo: string): Promise<number | null> {
-    const email = String(correo ?? "")
-      .trim()
-      .toLowerCase();
+    const email = String(correo ?? "").trim().toLowerCase();
 
     if (!email) return null;
 

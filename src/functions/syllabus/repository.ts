@@ -221,79 +221,81 @@ export class SyllabusRepository extends BaseRepository {
     };
   }
 
-  async create(syllabusData: z.infer<typeof SyllabusCreateSchema>) {
-    const rawDocenteId = Number(
-      syllabusData.asignadoADocenteId ??
-        syllabusData.asignado_a_docente_id ??
-        syllabusData.docenteId ??
-        syllabusData.creadoPorDocenteId,
-    );
-    const docenteId =
-      Number.isFinite(rawDocenteId) && rawDocenteId > 0 ? rawDocenteId : null;
+    async create(syllabusData: z.infer<typeof SyllabusCreateSchema>) {
+      const rawDocenteId = Number(
+        syllabusData.asignadoADocenteId ??
+          syllabusData.asignado_a_docente_id ??
+          syllabusData.docenteId ??
+          syllabusData.creadoPorDocenteId,
+      );
+      const docenteId =
+        Number.isFinite(rawDocenteId) && rawDocenteId > 0
+          ? rawDocenteId
+          : null;
 
-    // Sin docente válido siempre BORRADOR; no confiar en estadoRevision del payload.
-    const estadoRevision = docenteId ? "ASIGNADO" : "BORRADOR";
+      // Sin docente válido siempre BORRADOR; no confiar en estadoRevision del payload.
+      const estadoRevision = docenteId ? "ASIGNADO" : "BORRADOR";
 
-    const result = await this.db
-      .insert(silabo)
-      .values({
-        departamentoAcademico: syllabusData.departamentoAcademico,
-        escuelaProfesional: syllabusData.escuelaProfesional,
-        programaAcademico: syllabusData.programaAcademico,
-        cursoCodigo: syllabusData.codigoAsignatura,
-        cursoNombre: syllabusData.nombreAsignatura,
-        semestreAcademico: syllabusData.semestreAcademico,
-        tipoAsignatura: syllabusData.tipoAsignatura,
-        tipoDeEstudios: syllabusData.tipoEstudios,
-        modalidadDeAsignatura: syllabusData.modalidad,
-        ciclo: syllabusData.ciclo,
+      const result = await this.db
+        .insert(silabo)
+        .values({
+          departamentoAcademico: syllabusData.departamentoAcademico,
+          escuelaProfesional: syllabusData.escuelaProfesional,
+          programaAcademico: syllabusData.programaAcademico,
+          cursoCodigo: syllabusData.codigoAsignatura,
+          cursoNombre: syllabusData.nombreAsignatura,
+          semestreAcademico: syllabusData.semestreAcademico,
+          tipoAsignatura: syllabusData.tipoAsignatura,
+          tipoDeEstudios: syllabusData.tipoEstudios,
+          modalidadDeAsignatura: syllabusData.modalidad,
+          ciclo: syllabusData.ciclo,
 
-        requisitos: syllabusData.requisitos || null,
+          requisitos: syllabusData.requisitos || null,
 
-        horasTeoria: syllabusData.horasTeoria ?? null,
-        horasPractica: syllabusData.horasPractica ?? null,
-        horasLaboratorio: syllabusData.horasLaboratorio ?? null,
+          horasTeoria: syllabusData.horasTeoria ?? null,
+          horasPractica: syllabusData.horasPractica ?? null,
+          horasLaboratorio: syllabusData.horasLaboratorio ?? null,
 
-        horasTeoriaLectivaPresencial:
-          syllabusData.horasTeoriaLectivaPresencial ?? null,
-        horasTeoriaLectivaDistancia:
-          syllabusData.horasTeoriaLectivaDistancia ?? null,
-        horasTeoriaNoLectivaPresencial:
-          syllabusData.horasTeoriaNoLectivaPresencial ?? null,
-        horasTeoriaNoLectivaDistancia:
-          syllabusData.horasTeoriaNoLectivaDistancia ?? null,
+          horasTeoriaLectivaPresencial:
+            syllabusData.horasTeoriaLectivaPresencial ?? null,
+          horasTeoriaLectivaDistancia:
+            syllabusData.horasTeoriaLectivaDistancia ?? null,
+          horasTeoriaNoLectivaPresencial:
+            syllabusData.horasTeoriaNoLectivaPresencial ?? null,
+          horasTeoriaNoLectivaDistancia:
+            syllabusData.horasTeoriaNoLectivaDistancia ?? null,
 
-        horasPracticaLectivaPresencial:
-          syllabusData.horasPracticaLectivaPresencial ?? null,
-        horasPracticaLectivaDistancia:
-          syllabusData.horasPracticaLectivaDistancia ?? null,
-        horasPracticaNoLectivaPresencial:
-          syllabusData.horasPracticaNoLectivaPresencial ?? null,
-        horasPracticaNoLectivaDistancia:
-          syllabusData.horasPracticaNoLectivaDistancia ?? null,
+          horasPracticaLectivaPresencial:
+            syllabusData.horasPracticaLectivaPresencial ?? null,
+          horasPracticaLectivaDistancia:
+            syllabusData.horasPracticaLectivaDistancia ?? null,
+          horasPracticaNoLectivaPresencial:
+            syllabusData.horasPracticaNoLectivaPresencial ?? null,
+          horasPracticaNoLectivaDistancia:
+            syllabusData.horasPracticaNoLectivaDistancia ?? null,
 
-        creditosTeoria: syllabusData.creditosTeoria ?? null,
-        creditosPractica: syllabusData.creditosPractica ?? null,
+          creditosTeoria: syllabusData.creditosTeoria ?? null,
+          creditosPractica: syllabusData.creditosPractica ?? null,
 
-        creadoPorDocenteId: docenteId,
-        actualizadoPorDocenteId: docenteId,
-        asignadoADocenteId: docenteId,
-        estadoRevision,
-      })
-      .returning({ id: silabo.id });
+          creadoPorDocenteId: docenteId,
+          actualizadoPorDocenteId: docenteId,
+          asignadoADocenteId: docenteId,
+          estadoRevision,
+        })
+        .returning({ id: silabo.id });
 
-    const silaboId = result[0].id;
+      const silaboId = result[0].id;
 
-    if (docenteId) {
-      await this.db.insert(silaboDocente).values({
-        silaboId,
-        docenteId,
-        rol: "DOCENTE",
-      });
+      if (docenteId) {
+        await this.db.insert(silaboDocente).values({
+          silaboId,
+          docenteId,
+          rol: "DOCENTE",
+        });
+      }
+
+      return silaboId;
     }
-
-    return silaboId;
-  }
 
   async updateSumilla(silaboId: number, sumilla: string) {
     await this.db
@@ -1248,9 +1250,7 @@ export class SyllabusRepository extends BaseRepository {
     return updated[0] || null;
   }
 
-  async findRejectedRevisionSectionNumbers(
-    silaboId: number,
-  ): Promise<number[]> {
+  async findRejectedRevisionSectionNumbers(silaboId: number): Promise<number[]> {
     const sections = await this.findRevisionSections(silaboId);
     const rejected = new Set<number>();
 
@@ -1322,7 +1322,7 @@ export class SyllabusRepository extends BaseRepository {
     return result;
   }
 
-  async upsertRevisionSections(
+    async upsertRevisionSections(
     silaboId: number,
     secciones: Array<{
       numeroSeccion: number;

@@ -17,7 +17,7 @@ export const SyllabusCreateSchema = z.object({
   asignadoADocenteId: z.coerce.number().optional(),
   asignado_a_docente_id: z.number().optional(),
   docenteId: z.coerce.number().optional(),
-
+  
   creadoPorDocenteId: z.coerce.number().optional(),
   actualizadoPorDocenteId: z.coerce.number().optional(),
   nombreAsignatura: nonEmptyShortText("El nombre de asignatura"),
@@ -47,6 +47,7 @@ export const SyllabusCreateSchema = z.object({
   horasPracticaLectivaDistancia: nonNegativeInt.nullable().optional(),
   horasPracticaNoLectivaPresencial: nonNegativeInt.nullable().optional(),
   horasPracticaNoLectivaDistancia: nonNegativeInt.nullable().optional(),
+  
 
   // 🔹 Campos de créditos
   creditosTeoria: nonNegativeInt,
@@ -426,11 +427,7 @@ export const UnidadSemanaSchema = z.object({
 
 export const UnidadCreateSchema = z.object({
   numero: z.number().int().min(1).max(16),
-  titulo: z
-    .string()
-    .trim()
-    .min(1, "El título es obligatorio")
-    .max(SHORT_TEXT_MAX),
+  titulo: z.string().trim().min(1, "El título es obligatorio").max(SHORT_TEXT_MAX),
   capacidadesText: optionalLongText,
   semanaInicio: z.number().int().min(1).max(16).optional(),
   semanaFin: z.number().int().min(1).max(16).optional(),
@@ -517,16 +514,8 @@ export type DatosGeneralesUpdate = z.infer<typeof DatosGeneralesUpdateSchema>;
 
 // Variable individual de la fórmula
 export const FormulaVariableSchema = z.object({
-  codigo: z
-    .string()
-    .trim()
-    .min(1, "El código de la variable es requerido")
-    .max(20),
-  nombre: z
-    .string()
-    .trim()
-    .min(1, "El nombre de la variable es requerido")
-    .max(SHORT_TEXT_MAX),
+  codigo: z.string().trim().min(1, "El código de la variable es requerido").max(20),
+  nombre: z.string().trim().min(1, "El nombre de la variable es requerido").max(SHORT_TEXT_MAX),
   tipo: z.string().trim().max(SHORT_TEXT_MAX).default(""),
   descripcion: optionalMediumText,
   orden: z.number().int().nonnegative().optional(),
@@ -534,16 +523,8 @@ export const FormulaVariableSchema = z.object({
 
 // Subfórmula (expresión intermedia)
 export const FormulaSubformulaSchema = z.object({
-  variableCodigo: z
-    .string()
-    .trim()
-    .min(1, "El código de la variable es requerido")
-    .max(20),
-  expresion: z
-    .string()
-    .trim()
-    .min(1, "La expresión es requerida")
-    .max(MEDIUM_TEXT_MAX),
+  variableCodigo: z.string().trim().min(1, "El código de la variable es requerido").max(20),
+  expresion: z.string().trim().min(1, "La expresión es requerida").max(MEDIUM_TEXT_MAX),
 });
 
 // Mapeo de variable a plan de evaluación
@@ -588,21 +569,13 @@ export const FormulaEvaluacionCompleteSchema = z.object({
 // Schema para crear una nueva fórmula (POST)
 export const FormulaEvaluacionCreateSchema = z.object({
   silaboId: z.number().int().positive("ID del sílabo requerido"),
-  nombreRegla: z
-    .string()
-    .trim()
-    .min(1, "El nombre de la regla es requerido")
-    .max(SHORT_TEXT_MAX),
+  nombreRegla: z.string().trim().min(1, "El nombre de la regla es requerido").max(SHORT_TEXT_MAX),
   variableFinalCodigo: z
     .string()
     .trim()
     .min(1, "El código de la variable final es requerido")
     .max(20),
-  expresionFinal: z
-    .string()
-    .trim()
-    .min(1, "La expresión final es requerida")
-    .max(MEDIUM_TEXT_MAX),
+  expresionFinal: z.string().trim().min(1, "La expresión final es requerida").max(MEDIUM_TEXT_MAX),
   activo: z.boolean().default(true),
   variables: z
     .array(FormulaVariableSchema)

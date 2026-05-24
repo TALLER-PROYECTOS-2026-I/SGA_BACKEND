@@ -15,9 +15,7 @@ class AssignmentsService {
     return await assignmentsRepository.getAll(filters);
   }
 
-  async getAllCourses(options?: {
-    sinAsignar?: boolean;
-  }): Promise<CourseSimple[]> {
+  async getAllCourses(options?: { sinAsignar?: boolean }): Promise<CourseSimple[]> {
     return await assignmentsRepository.getAllCourses(options);
   }
 

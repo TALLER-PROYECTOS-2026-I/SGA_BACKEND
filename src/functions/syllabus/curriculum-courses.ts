@@ -166,8 +166,8 @@ export function getCurriculumPosteriores(course: CurriculumCourse): string[] {
 
   return curriculumCourses
     .filter((item) =>
-      item.prerrequisitos.some((prerrequisito) =>
-        currentNames.includes(normalizeCourseName(prerrequisito)),
+      item.prerrequisitos.some(
+        (prerrequisito) => currentNames.includes(normalizeCourseName(prerrequisito)),
       ),
     )
     .map((item) => item.nombre)

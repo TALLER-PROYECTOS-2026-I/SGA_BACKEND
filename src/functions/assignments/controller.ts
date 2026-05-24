@@ -40,7 +40,8 @@ export class AssignmentsController implements Listable {
   @route("/courses", "GET")
   async getAllCourses(req: HttpRequest): Promise<HttpResponseInit> {
     const sinAsignarParam = req.query.get("sinAsignar")?.trim();
-    const sinAsignar = sinAsignarParam === "true" || sinAsignarParam === "1";
+    const sinAsignar =
+      sinAsignarParam === "true" || sinAsignarParam === "1";
     const courses = await assignmentsService.getAllCourses({ sinAsignar });
 
     return {

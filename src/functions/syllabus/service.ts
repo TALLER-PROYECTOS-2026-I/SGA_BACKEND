@@ -1,6 +1,9 @@
 import { syllabusRepository } from "./repository";
 import { permissionsRepository } from "../permissions/repository";
-import { getSectionLabel, SYLLABUS_SECTION } from "./section-permissions";
+import {
+  getSectionLabel,
+  SYLLABUS_SECTION,
+} from "./section-permissions";
 import {
   UpsertCompetenciesSchema,
   CreateComponentsSchema, //
@@ -177,13 +180,13 @@ export class SyllabusService {
     const id = resolveAuthUserId(user ?? {});
     const role = resolveAuthUserRole(user ?? {});
 
-    if (!id || !role) {
-      throw new AppError(
-        "Unauthorized",
-        "UNAUTHORIZED",
-        "Usuario autenticado requerido",
-      );
-    }
+      if (!id || !role) {
+        throw new AppError(
+          "Unauthorized",
+          "UNAUTHORIZED",
+          "Usuario autenticado requerido",
+        );
+      }
 
     return {
       ...(user as any),
@@ -194,7 +197,9 @@ export class SyllabusService {
     } as UserSession;
   }
 
-  private assertAuthenticatedUser(user?: UserSession | AuthUser): UserSession {
+  private assertAuthenticatedUser(
+    user?: UserSession | AuthUser,
+  ): UserSession {
     return this.toUserSession(user);
   }
 
@@ -224,11 +229,7 @@ export class SyllabusService {
       if (!current || visited.has(current)) continue;
       visited.add(current);
 
-      const record = current as {
-        message?: string;
-        code?: string;
-        cause?: unknown;
-      };
+      const record = current as { message?: string; code?: string; cause?: unknown };
       const message = String(record.message ?? "");
       const code = String(record.code ?? "");
 
@@ -283,9 +284,7 @@ export class SyllabusService {
   ) {
     const currentUser = this.assertAuthenticatedUser(user);
     const current = await this.assertSyllabusCanBeEdited(silaboId);
-    const estadoKey = this.normalizeEstadoRevision(
-      current.estadoRevision ?? "",
-    );
+    const estadoKey = this.normalizeEstadoRevision(current.estadoRevision ?? "");
 
     if (
       await this.canPrivilegedEditUnassignedBorrador(
@@ -314,10 +313,7 @@ export class SyllabusService {
     }
 
     if (estadoKey === "DESAPROBADO") {
-      const docenteId = await this.resolveDocenteIdForUser(
-        currentUser,
-        silaboId,
-      );
+      const docenteId = await this.resolveDocenteIdForUser(currentUser, silaboId);
 
       if (!docenteId) {
         throw new AppError(
@@ -366,9 +362,7 @@ export class SyllabusService {
     docenteId: number,
   ) {
     const permisos = this.normalizeSectionNumbers(sectionNumbers).map(
-      (numeroSeccion) => ({
-        numeroSeccion,
-      }),
+      (numeroSeccion) => ({ numeroSeccion }),
     );
 
     if (permisos.length === 0) {
@@ -392,9 +386,7 @@ export class SyllabusService {
       return;
     }
 
-    const estadoKey = this.normalizeEstadoRevision(
-      current.estadoRevision ?? "",
-    );
+    const estadoKey = this.normalizeEstadoRevision(current.estadoRevision ?? "");
 
     if (estadoKey !== "DESAPROBADO") {
       return;
@@ -416,11 +408,10 @@ export class SyllabusService {
       return;
     }
 
-    const enabledSections =
-      await permissionsRepository.findEnabledSectionNumbers(
-        docenteId,
-        silaboId,
-      );
+    const enabledSections = await permissionsRepository.findEnabledSectionNumbers(
+      docenteId,
+      silaboId,
+    );
 
     const rejectedSet = new Set(rejectedSections);
     const enabledSet = new Set(enabledSections);
@@ -474,10 +465,7 @@ export class SyllabusService {
     }
   }
 
-  async assertCanReviewSyllabus(
-    user: UserSession | undefined,
-    silaboId: number,
-  ) {
+  async assertCanReviewSyllabus(user: UserSession | undefined, silaboId: number) {
     const currentUser = this.assertAuthenticatedUser(user);
     const current = await syllabusRepository.findById(silaboId);
 
@@ -528,9 +516,7 @@ export class SyllabusService {
       throw new AppError("NotFound", "NOT_FOUND", "Sílabo no encontrado");
     }
 
-    const estadoKey = this.normalizeEstadoRevision(
-      current.estadoRevision ?? "",
-    );
+    const estadoKey = this.normalizeEstadoRevision(current.estadoRevision ?? "");
 
     if (action === "submit") {
       if (!this.isDocente(currentUser)) {
@@ -716,6 +702,7 @@ export class SyllabusService {
     }
   }
 
+  
   private normalizeText(value: unknown): string {
     return String(value ?? "").trim();
   }
@@ -783,7 +770,8 @@ export class SyllabusService {
       missingSections.push("Componentes");
     }
 
-    const unidades = await syllabusRepository.findUnidadesBySilaboId(silaboId);
+    const unidades =
+      await syllabusRepository.findUnidadesBySilaboId(silaboId);
 
     if (!this.hasItems(unidades)) {
       missingSections.push("Programación del contenido");
@@ -837,10 +825,13 @@ export class SyllabusService {
       throw new AppError(
         "BadRequest",
         "BAD_REQUEST",
-        `No se puede enviar el sílabo a revisión. Faltan completar: ${missingSections.join(", ")}`,
+        `No se puede enviar el sílabo a revisión. Faltan completar: ${missingSections.join(
+          ", ",
+        )}`,
       );
     }
   }
+
 
   // ---------- COMPETENCIAS ----------
   async getCompetencies(syllabusId: string) {
@@ -963,11 +954,9 @@ export class SyllabusService {
       throw new AppError("BadRequest", "BAD_REQUEST", "syllabusId inválido");
     }
 
-    const mapRows = (
-      rows: Awaited<
-        ReturnType<typeof syllabusRepository.listAllComponentsByGrupo>
-      >,
-    ) => rows.map((r) => this.mapComponentRow(r));
+    const mapRows = (rows: Awaited<
+      ReturnType<typeof syllabusRepository.listAllComponentsByGrupo>
+    >) => rows.map((r) => this.mapComponentRow(r));
 
     if (grupo === "ACT") {
       const actRows = await syllabusRepository.listAttitudes(sId);
@@ -1104,7 +1093,10 @@ export class SyllabusService {
     return data;
   }
 
-  async createSyllabus(payload: unknown, _authUser?: UserSession | AuthUser) {
+  async createSyllabus(
+    payload: unknown,
+    _authUser?: UserSession | AuthUser,
+  ) {
     let data;
     try {
       data = SyllabusCreateSchema.parse(payload);
@@ -1686,11 +1678,15 @@ export class SyllabusService {
     }) as any;
 
     if (existing) {
-      const updated = await syllabusRepository.updateContribution(silaboId, 0, {
-        resultadoProgramaCodigo,
-        resultadoProgramaDescripcion,
-        aporteValor,
-      } as any);
+      const updated = await syllabusRepository.updateContribution(
+        silaboId,
+        0,
+        {
+          resultadoProgramaCodigo,
+          resultadoProgramaDescripcion,
+          aporteValor,
+        } as any,
+      );
 
       return {
         ok: true,
@@ -1918,7 +1914,7 @@ export class SyllabusService {
   async getSyllabusCatalog() {
     return await syllabusRepository.getSyllabusCatalog();
   }
-
+  
   // ---------- SECCIÓN I: DATOS GENERALES ----------
   async updateDatosGenerales(id: number, data: DatosGeneralesUpdate) {
     await this.assertSyllabusCanBeEdited(id);
@@ -2004,9 +2000,7 @@ export class SyllabusService {
         continue;
       }
 
-      const existing = await syllabusRepository.findSemanasByUnidadId(
-        unidad.id,
-      );
+      const existing = await syllabusRepository.findSemanasByUnidadId(unidad.id);
 
       for (const row of existing) {
         const semana = Number(row.semana);
@@ -2152,38 +2146,38 @@ export class SyllabusService {
 
     return rows
       .map((row: any, index: number) => {
-        const codigo = String(
-          row.resultadoProgramaCodigo ?? row.resultado_programa_codigo ?? "",
-        ).trim();
+      const codigo = String(
+        row.resultadoProgramaCodigo ?? row.resultado_programa_codigo ?? "",
+      ).trim();
 
-        if (!/^RP\d+$/i.test(codigo)) {
-          return null;
-        }
+      if (!/^RP\d+$/i.test(codigo)) {
+        return null;
+      }
 
-        const rpMatch = codigo.match(/^RP(\d+)$/i);
-        const stableId = rpMatch ? Number(rpMatch[1]) : index + 1;
+      const rpMatch = codigo.match(/^RP(\d+)$/i);
+      const stableId = rpMatch ? Number(rpMatch[1]) : index + 1;
 
-        const descripcion =
-          row.resultadoProgramaDescripcion ??
-          row.resultado_programa_descripcion ??
-          "";
+      const descripcion =
+        row.resultadoProgramaDescripcion ??
+        row.resultado_programa_descripcion ??
+        "";
 
-        const aporteValor = row.aporteValor ?? row.aporte_valor ?? "";
+      const aporteValor = row.aporteValor ?? row.aporte_valor ?? "";
 
-        return {
-          id: stableId,
-          silaboId: row.silaboId ?? silaboId,
-          resultadoProgramaCodigo: codigo,
-          resultadoProgramaDescripcion: descripcion,
-          aporteValor,
-          codigo,
-          descripcion,
-          nivel: aporteValor,
-          level: aporteValor,
-          code: codigo,
-          description: descripcion,
-        };
-      })
+      return {
+        id: stableId,
+        silaboId: row.silaboId ?? silaboId,
+        resultadoProgramaCodigo: codigo,
+        resultadoProgramaDescripcion: descripcion,
+        aporteValor,
+        codigo,
+        descripcion,
+        nivel: aporteValor,
+        level: aporteValor,
+        code: codigo,
+        description: descripcion,
+      };
+    })
       .filter((row): row is NonNullable<typeof row> => row !== null);
   }
 
@@ -2199,10 +2193,7 @@ export class SyllabusService {
       );
     }
 
-    const result = await syllabusRepository.deleteContribution(
-      silaboId,
-      codigo,
-    );
+    const result = await syllabusRepository.deleteContribution(silaboId, codigo);
     if (!result) {
       throw new AppError("NotFound", "NOT_FOUND", "Aporte no encontrado");
     }
@@ -2276,9 +2267,7 @@ export class SyllabusService {
 
   private findSilaboByCurriculumCourse(
     course: CurriculumCourse,
-    silaboRefs: Awaited<
-      ReturnType<typeof syllabusRepository.listSilaboCourseRefs>
-    >,
+    silaboRefs: Awaited<ReturnType<typeof syllabusRepository.listSilaboCourseRefs>>,
   ) {
     const comparableNames = getCourseComparableNames(course);
     const found = silaboRefs.find((ref) => {
@@ -2295,9 +2284,7 @@ export class SyllabusService {
       string,
       { id: number; cursoNombre: string; cursoCodigo: string | null }
     >,
-    silaboRows: Awaited<
-      ReturnType<typeof syllabusRepository.listSilaboCourseRefs>
-    >,
+    silaboRows: Awaited<ReturnType<typeof syllabusRepository.listSilaboCourseRefs>>,
     user?: UserSession,
   ) {
     const curriculumCourse = findCurriculumCourseByName(nombreMalla);
@@ -2367,23 +2354,13 @@ export class SyllabusService {
 
     const anteriores = await Promise.all(
       getCurriculumAnteriores(curriculum).map((nombre) =>
-        this.mapRelatedCurriculumCourse(
-          nombre,
-          index,
-          silaboRows,
-          options.user,
-        ),
+        this.mapRelatedCurriculumCourse(nombre, index, silaboRows, options.user),
       ),
     );
 
     const posteriores = await Promise.all(
       getCurriculumPosteriores(curriculum).map((nombre) =>
-        this.mapRelatedCurriculumCourse(
-          nombre,
-          index,
-          silaboRows,
-          options.user,
-        ),
+        this.mapRelatedCurriculumCourse(nombre, index, silaboRows, options.user),
       ),
     );
 

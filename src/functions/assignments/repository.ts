@@ -142,9 +142,7 @@ class AssignmentsRepository extends BaseRepository {
     });
   }
 
-  async getAllCourses(options?: {
-    sinAsignar?: boolean;
-  }): Promise<CourseSimple[]> {
+  async getAllCourses(options?: { sinAsignar?: boolean }): Promise<CourseSimple[]> {
     try {
       const conditions: SQL[] = options?.sinAsignar
         ? pendingAssignmentConditions()

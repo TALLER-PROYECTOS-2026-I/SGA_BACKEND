@@ -46,6 +46,7 @@ import {
 @controller("syllabus")
 export class SyllabusController implements Updatable {
   private getUser(req: HttpRequest): UserSession {
+
     const authUser = getAuthUser(req);
 
     if (!authUser) {
@@ -114,7 +115,7 @@ export class SyllabusController implements Updatable {
     const user = this.getUser(req);
     const body = (await req.json()) as Record<string, unknown>;
 
-    await service.assertCanCreateSyllabus(user, body);
+  await service.assertCanCreateSyllabus(user, body);
     const idNewSyllabus = await service.createSyllabus(body, authUser ?? user);
 
     return {
@@ -191,6 +192,8 @@ export class SyllabusController implements Updatable {
       },
     };
   }
+
+
 
   /**
    * PUT /api/syllabus/{syllabusId}/state
@@ -290,10 +293,7 @@ export class SyllabusController implements Updatable {
     }
 
     await this.assertRead(req, id);
-    const data = await syllabusService.getCurriculumContext(
-      id,
-      this.getUser(req),
-    );
+    const data = await syllabusService.getCurriculumContext(id, this.getUser(req));
 
     return {
       status: STATUS_CODES.OK,
@@ -460,11 +460,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.createCompetencies(syllabusId, body);
     return { status: 201, jsonBody: res };
   }
@@ -484,11 +480,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.updateCompetencies(syllabusId, body);
     return { status: 200, jsonBody: res };
   }
@@ -503,11 +495,7 @@ export class SyllabusController implements Updatable {
     _ctx: InvocationContext,
   ): Promise<HttpResponseInit> {
     const { syllabusId, id } = req.params as { syllabusId: string; id: string };
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.removeCompetency(syllabusId, id);
     return { status: 200, jsonBody: res };
   }
@@ -562,11 +550,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.createComponents(syllabusId, body);
     return { status: 201, jsonBody: res };
   }
@@ -586,11 +570,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.updateComponents(syllabusId, body);
     return { status: 200, jsonBody: res };
   }
@@ -605,11 +585,7 @@ export class SyllabusController implements Updatable {
     _ctx: InvocationContext,
   ): Promise<HttpResponseInit> {
     const { syllabusId, id } = req.params as { syllabusId: string; id: string };
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.removeComponent(syllabusId, id);
     return { status: 200, jsonBody: res };
   }
@@ -640,11 +616,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.createAttitudes(syllabusId, body);
     return { status: 201, jsonBody: res };
   }
@@ -664,11 +636,7 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.updateAttitudes(syllabusId, body);
     return { status: 200, jsonBody: res };
   }
@@ -683,11 +651,7 @@ export class SyllabusController implements Updatable {
     _ctx: InvocationContext,
   ): Promise<HttpResponseInit> {
     const { syllabusId, id } = req.params as { syllabusId: string; id: string };
-    await this.assertEdit(
-      req,
-      Number(syllabusId),
-      SYLLABUS_SECTION.COMPETENCIAS,
-    );
+    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
     const res = await syllabusService.removeAttitude(syllabusId, id);
     return { status: 200, jsonBody: res };
   }
