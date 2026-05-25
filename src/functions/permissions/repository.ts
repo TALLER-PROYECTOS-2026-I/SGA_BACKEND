@@ -3,26 +3,14 @@ import { eq, and } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../../../drizzle/schema";
 import { AppError } from "../../error";
-import {
-  silaboDocente,
-  docente,
-  silabo,
-  silaboSeccionPermiso,
-} from "../../../drizzle/schema";
-import { z } from "zod";
-import { PermissionsSchema } from "./types";
-
-type Upsertable = { id?: number | string; text: string; order?: number | null };
-type CreateItem = { text: string; order?: number | null; code?: string | null };
-
-const GROUP_COMP = "COMP";
-const GROUP_ACT = "ACT";
+import { silaboSeccionPermiso, docente } from "../../../drizzle/schema";
 
 export class PermissionsRepository {
   private db: NodePgDatabase<typeof schema>;
 
   constructor() {
     const database = getDb();
+
     if (!database) {
       throw new AppError(
         "DbConnectionError",
@@ -30,74 +18,42 @@ export class PermissionsRepository {
         "DB no inicializada",
       );
     }
+
     this.db = database as unknown as NodePgDatabase<typeof schema>;
   }
-  // async findAllPermissions() {
-  //   // const db = getDbOrThrow();
-  //   const permissions = [
-  //     {
-  //       id: 1,
-  //       section: "datos_generales",
-  //       name: "1. Datos generales",
-  //     },
-  //     {
-  //       id: 2,
-  //       section: "sumilla",
-  //       name: "2. Sumilla",
-  //     },
-  //     {
-  //       id: 3,
-  //       section: "competencias",
-  //       name: "3. Competencias y componentes",
-  //     },
-  //     {
-  //       id: 4,
-  //       section: "programacion",
-  //       name: "4. Programación del contenido",
-  //     },
-  //     {
-  //       id: 5,
-  //       section: "estrategias",
-  //       name: "5. Estrategias metodológicas",
-  //     },
-  //     {
-  //       id: 6,
-  //       section: "recursos",
-  //       name: "6. Recursos didácticos",
-  //     },
-  //     {
-  //       id: 7,
-  //       section: "evaluacion",
-  //       name: "7. Evaluación de aprendizaje",
-  //     },
-  //     {
-  //       id: 8,
-  //       section: "fuentes",
-  //       name: "8. Fuentes de consulta",
-  //     },
-  //     {
-  //       id: 9,
-  //       section: "resultados",
-  //       name: "9. Resultados (outcomes)",
-  //     },
-  //   ];
 
-  //   return permissions;
-  // }
   async findDocenteById(docenteId: number) {
     const result = await this.db
       .select()
       .from(docente)
       .where(eq(docente.id, docenteId));
+
     return result;
+  }
+
+  async findDocenteIdByCorreo(correo: string): Promise<number | null> {
+    const email = String(correo ?? "")
+      .trim()
+      .toLowerCase();
+
+    if (!email) return null;
+
+    const result = await this.db
+      .select({ id: docente.id })
+      .from(docente)
+      .where(eq(docente.correo, email))
+      .limit(1);
+
+    const id = Number(result[0]?.id);
+
+    return Number.isFinite(id) && id > 0 ? id : null;
   }
 
   async savePermissionsBySilaboIdAndDocenteId(
     silaboId: number,
     docenteId: number,
-    permisos: any[],
+    permisos: Array<{ numeroSeccion: number }>,
   ) {
-    // Eliminar permisos previos del mismo docente/sílabo
     await this.db
       .delete(silaboSeccionPermiso)
       .where(
@@ -107,35 +63,104 @@ export class PermissionsRepository {
         ),
       );
 
-    // Fecha actual + 20 días
+    if (!Array.isArray(permisos) || permisos.length === 0) {
+      return [];
+    }
+
     const fechaActual = new Date();
     const fechaLimite = new Date(fechaActual);
+
     fechaLimite.setDate(fechaActual.getDate() + 20);
 
-    // Insertar nuevos permisos
+    const permisosNormalizados = permisos
+      .map((permiso) => Number(permiso.numeroSeccion))
+      .filter((numeroSeccion) => {
+        return (
+          !Number.isNaN(numeroSeccion) &&
+          numeroSeccion >= 1 &&
+          numeroSeccion <= 9
+        );
+      });
+
+    const permisosUnicos = Array.from(new Set(permisosNormalizados));
+
+    if (permisosUnicos.length === 0) {
+      return [];
+    }
+
+    const permisosAInsertar = permisosUnicos.map((numeroSeccion) => ({
+      silaboId: Number(silaboId),
+      docenteId: Number(docenteId),
+      numeroSeccion,
+      puedeEditar: true,
+      puedeComentar: false,
+      fechaLimite: fechaLimite.toISOString(),
+      bloqueadoPorEstado: false,
+    }));
+
     const insertados = await this.db
       .insert(silaboSeccionPermiso)
-      .values(
-        permisos.map((p) => ({
-          silaboId: Number(silaboId),
-          docenteId: Number(docenteId),
-          numeroSeccion: Number(p.numeroSeccion),
-          puedeEditar: true,
-          puedeComentar: false,
-          fechaLimite: fechaLimite.toISOString(),
-          bloqueadoPorEstado: false, // por defecto false al registrar
-        })),
-      )
+      .values(permisosAInsertar)
       .returning();
 
     return insertados;
   }
+
   async findPermissionsByDocenteId(docenteId: number) {
     const result = await this.db
-      .select({ numeroSeccion: silaboSeccionPermiso.numeroSeccion })
+      .select({
+        numeroSeccion: silaboSeccionPermiso.numeroSeccion,
+      })
       .from(silaboSeccionPermiso)
       .where(eq(silaboSeccionPermiso.docenteId, docenteId));
+
     return result;
+  }
+
+  async findEnabledSectionNumbers(
+    docenteId: number,
+    silaboId: number,
+  ): Promise<number[]> {
+    const now = new Date();
+
+    const rows = await this.db
+      .select({
+        numeroSeccion: silaboSeccionPermiso.numeroSeccion,
+        fechaLimite: silaboSeccionPermiso.fechaLimite,
+        puedeEditar: silaboSeccionPermiso.puedeEditar,
+        bloqueadoPorEstado: silaboSeccionPermiso.bloqueadoPorEstado,
+      })
+      .from(silaboSeccionPermiso)
+      .where(
+        and(
+          eq(silaboSeccionPermiso.silaboId, Number(silaboId)),
+          eq(silaboSeccionPermiso.docenteId, Number(docenteId)),
+          eq(silaboSeccionPermiso.puedeEditar, true),
+          eq(silaboSeccionPermiso.bloqueadoPorEstado, false),
+        ),
+      );
+
+    return rows
+      .filter((row) => {
+        if (!row.fechaLimite) return true;
+
+        const fechaLimite = new Date(row.fechaLimite);
+
+        if (Number.isNaN(fechaLimite.getTime())) return true;
+
+        return fechaLimite >= now;
+      })
+      .map((row) => Number(row.numeroSeccion))
+      .filter((numeroSeccion) => Number.isFinite(numeroSeccion));
+  }
+
+  async findPermissionsByDocenteIdAndSilaboId(
+    docenteId: number,
+    silaboId: number,
+  ) {
+    const sections = await this.findEnabledSectionNumbers(docenteId, silaboId);
+
+    return sections.map((numeroSeccion) => ({ numeroSeccion }));
   }
 }
 

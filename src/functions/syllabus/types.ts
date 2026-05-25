@@ -1,46 +1,68 @@
 // types.ts
 import { boolean, int, z } from "zod";
 
+const SHORT_TEXT_MAX = 255;
+const MEDIUM_TEXT_MAX = 1000;
+const LONG_TEXT_MAX = 6000;
+const OBSERVATION_MAX = 2000;
+const nonEmptyShortText = (label: string) =>
+  z.string().trim().min(1, `${label} es obligatorio`).max(SHORT_TEXT_MAX);
+const optionalShortText = z.string().trim().max(SHORT_TEXT_MAX).optional();
+const optionalMediumText = z.string().trim().max(MEDIUM_TEXT_MAX).optional();
+const optionalLongText = z.string().trim().max(LONG_TEXT_MAX).optional();
+const nonNegativeInt = z.number().int().nonnegative();
+
 //---------------------------
 export const SyllabusCreateSchema = z.object({
-  nombreAsignatura: z.string(),
-  departamentoAcademico: z.string(),
-  escuelaProfesional: z.string(),
-  programaAcademico: z.string(),
-  semestreAcademico: z.string(),
-  tipoAsignatura: z.string(),
-  tipoEstudios: z.string(),
-  modalidad: z.string(),
-  codigoAsignatura: z.string(),
-  ciclo: z.string(),
-  requisitos: z.string(),
+  asignadoADocenteId: z.coerce.number().optional(),
+  asignado_a_docente_id: z.number().optional(),
+  docenteId: z.coerce.number().optional(),
+
+  creadoPorDocenteId: z.coerce.number().optional(),
+  actualizadoPorDocenteId: z.coerce.number().optional(),
+  nombreAsignatura: nonEmptyShortText("El nombre de asignatura"),
+  departamentoAcademico: nonEmptyShortText("El departamento académico"),
+  escuelaProfesional: nonEmptyShortText("La escuela profesional"),
+  programaAcademico: nonEmptyShortText("El programa académico"),
+  semestreAcademico: nonEmptyShortText("El semestre académico"),
+  tipoAsignatura: nonEmptyShortText("El tipo de asignatura"),
+  tipoEstudios: nonEmptyShortText("El tipo de estudios"),
+  modalidad: nonEmptyShortText("La modalidad"),
+  codigoAsignatura: nonEmptyShortText("El código de asignatura"),
+  ciclo: nonEmptyShortText("El ciclo"),
+  requisitos: z.string().trim().max(MEDIUM_TEXT_MAX),
 
   // 🔹 Campos de horas
-  horasTeoria: z.number(),
-  horasPractica: z.number(),
-  horasLaboratorio: z.number().nullable().optional(),
-  horasTotales: z.number(),
+  horasTeoria: nonNegativeInt,
+  horasPractica: nonNegativeInt,
+  horasLaboratorio: nonNegativeInt.nullable().optional(),
+  horasTotales: nonNegativeInt,
 
-  horasTeoriaLectivaPresencial: z.number().nullable().optional(),
-  horasTeoriaLectivaDistancia: z.number().nullable().optional(),
-  horasTeoriaNoLectivaPresencial: z.number().nullable().optional(),
-  horasTeoriaNoLectivaDistancia: z.number().nullable().optional(),
+  horasTeoriaLectivaPresencial: nonNegativeInt.nullable().optional(),
+  horasTeoriaLectivaDistancia: nonNegativeInt.nullable().optional(),
+  horasTeoriaNoLectivaPresencial: nonNegativeInt.nullable().optional(),
+  horasTeoriaNoLectivaDistancia: nonNegativeInt.nullable().optional(),
 
-  horasPracticaLectivaPresencial: z.number().nullable().optional(),
-  horasPracticaLectivaDistancia: z.number().nullable().optional(),
-  horasPracticaNoLectivaPresencial: z.number().nullable().optional(),
-  horasPracticaNoLectivaDistancia: z.number().nullable().optional(),
+  horasPracticaLectivaPresencial: nonNegativeInt.nullable().optional(),
+  horasPracticaLectivaDistancia: nonNegativeInt.nullable().optional(),
+  horasPracticaNoLectivaPresencial: nonNegativeInt.nullable().optional(),
+  horasPracticaNoLectivaDistancia: nonNegativeInt.nullable().optional(),
 
   // 🔹 Campos de créditos
-  creditosTeoria: z.number(),
-  creditosPractica: z.number(),
-  creditosTotales: z.number(),
+  creditosTeoria: nonNegativeInt,
+  creditosPractica: nonNegativeInt,
+  creditosTotales: nonNegativeInt,
+  estadoRevision: optionalShortText,
 });
 
 export const SumillaSchema = z.object({
   sumilla: z
     .string()
+    .trim()
     .min(1, { message: "La sumilla es obligatoria y debe ser texto" })
+    .max(LONG_TEXT_MAX, {
+      message: `La sumilla no debe superar ${LONG_TEXT_MAX} caracteres`,
+    })
     .refine((val) => val.trim().split(/\s+/).length >= 80, {
       message: "La sumilla debe tener al menos 80 palabras",
     }),
@@ -92,7 +114,11 @@ export const CreateComponentsSchema = z.object({
     .array(
       z.object({
         id: IdSchema.optional(),
-        text: z.string().trim().min(1, "El campo 'text' es obligatorio"),
+        text: z
+          .string()
+          .trim()
+          .min(1, "El campo 'text' es obligatorio")
+          .max(MEDIUM_TEXT_MAX),
         code: CodeSchemaComponent.optional(), // ← tiene code
         order: OrderSchema,
       }),
@@ -107,7 +133,11 @@ export const CreateAttitudesSchema = z.object({
     .array(
       z.object({
         id: IdSchema.optional(),
-        text: z.string().min(1, "El campo 'text' es obligatorio"),
+        text: z
+          .string()
+          .trim()
+          .min(1, "El campo 'text' es obligatorio")
+          .max(MEDIUM_TEXT_MAX),
         code: CodeSchemaAttitude.optional(),
         order: OrderSchema,
       }),
@@ -123,11 +153,19 @@ export const UpsertCompetenciesSchema = z
       .array(
         z.object({
           id: IdSchema.optional(),
-          text: z.string().trim().min(1, "Deberias completar el campo 'text' "),
+          text: z
+            .string()
+            .trim()
+            .min(1, "Deberias completar el campo 'text' ")
+            .max(MEDIUM_TEXT_MAX),
           // aquí puedes dejar solo letras/números simples:
           code: z
             .union([
-              z.string().trim().min(1, "El campo 'code' es obligatorio"),
+              z
+                .string()
+                .trim()
+                .min(1, "El campo 'code' es obligatorio")
+                .max(20),
               z.number(),
             ])
             .transform((v) => v.toString().trim())
@@ -147,8 +185,10 @@ export const ContributionCreateSchema = z.object({
   syllabusId: z.number().min(1, { message: "El ID del sílabo es obligatorio" }),
   resultadoProgramaCodigo: z
     .string()
-    .min(1, { message: "El código del resultado del programa es obligatorio" }),
-  resultadoProgramaDescripcion: z.string().optional(),
+    .trim()
+    .min(1, { message: "El código del resultado del programa es obligatorio" })
+    .max(20),
+  resultadoProgramaDescripcion: optionalLongText,
   aporteValor: z
     .enum(["K", "R", ""], {
       message: "El aporte solo puede ser 'K', 'R' o vacío",
@@ -316,22 +356,53 @@ export type CompleteSyllabusResponse = z.infer<
 /* ========================================
    SECCIÓN VIII: FUENTES DE CONSULTA
    ======================================== */
+const FuenteTipoSchema = z
+  .enum([
+    "LIBRO",
+    "ART",
+    "WEB",
+    "libro",
+    "articulo",
+    "recurso_electronico",
+    "otro",
+  ])
+  .transform((value) => {
+    if (value === "libro") return "LIBRO";
+    if (value === "articulo") return "ART";
+    if (value === "recurso_electronico") return "WEB";
+    if (value === "otro") return "ART";
+    return value;
+  });
+
 export const FuenteCreateSchema = z.object({
-  tipo: z.enum(["libro", "articulo", "recurso_electronico", "otro"]),
-  autores: z.string().optional(),
+  tipo: FuenteTipoSchema,
+  autores: z
+    .string()
+    .trim()
+    .min(1, "El autor o fuente es obligatorio")
+    .max(MEDIUM_TEXT_MAX),
   anio: z.number().int().min(1900).max(2100).optional(),
-  titulo: z.string().min(1, "El título es obligatorio"),
-  editorialRevista: z.string().optional(),
-  ciudad: z.string().optional(),
-  isbnIssn: z.string().optional(),
-  doiUrl: z.string().url().optional().or(z.literal("")),
-  notas: z.string().optional(),
+  titulo: z
+    .string()
+    .trim()
+    .min(1, "El título es obligatorio")
+    .max(MEDIUM_TEXT_MAX),
+  editorialRevista: optionalShortText,
+  ciudad: optionalShortText,
+  isbnIssn: optionalShortText,
+  doiUrl: z
+    .string()
+    .trim()
+    .url("La URL no tiene un formato válido")
+    .optional()
+    .or(z.literal("")),
+  notas: optionalMediumText,
 });
 
 export const FuenteUpdateSchema = FuenteCreateSchema.partial();
 
-export type FuenteCreate = z.infer<typeof FuenteCreateSchema>;
-export type FuenteUpdate = z.infer<typeof FuenteUpdateSchema>;
+export type FuenteCreate = z.output<typeof FuenteCreateSchema>;
+export type FuenteUpdate = z.output<typeof FuenteUpdateSchema>;
 
 /* ========================================
    SECCIÓN IV: UNIDADES (PROGRAMACIÓN DE CONTENIDOS)
@@ -342,9 +413,9 @@ export const UnidadSemanaSchema = z.object({
   id: z.number().int().optional(),
   silaboUnidadId: z.number().int().optional(),
   semana: z.number().int().min(1).max(16),
-  contenidosConceptuales: z.string().optional().nullable(),
-  contenidosProcedimentales: z.string().optional().nullable(),
-  actividadesAprendizaje: z.string().optional().nullable(),
+  contenidosConceptuales: optionalLongText.nullable(),
+  contenidosProcedimentales: optionalLongText.nullable(),
+  actividadesAprendizaje: optionalLongText.nullable(),
   horasLectivasTeoria: z.number().int().nonnegative().default(0),
   horasLectivasPractica: z.number().int().nonnegative().default(0),
   horasNoLectivasTeoria: z.number().int().nonnegative().default(0),
@@ -354,14 +425,18 @@ export const UnidadSemanaSchema = z.object({
 });
 
 export const UnidadCreateSchema = z.object({
-  numero: z.number().int().positive(),
-  titulo: z.string().min(1, "El título es obligatorio"),
-  capacidadesText: z.string().optional(),
-  semanaInicio: z.number().int().positive().optional(),
-  semanaFin: z.number().int().positive().optional(),
-  contenidosConceptuales: z.string().optional(),
-  contenidosProcedimentales: z.string().optional(),
-  actividadesAprendizaje: z.string().optional(),
+  numero: z.number().int().min(1).max(16),
+  titulo: z
+    .string()
+    .trim()
+    .min(1, "El título es obligatorio")
+    .max(SHORT_TEXT_MAX),
+  capacidadesText: optionalLongText,
+  semanaInicio: z.number().int().min(1).max(16).optional(),
+  semanaFin: z.number().int().min(1).max(16).optional(),
+  contenidosConceptuales: optionalLongText,
+  contenidosProcedimentales: optionalLongText,
+  actividadesAprendizaje: optionalLongText,
   horasLectivasTeoria: z.number().int().nonnegative().optional(),
   horasLectivasPractica: z.number().int().nonnegative().optional(),
   horasNoLectivasTeoria: z.number().int().nonnegative().optional(),
@@ -401,33 +476,34 @@ export type UnidadComplete = z.infer<typeof UnidadCompleteSchema>;
    SECCIÓN I: DATOS GENERALES (UPDATE)
    ======================================== */
 export const DatosGeneralesUpdateSchema = z.object({
-  departamentoAcademico: z.string().optional(),
-  escuelaProfesional: z.string().optional(),
-  programaAcademico: z.string().optional(),
-  areaCurricular: z.string().optional(),
-  cursoCodigo: z.string().optional(),
-  cursoNombre: z.string().optional(),
-  semestreAcademico: z.string().optional(),
-  tipoAsignatura: z.string().optional(),
-  tipoDeEstudios: z.string().optional(),
-  modalidadDeAsignatura: z.string().optional(),
-  formatoDeCurso: z.string().optional(),
-  ciclo: z.string().optional(),
-  requisitos: z.string().optional(),
-  horasTeoria: z.number().int().nonnegative().optional(),
-  horasPractica: z.number().int().nonnegative().optional(),
-  horasLaboratorio: z.number().int().nonnegative().optional(),
-  horasTotales: z.number().int().nonnegative().optional(),
-  creditosTotales: z.number().int().nonnegative().optional(),
+  departamentoAcademico: optionalShortText,
+  escuelaProfesional: optionalShortText,
+  programaAcademico: optionalShortText,
+  areaCurricular: optionalShortText,
+  cursoCodigo: optionalShortText,
+  cursoNombre: optionalShortText,
+  semestreAcademico: optionalShortText,
+  tipoAsignatura: optionalShortText,
+  tipoDeEstudios: optionalShortText,
+  modalidadDeAsignatura: optionalShortText,
+  formatoDeCurso: optionalShortText,
+  ciclo: optionalShortText,
+  requisitos: optionalMediumText,
+  horasTeoria: nonNegativeInt.optional(),
+  horasPractica: nonNegativeInt.optional(),
+  horasLaboratorio: nonNegativeInt.optional(),
+  horasTotales: nonNegativeInt.optional(),
+  creditosTotales: nonNegativeInt.optional(),
 });
 
 export const DesaprobarSilabo = z.object({
   silaboId: z.number().int().positive(),
+  docenteId: z.number().int().positive().optional(),
   observaciones: z.array(
     z.object({
       numeroSeccion: int(),
-      nombreSeccion: z.string(),
-      comentario: z.string(),
+      nombreSeccion: z.string().trim().min(1).max(SHORT_TEXT_MAX),
+      comentario: z.string().trim().max(OBSERVATION_MAX),
       estado: z.enum(["APROBADO", "DESAPROBADO"]).optional(), // Opcional porque usamos valor fijo en backend
     }),
   ),
@@ -441,17 +517,33 @@ export type DatosGeneralesUpdate = z.infer<typeof DatosGeneralesUpdateSchema>;
 
 // Variable individual de la fórmula
 export const FormulaVariableSchema = z.object({
-  codigo: z.string().min(1, "El código de la variable es requerido"),
-  nombre: z.string().min(1, "El nombre de la variable es requerido"),
-  tipo: z.string().default(""),
-  descripcion: z.string().optional(),
+  codigo: z
+    .string()
+    .trim()
+    .min(1, "El código de la variable es requerido")
+    .max(20),
+  nombre: z
+    .string()
+    .trim()
+    .min(1, "El nombre de la variable es requerido")
+    .max(SHORT_TEXT_MAX),
+  tipo: z.string().trim().max(SHORT_TEXT_MAX).default(""),
+  descripcion: optionalMediumText,
   orden: z.number().int().nonnegative().optional(),
 });
 
 // Subfórmula (expresión intermedia)
 export const FormulaSubformulaSchema = z.object({
-  variableCodigo: z.string().min(1, "El código de la variable es requerido"),
-  expresion: z.string().min(1, "La expresión es requerida"),
+  variableCodigo: z
+    .string()
+    .trim()
+    .min(1, "El código de la variable es requerido")
+    .max(20),
+  expresion: z
+    .string()
+    .trim()
+    .min(1, "La expresión es requerida")
+    .max(MEDIUM_TEXT_MAX),
 });
 
 // Mapeo de variable a plan de evaluación
@@ -466,12 +558,12 @@ export const FormulaVariablePlanMappingSchema = z.object({
 // Plan de evaluación (componente de evaluación)
 export const PlanEvaluacionSchema = z.object({
   id: z.number().int().positive(),
-  componenteNombre: z.string(),
-  instrumentoNombre: z.string().nullable(),
-  semana: z.number().int().nullable(),
+  componenteNombre: z.string().trim().max(SHORT_TEXT_MAX),
+  instrumentoNombre: z.string().trim().max(SHORT_TEXT_MAX).nullable(),
+  semana: z.number().int().min(1).max(16).nullable(),
   fecha: z.string().nullable(),
-  instrucciones: z.string().nullable(),
-  rubricaUrl: z.string().nullable(),
+  instrucciones: z.string().trim().max(MEDIUM_TEXT_MAX).nullable(),
+  rubricaUrl: z.string().trim().url().nullable().or(z.literal("")),
 });
 
 // Variable con su mapeo al plan
@@ -496,11 +588,21 @@ export const FormulaEvaluacionCompleteSchema = z.object({
 // Schema para crear una nueva fórmula (POST)
 export const FormulaEvaluacionCreateSchema = z.object({
   silaboId: z.number().int().positive("ID del sílabo requerido"),
-  nombreRegla: z.string().min(1, "El nombre de la regla es requerido"),
+  nombreRegla: z
+    .string()
+    .trim()
+    .min(1, "El nombre de la regla es requerido")
+    .max(SHORT_TEXT_MAX),
   variableFinalCodigo: z
     .string()
-    .min(1, "El código de la variable final es requerido"),
-  expresionFinal: z.string().min(1, "La expresión final es requerida"),
+    .trim()
+    .min(1, "El código de la variable final es requerido")
+    .max(20),
+  expresionFinal: z
+    .string()
+    .trim()
+    .min(1, "La expresión final es requerida")
+    .max(MEDIUM_TEXT_MAX),
   activo: z.boolean().default(true),
   variables: z
     .array(FormulaVariableSchema)
@@ -514,9 +616,9 @@ export const FormulaEvaluacionCreateSchema = z.object({
 
 // Schema para actualizar una fórmula existente (PUT)
 export const FormulaEvaluacionUpdateSchema = z.object({
-  nombreRegla: z.string().min(1).optional(),
-  variableFinalCodigo: z.string().min(1).optional(),
-  expresionFinal: z.string().min(1).optional(),
+  nombreRegla: z.string().trim().min(1).max(SHORT_TEXT_MAX).optional(),
+  variableFinalCodigo: z.string().trim().min(1).max(20).optional(),
+  expresionFinal: z.string().trim().min(1).max(MEDIUM_TEXT_MAX).optional(),
   activo: z.boolean().optional(),
   variables: z.array(FormulaVariableSchema).optional(),
   subformulas: z.array(FormulaSubformulaSchema).optional(),
