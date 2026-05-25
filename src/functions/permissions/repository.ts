@@ -34,12 +34,29 @@ export class PermissionsRepository {
     return result;
   }
 
+  async findDocenteIdByCorreo(correo: string): Promise<number | null> {
+    const email = String(correo ?? "")
+      .trim()
+      .toLowerCase();
+
+    if (!email) return null;
+
+    const result = await this.db
+      .select({ id: docente.id })
+      .from(docente)
+      .where(eq(docente.correo, email))
+      .limit(1);
+
+    const id = Number(result[0]?.id);
+
+    return Number.isFinite(id) && id > 0 ? id : null;
+  }
+
   async savePermissionsBySilaboIdAndDocenteId(
     silaboId: number,
     docenteId: number,
-    permisos: any[],
+    permisos: Array<{ numeroSeccion: number }>,
   ) {
-    // Eliminar permisos previos del mismo docente/sílabo
     await this.db
       .delete(silaboSeccionPermiso)
       .where(
@@ -81,11 +98,59 @@ export class PermissionsRepository {
 
   async findPermissionsByDocenteId(docenteId: number) {
     const result = await this.db
-      .select({ numeroSeccion: silaboSeccionPermiso.numeroSeccion })
+      .select({
+        numeroSeccion: silaboSeccionPermiso.numeroSeccion,
+      })
       .from(silaboSeccionPermiso)
       .where(eq(silaboSeccionPermiso.docenteId, docenteId));
 
     return result;
+  }
+
+  async findEnabledSectionNumbers(
+    docenteId: number,
+    silaboId: number,
+  ): Promise<number[]> {
+    const now = new Date();
+
+    const rows = await this.db
+      .select({
+        numeroSeccion: silaboSeccionPermiso.numeroSeccion,
+        fechaLimite: silaboSeccionPermiso.fechaLimite,
+        puedeEditar: silaboSeccionPermiso.puedeEditar,
+        bloqueadoPorEstado: silaboSeccionPermiso.bloqueadoPorEstado,
+      })
+      .from(silaboSeccionPermiso)
+      .where(
+        and(
+          eq(silaboSeccionPermiso.silaboId, Number(silaboId)),
+          eq(silaboSeccionPermiso.docenteId, Number(docenteId)),
+          eq(silaboSeccionPermiso.puedeEditar, true),
+          eq(silaboSeccionPermiso.bloqueadoPorEstado, false),
+        ),
+      );
+
+    return rows
+      .filter((row) => {
+        if (!row.fechaLimite) return true;
+
+        const fechaLimite = new Date(row.fechaLimite);
+
+        if (Number.isNaN(fechaLimite.getTime())) return true;
+
+        return fechaLimite >= now;
+      })
+      .map((row) => Number(row.numeroSeccion))
+      .filter((numeroSeccion) => Number.isFinite(numeroSeccion));
+  }
+
+  async findPermissionsByDocenteIdAndSilaboId(
+    docenteId: number,
+    silaboId: number,
+  ) {
+    const sections = await this.findEnabledSectionNumbers(docenteId, silaboId);
+
+    return sections.map((numeroSeccion) => ({ numeroSeccion }));
   }
 }
 
