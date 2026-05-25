@@ -17,20 +17,20 @@ export const SyllabusCreateSchema = z.object({
   asignadoADocenteId: z.coerce.number().optional(),
   asignado_a_docente_id: z.number().optional(),
   docenteId: z.coerce.number().optional(),
-  
+
   creadoPorDocenteId: z.coerce.number().optional(),
   actualizadoPorDocenteId: z.coerce.number().optional(),
-  nombreAsignatura: z.string(),
-  departamentoAcademico: z.string(),
-  escuelaProfesional: z.string(),
-  programaAcademico: z.string(),
-  semestreAcademico: z.string(),
-  tipoAsignatura: z.string(),
-  tipoEstudios: z.string(),
-  modalidad: z.string(),
-  codigoAsignatura: z.string(),
-  ciclo: z.string(),
-  requisitos: z.string(),
+  nombreAsignatura: nonEmptyShortText("El nombre de asignatura"),
+  departamentoAcademico: nonEmptyShortText("El departamento académico"),
+  escuelaProfesional: nonEmptyShortText("La escuela profesional"),
+  programaAcademico: nonEmptyShortText("El programa académico"),
+  semestreAcademico: nonEmptyShortText("El semestre académico"),
+  tipoAsignatura: nonEmptyShortText("El tipo de asignatura"),
+  tipoEstudios: nonEmptyShortText("El tipo de estudios"),
+  modalidad: nonEmptyShortText("La modalidad"),
+  codigoAsignatura: nonEmptyShortText("El código de asignatura"),
+  ciclo: nonEmptyShortText("El ciclo"),
+  requisitos: z.string().trim().max(MEDIUM_TEXT_MAX),
 
   // 🔹 Campos de horas
   horasTeoria: nonNegativeInt,
@@ -43,11 +43,10 @@ export const SyllabusCreateSchema = z.object({
   horasTeoriaNoLectivaPresencial: nonNegativeInt.nullable().optional(),
   horasTeoriaNoLectivaDistancia: nonNegativeInt.nullable().optional(),
 
-  horasPracticaLectivaPresencial: z.number().nullable().optional(),
-  horasPracticaLectivaDistancia: z.number().nullable().optional(),
-  horasPracticaNoLectivaPresencial: z.number().nullable().optional(),
-  horasPracticaNoLectivaDistancia: z.number().nullable().optional(),
-  
+  horasPracticaLectivaPresencial: nonNegativeInt.nullable().optional(),
+  horasPracticaLectivaDistancia: nonNegativeInt.nullable().optional(),
+  horasPracticaNoLectivaPresencial: nonNegativeInt.nullable().optional(),
+  horasPracticaNoLectivaDistancia: nonNegativeInt.nullable().optional(),
 
   // 🔹 Campos de créditos
   creditosTeoria: nonNegativeInt,

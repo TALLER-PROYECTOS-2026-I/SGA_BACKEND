@@ -221,86 +221,79 @@ export class SyllabusRepository extends BaseRepository {
     };
   }
 
-    async create(syllabusData: z.infer<typeof SyllabusCreateSchema>) {
-      const docenteId =
-        Number(
-          (syllabusData as any).asignadoADocenteId ??
-            (syllabusData as any).asignado_a_docente_id ??
-            (syllabusData as any).docenteId,
-        ) || null;
+  async create(syllabusData: z.infer<typeof SyllabusCreateSchema>) {
+    const rawDocenteId = Number(
+      syllabusData.asignadoADocenteId ??
+        syllabusData.asignado_a_docente_id ??
+        syllabusData.docenteId ??
+        syllabusData.creadoPorDocenteId,
+    );
+    const docenteId =
+      Number.isFinite(rawDocenteId) && rawDocenteId > 0 ? rawDocenteId : null;
 
-        console.log("SYLLABUS DATA CREATE:", syllabusData);
-        console.log("DOCENTE ID CREATE:", docenteId);
+    // Sin docente válido siempre BORRADOR; no confiar en estadoRevision del payload.
+    const estadoRevision = docenteId ? "ASIGNADO" : "BORRADOR";
 
-      const result = await this.db
-        .insert(silabo)
-        .values({
-          departamentoAcademico: syllabusData.departamentoAcademico,
-          escuelaProfesional: syllabusData.escuelaProfesional,
-          programaAcademico: syllabusData.programaAcademico,
-          cursoCodigo: syllabusData.codigoAsignatura,
-          cursoNombre: syllabusData.nombreAsignatura,
-          semestreAcademico: syllabusData.semestreAcademico,
-          tipoAsignatura: syllabusData.tipoAsignatura,
-          tipoDeEstudios: syllabusData.tipoEstudios,
-          modalidadDeAsignatura: syllabusData.modalidad,
-          ciclo: syllabusData.ciclo,
+    const result = await this.db
+      .insert(silabo)
+      .values({
+        departamentoAcademico: syllabusData.departamentoAcademico,
+        escuelaProfesional: syllabusData.escuelaProfesional,
+        programaAcademico: syllabusData.programaAcademico,
+        cursoCodigo: syllabusData.codigoAsignatura,
+        cursoNombre: syllabusData.nombreAsignatura,
+        semestreAcademico: syllabusData.semestreAcademico,
+        tipoAsignatura: syllabusData.tipoAsignatura,
+        tipoDeEstudios: syllabusData.tipoEstudios,
+        modalidadDeAsignatura: syllabusData.modalidad,
+        ciclo: syllabusData.ciclo,
 
-          requisitos: syllabusData.requisitos || null,
+        requisitos: syllabusData.requisitos || null,
 
-          horasTeoria: syllabusData.horasTeoria ?? null,
-          horasPractica: syllabusData.horasPractica ?? null,
-          horasLaboratorio: syllabusData.horasLaboratorio ?? null,
+        horasTeoria: syllabusData.horasTeoria ?? null,
+        horasPractica: syllabusData.horasPractica ?? null,
+        horasLaboratorio: syllabusData.horasLaboratorio ?? null,
 
-          horasTeoriaLectivaPresencial:
-            syllabusData.horasTeoriaLectivaPresencial ?? null,
-          horasTeoriaLectivaDistancia:
-            syllabusData.horasTeoriaLectivaDistancia ?? null,
-          horasTeoriaNoLectivaPresencial:
-            syllabusData.horasTeoriaNoLectivaPresencial ?? null,
-          horasTeoriaNoLectivaDistancia:
-            syllabusData.horasTeoriaNoLectivaDistancia ?? null,
+        horasTeoriaLectivaPresencial:
+          syllabusData.horasTeoriaLectivaPresencial ?? null,
+        horasTeoriaLectivaDistancia:
+          syllabusData.horasTeoriaLectivaDistancia ?? null,
+        horasTeoriaNoLectivaPresencial:
+          syllabusData.horasTeoriaNoLectivaPresencial ?? null,
+        horasTeoriaNoLectivaDistancia:
+          syllabusData.horasTeoriaNoLectivaDistancia ?? null,
 
-          horasPracticaLectivaPresencial:
-            syllabusData.horasPracticaLectivaPresencial ?? null,
-          horasPracticaLectivaDistancia:
-            syllabusData.horasPracticaLectivaDistancia ?? null,
-          horasPracticaNoLectivaPresencial:
-            syllabusData.horasPracticaNoLectivaPresencial ?? null,
-          horasPracticaNoLectivaDistancia:
-            syllabusData.horasPracticaNoLectivaDistancia ?? null,
+        horasPracticaLectivaPresencial:
+          syllabusData.horasPracticaLectivaPresencial ?? null,
+        horasPracticaLectivaDistancia:
+          syllabusData.horasPracticaLectivaDistancia ?? null,
+        horasPracticaNoLectivaPresencial:
+          syllabusData.horasPracticaNoLectivaPresencial ?? null,
+        horasPracticaNoLectivaDistancia:
+          syllabusData.horasPracticaNoLectivaDistancia ?? null,
 
-          creditosTeoria: syllabusData.creditosTeoria ?? null,
-          creditosPractica: syllabusData.creditosPractica ?? null,
+        creditosTeoria: syllabusData.creditosTeoria ?? null,
+        creditosPractica: syllabusData.creditosPractica ?? null,
 
-          creadoPorDocenteId: docenteId,
-          actualizadoPorDocenteId: docenteId,
-          asignadoADocenteId: docenteId,
-          estadoRevision: "ASIGNADO",
-        })
-        .returning({ id: silabo.id });
+        creadoPorDocenteId: docenteId,
+        actualizadoPorDocenteId: docenteId,
+        asignadoADocenteId: docenteId,
+        estadoRevision,
+      })
+      .returning({ id: silabo.id });
 
-      const silaboId = result[0].id;
+    const silaboId = result[0].id;
 
-      if (docenteId) {
-        await this.db
-          .update(silabo)
-          .set({
-            asignadoADocenteId: docenteId,
-            creadoPorDocenteId: docenteId,
-            actualizadoPorDocenteId: docenteId,
-          })
-          .where(eq(silabo.id, silaboId));
-
-        await this.db.insert(silaboDocente).values({
-          silaboId,
-          docenteId,
-          rol: "DOCENTE",
-        });
-      }
-
-      return silaboId;
+    if (docenteId) {
+      await this.db.insert(silaboDocente).values({
+        silaboId,
+        docenteId,
+        rol: "DOCENTE",
+      });
     }
+
+    return silaboId;
+  }
 
   async updateSumilla(silaboId: number, sumilla: string) {
     await this.db
