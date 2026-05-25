@@ -1918,7 +1918,7 @@ export class SyllabusService {
   async getSyllabusCatalog() {
     return await syllabusRepository.getSyllabusCatalog();
   }
-
+  
   // ---------- SECCIÓN I: DATOS GENERALES ----------
   async updateDatosGenerales(id: number, data: DatosGeneralesUpdate) {
     await this.assertSyllabusCanBeEdited(id);

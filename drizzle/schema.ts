@@ -273,8 +273,8 @@ export const silabo = pgTable(
     actualizadoPorDocenteId: integer("actualizado_por_docente_id"),
     createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
-    horasTotales: integer(),
-    creditosTotales: integer(),
+    horasTotales: integer("horas_totales"),
+    creditosTotales: integer("creditos_totales"),
   },
   (table) => [
     index("idx_silabo_estado").using(
@@ -463,7 +463,7 @@ export const planEvaluacionOferta = pgTable(
   (table) => [
     uniqueIndex("uq_plan_eval_silabo_componente").using(
       "btree",
-      table.silaboId.asc().nullsLast().op("text_ops"),
+      table.silaboId.asc().nullsLast().op("int4_ops"),
       table.componenteNombre.asc().nullsLast().op("text_ops"),
     ),
     foreignKey({
@@ -561,7 +561,7 @@ export const silaboFuente = pgTable(
       "btree",
       table.silaboId.asc().nullsLast().op("int4_ops"),
       table.titulo.asc().nullsLast().op("text_ops"),
-      table.anio.asc().nullsLast().op("text_ops"),
+      table.anio.asc().nullsLast().op("int4_ops"),
     ),
     foreignKey({
       columns: [table.silaboId],
