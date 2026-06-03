@@ -2,11 +2,12 @@ import { AppError } from "../../error";
 import { syllabusRepository } from "../syllabus/repository";
 import { teacherRepository } from "../teacher/repository";
 import { assignmentsRepository } from "./repository";
-import type {
-  CreateAssignmentRequest,
-  SilaboFilters,
-  SilaboListItem,
-  CourseSimple,
+import {
+  SYLLABUS_ALREADY_ASSIGNED_MESSAGE,
+  type CreateAssignmentRequest,
+  type SilaboFilters,
+  type SilaboListItem,
+  type CourseSimple,
 } from "./types";
 
 class AssignmentsService {
@@ -14,8 +15,8 @@ class AssignmentsService {
     return await assignmentsRepository.getAll(filters);
   }
 
-  async getAllCourses(): Promise<CourseSimple[]> {
-    return await assignmentsRepository.getAllCourses();
+  async getAllCourses(options?: { sinAsignar?: boolean }): Promise<CourseSimple[]> {
+    return await assignmentsRepository.getAllCourses(options);
   }
 
   async create(assignmentPayload: CreateAssignmentRequest) {
@@ -43,11 +44,15 @@ class AssignmentsService {
       );
     }
 
-    if (syllabus.asignadoADocenteId === assignmentPayload.teacherId) {
+    const alreadyAssigned = await assignmentsRepository.hasDocenteForSilabo(
+      syllabus.id,
+    );
+
+    if (alreadyAssigned) {
       throw new AppError(
         "Conflicto de asignación",
-        "BAD_REQUEST",
-        "El docente no puede asignarse a sí mismo.",
+        "CONFLICT",
+        SYLLABUS_ALREADY_ASSIGNED_MESSAGE,
       );
     }
 

@@ -1,164 +1,164 @@
-# 📌 Proyecto Core-Gestion
+# 📘 Guía Git del Equipo
 
-Este proyecto utiliza **Azure Functions** en **Node.js** con conexión a **PostgreSQL** usando `pg`,
-gestiona variables de entorno con `dotenv` y aplica migraciones con **Drizzle ORM**.
+> Flujo de trabajo estándar para desarrollo y documentación de código.
 
 ---
 
-## 🛠 Requisitos previos
+## 📋 Tabla de Contenidos
 
-Antes de instalar y correr el proyecto, asegúrate de tener:
+- [Flujo de desarrollo (feature branches)](#-flujo-de-desarrollo-feature-branches)
+- [Cómo documentar código ya mergeado a dev](#-cómo-documentar-código-ya-mergeado-a-dev)
+- [Reglas de oro](#-reglas-de-oro)
 
-- **Node.js** v22.18.0  
-  [Descargar Node.js](https://nodejs.org/en/)  
-  Verificar versión:
+---
 
-  ```bash
-  node -v
-  ```
+## 🚀 Flujo de desarrollo (feature branches)
 
-- **Azure Functions Core Tools v4**
+Cada persona trabaja en su propia rama por funcionalidad (HU). Seguir estos pasos **en orden** evita el 90% de los conflictos.
 
-  ```powershell
-  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-  npm install -g azure-functions-core-tools@4 --unsafe-perm true
-  func --version
-  ```
-
-- **Azure CLI**  
-  Instalar desde [Azure CLI MSI (Windows 64bits)](https://learn.microsoft.com/es-es/cli/azure/install-azure-cli-windows?view=azure-cli-latest&pivots=msi)
-
-Dependencias principales instaladas en el proyecto:
-
-```json
-"dependencies": {
-  "@azure/functions": "^4.0.0",
-  "dotenv": "^17.2.1",
-  "pg": "^8.16.3"
-}
-```
-
-## 🚀 Despliegue y ejecución
-
-Para correr el proyecto en local:
+### Paso 1 — Partir siempre desde `dev` actualizado
 
 ```bash
-npm run start
+git checkout dev
+git pull origin dev
 ```
 
-En caso de errores, verificar que se compile la carpeta /dist y ejecutar:
+> ⚠️ Nunca crear una rama desde código desactualizado.
+
+---
+
+### Paso 2 — Crear tu rama con nombre descriptivo
 
 ```bash
-npm run start
-func start
+git checkout -b feature/nombre-de-la-hu
 ```
 
-Comando para generar credenciales en Azure clie (lideres - pruebas independientes), recomendacion: utilizar "azure functions consumption plan":
+**Ejemplos:**
 
 ```bash
-az ad sp create-for-rbac --name "github-actions-coregestion" --role "Contributor" --scopes "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>" --sdk-auth
+git checkout -b feature/login
+git checkout -b feature/dashboard
+git checkout -b feature/cambio-de-password
 ```
 
 ---
 
----
+### Paso 3 — Trabajar en tu código
 
-## ⚡ Scripts de inicialización configurados en el proyecto
-
-- **Instalar dependencias**
-
-  ```bash
-  npm install
-  ```
-
-- **Compilar proyecto**
-
-  ```bash
-  npm run build
-  ```
-
-- **Ejecutar en modo watch**
-
-  ```bash
-  npm run watch
-  ```
-
-- **Iniciar proyecto en local**
-
-  ```bash
-  npm run start
-  ```
-
-- **Verificar formato con Prettier**
-
-  ```bash
-  npm run format:check
-  ```
-
-- **Formatear con Prettier**
-
-  ```bash
-  npm run format:write
-  ```
-
-- **Ejecutar pruebas con Jest**
-  ```bash
-  npm run test
-  ```
-
----
-
-## ⚠️ Errores comunes y soluciones
-
-### 1. Error: `func : El término 'func' no se reconoce`
-
-➡️ Significa que no tienes instalado **Azure Functions Core Tools** o no está en el `PATH`.  
-✅ Solución: Reinstalar con:
+Desarrolla tu funcionalidad normalmente. Haz commits frecuentes y descriptivos:
 
 ```bash
-npm install -g azure-functions-core-tools@4 --unsafe-perm true
-```
-
-### 2. Error: `npm : El término 'npm' no se reconoce`
-
-➡️ Node.js no está instalado correctamente o no está agregado al `PATH`.  
-✅ Verificar instalación:
-
-```bash
-node -v
-npm -v
-```
-
-### 3. Error al ejecutar `func start` en PowerShell
-
-➡️ Restricción de ejecución de scripts en Windows.  
-✅ Ejecutar:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-
-npm uninstall azure-functions-core-tools
-npm install azure-functions-core-tools@4 --save-dev
+git add .
+git commit -m "feat: agrega validación de formulario en login"
 ```
 
 ---
 
-## Patron de diseño arquitectura
+### Paso 4 — Actualizar tu rama con lo último de `dev` (hacer esto cada día)
 
-Ademas definimos este patron de diseño del proy backend como:
-**Arquitectura Serverless basada en Controllers con Attribute-Based Routing sobre Azure Functions**
+Antes de seguir trabajando o de abrir un PR, traer los cambios nuevos de `dev`:
 
-manejamos
+```bash
+git fetch origin
+git rebase origin/dev
+```
 
-- Serverless MVC-Light con Decorators
+> 💡 Si hay conflictos, resolverlos, luego:
+> ```bash
+> git add .
+> git rebase --continue
+> ```
 
-- Framework de Controllers para Azure Functions
+---
 
-- Clean Controller Pattern aplicado en entorno Serverless
+### Paso 5 — Subir tu rama y abrir el PR
 
-## Creacion de schema automatico con drizzle
+```bash
+git push origin feature/nombre-de-la-hu
+```
 
-```powershell
-npx drizzle-kit introspect --config=drizzle.config.ts
+Luego abrir el **Pull Request** hacia `dev` desde la interfaz de GitHub.
+
+---
+
+### Flujo visual
 
 ```
+dev
+ ├── feature/login           → fetch+rebase diario → PR → dev ✅
+ ├── feature/dashboard       → fetch+rebase diario → PR → dev ✅
+ └── feature/cambio-password → fetch+rebase diario → PR → dev ✅
+```
+
+---
+
+## 📝 Cómo documentar código ya mergeado a `dev`
+
+Cuando el código ya fue mergeado a `dev` y las ramas originales están desactualizadas o eliminadas, **no tocar las ramas viejas**. Partir desde `dev` directamente.
+
+### Paso 1 — Cada quien crea su propia rama de documentación desde `dev`
+
+```bash
+git checkout dev
+git pull origin dev
+git checkout -b docs/comentarios-nombre-funcionalidad
+```
+
+**Ejemplos:**
+
+```bash
+git checkout -b docs/comentarios-login        # persona de login
+git checkout -b docs/comentarios-dashboard    # persona de dashboard
+git checkout -b docs/comentarios-password     # persona de password
+```
+
+---
+
+### Paso 2 — Comentar solo los archivos de tu funcionalidad
+
+Cada persona comenta **únicamente sus archivos**. No tocar archivos de otros para evitar conflictos.
+
+```bash
+# Ejemplo de comentario en una función
+git add src/login/authService.js
+git commit -m "docs: agrega comentarios a funciones de autenticación"
+```
+
+---
+
+### Paso 3 — Subir la rama y abrir el PR hacia `dev`
+
+```bash
+git push origin docs/comentarios-nombre-funcionalidad
+```
+
+Luego abrir el **Pull Request** hacia `dev`.
+
+---
+
+### Flujo visual
+
+```
+dev (con todo el código mergeado)
+ ├── docs/comentarios-login       → PR → dev ✅
+ ├── docs/comentarios-dashboard   → PR → dev ✅
+ └── docs/comentarios-password    → PR → dev ✅
+```
+
+> ✅ Con ramas separadas por persona, cada quien es independiente. Si uno se tarda, los demás no se bloquean.
+
+---
+
+## 🏆 Reglas de oro
+
+| Regla | Por qué importa |
+|---|---|
+| Siempre partir desde `dev` actualizado | Evita trabajar sobre código viejo |
+| `fetch` + `rebase` diario | Reduce conflictos al mínimo |
+| PRs pequeños y frecuentes | Más fácil de revisar y mergear |
+| Cada quien toca solo sus archivos | Evita pisar el trabajo de otros |
+| Comentar el código antes del PR | Evita tener que crear ramas de docs después |
+
+---
+
+> 📌 **Tip final:** Establecer como regla del equipo que todo PR debe incluir comentarios en las funciones nuevas antes de mergear a `dev`. Esto evita el problema de raíz.

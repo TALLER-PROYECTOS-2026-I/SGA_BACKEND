@@ -12,8 +12,9 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2022", "DOM"]
+    "types": ["node"],
+    "lib": ["ES2022", "DOM"],
   },
-  "include": ["src", "src/db"],
+  "include": ["src", "src/db", "drizzle.config.ts", "drizzle/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

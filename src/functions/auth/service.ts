@@ -49,7 +49,6 @@ class AuthService {
 
     const userEmail = msPayload.preferred_username;
     let userRecord = await authRepository.findUserByEmail(userEmail);
-    console.log("📚 [AuthService] User record found?", !!userRecord);
 
     if (userRecord) {
       await authRepository.updateLastAccess(userRecord.user.id, msPayload);
