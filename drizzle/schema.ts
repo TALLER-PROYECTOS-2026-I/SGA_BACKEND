@@ -107,6 +107,58 @@ export const docente = pgTable(
   ],
 );
 
+export const formulaCatalogo = pgTable(
+  "formula_catalogo",
+  {
+    id: serial().primaryKey().notNull(),
+    tipo: varchar().notNull(),
+    nombre: varchar().notNull(),
+    expresion: text().notNull(),
+    descripcion: text(),
+    variablesJson: json("variables_json"),
+    subformulasJson: json("subformulas_json"),
+    activo: boolean().default(true).notNull(),
+    creadoPorDocenteId: integer("creado_por_docente_id"),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.creadoPorDocenteId],
+      foreignColumns: [docente.id],
+      name: "formula_catalogo_creado_por_docente_id_fkey",
+    }),
+    check("formula_catalogo_tipo_check", sql`(tipo)::text IN ('PE', 'PF')`),
+  ],
+);
+
+export const curriculumCourseCatalog = pgTable(
+  "curriculum_course_catalog",
+  {
+    id: serial().primaryKey().notNull(),
+    periodo: varchar().notNull(),
+    codigo: varchar().notNull(),
+    nombre: varchar().notNull(),
+    ciclo: integer(),
+    creditos: integer().default(0).notNull(),
+    horasTeoria: integer("horas_teoria").default(0).notNull(),
+    horasPractica: integer("horas_practica").default(0).notNull(),
+    modalidad: varchar().default("PRESENCIAL").notNull(),
+    tipoCurso: varchar("tipo_curso"),
+    areaCurricular: varchar("area_curricular"),
+    prerrequisitos: json(),
+    activo: boolean().default(true).notNull(),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
+  },
+  (table) => [
+    unique("uq_curriculum_course_periodo_codigo").on(
+      table.periodo,
+      table.codigo,
+    ),
+  ],
+);
+
 export const silaboUnidad = pgTable(
   "silabo_unidad",
   {
@@ -305,6 +357,44 @@ export const silabo = pgTable(
   ],
 );
 
+export const syllabusVersions = pgTable(
+  "syllabus_versions",
+  {
+    id: serial().primaryKey().notNull(),
+    syllabusId: integer("syllabus_id").notNull(),
+    versionNumber: integer("version_number").notNull(),
+    snapshotJson: json("snapshot_json").notNull(),
+    status: varchar(),
+    modifiedBy: integer("modified_by"),
+    modifiedAt: timestamp("modified_at", { mode: "string" }).defaultNow(),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+  },
+  (table) => [
+    index("idx_syllabus_versions_syllabus").using(
+      "btree",
+      table.syllabusId.asc().nullsLast().op("int4_ops"),
+    ),
+    index("idx_syllabus_versions_modified_at").using(
+      "btree",
+      table.modifiedAt.asc().nullsLast().op("timestamp_ops"),
+    ),
+    foreignKey({
+      columns: [table.modifiedBy],
+      foreignColumns: [docente.id],
+      name: "syllabus_versions_modified_by_fkey",
+    }).onDelete("set null"),
+    foreignKey({
+      columns: [table.syllabusId],
+      foreignColumns: [silabo.id],
+      name: "syllabus_versions_syllabus_id_fkey",
+    }).onDelete("cascade"),
+    unique("uq_syllabus_versions_syllabus_number").on(
+      table.syllabusId,
+      table.versionNumber,
+    ),
+  ],
+);
+
 export const formulaEvaluacionSubformula = pgTable(
   "formula_evaluacion_subformula",
   {
@@ -463,7 +553,7 @@ export const planEvaluacionOferta = pgTable(
   (table) => [
     uniqueIndex("uq_plan_eval_silabo_componente").using(
       "btree",
-      table.silaboId.asc().nullsLast().op("text_ops"),
+      table.silaboId.asc().nullsLast().op("int4_ops"),
       table.componenteNombre.asc().nullsLast().op("text_ops"),
     ),
     foreignKey({
@@ -561,7 +651,7 @@ export const silaboFuente = pgTable(
       "btree",
       table.silaboId.asc().nullsLast().op("int4_ops"),
       table.titulo.asc().nullsLast().op("text_ops"),
-      table.anio.asc().nullsLast().op("text_ops"),
+      table.anio.asc().nullsLast().op("int4_ops"),
     ),
     foreignKey({
       columns: [table.silaboId],
