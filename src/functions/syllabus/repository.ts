@@ -1,5 +1,5 @@
 import { getDb } from "../../db";
-import { eq, and, sql, asc, inArray } from "drizzle-orm";
+import { eq, and, sql, asc, desc, inArray, type SQL } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../../../drizzle/schema";
 import {
@@ -221,81 +221,79 @@ export class SyllabusRepository extends BaseRepository {
     };
   }
 
-    async create(syllabusData: z.infer<typeof SyllabusCreateSchema>) {
-      const rawDocenteId = Number(
-        syllabusData.asignadoADocenteId ??
-          syllabusData.asignado_a_docente_id ??
-          syllabusData.docenteId ??
-          syllabusData.creadoPorDocenteId,
-      );
-      const docenteId =
-        Number.isFinite(rawDocenteId) && rawDocenteId > 0
-          ? rawDocenteId
-          : null;
+  async create(syllabusData: z.infer<typeof SyllabusCreateSchema>) {
+    const rawDocenteId = Number(
+      syllabusData.asignadoADocenteId ??
+        syllabusData.asignado_a_docente_id ??
+        syllabusData.docenteId ??
+        syllabusData.creadoPorDocenteId,
+    );
+    const docenteId =
+      Number.isFinite(rawDocenteId) && rawDocenteId > 0 ? rawDocenteId : null;
 
-      // Sin docente válido siempre BORRADOR; no confiar en estadoRevision del payload.
-      const estadoRevision = docenteId ? "ASIGNADO" : "BORRADOR";
+    // Sin docente válido siempre BORRADOR; no confiar en estadoRevision del payload.
+    const estadoRevision = docenteId ? "ASIGNADO" : "BORRADOR";
 
-      const result = await this.db
-        .insert(silabo)
-        .values({
-          departamentoAcademico: syllabusData.departamentoAcademico,
-          escuelaProfesional: syllabusData.escuelaProfesional,
-          programaAcademico: syllabusData.programaAcademico,
-          cursoCodigo: syllabusData.codigoAsignatura,
-          cursoNombre: syllabusData.nombreAsignatura,
-          semestreAcademico: syllabusData.semestreAcademico,
-          tipoAsignatura: syllabusData.tipoAsignatura,
-          tipoDeEstudios: syllabusData.tipoEstudios,
-          modalidadDeAsignatura: syllabusData.modalidad,
-          ciclo: syllabusData.ciclo,
+    const result = await this.db
+      .insert(silabo)
+      .values({
+        departamentoAcademico: syllabusData.departamentoAcademico,
+        escuelaProfesional: syllabusData.escuelaProfesional,
+        programaAcademico: syllabusData.programaAcademico,
+        cursoCodigo: syllabusData.codigoAsignatura,
+        cursoNombre: syllabusData.nombreAsignatura,
+        semestreAcademico: syllabusData.semestreAcademico,
+        tipoAsignatura: syllabusData.tipoAsignatura,
+        tipoDeEstudios: syllabusData.tipoEstudios,
+        modalidadDeAsignatura: syllabusData.modalidad,
+        ciclo: syllabusData.ciclo,
 
-          requisitos: syllabusData.requisitos || null,
+        requisitos: syllabusData.requisitos || null,
 
-          horasTeoria: syllabusData.horasTeoria ?? null,
-          horasPractica: syllabusData.horasPractica ?? null,
-          horasLaboratorio: syllabusData.horasLaboratorio ?? null,
+        horasTeoria: syllabusData.horasTeoria ?? null,
+        horasPractica: syllabusData.horasPractica ?? null,
+        horasLaboratorio: syllabusData.horasLaboratorio ?? null,
 
-          horasTeoriaLectivaPresencial:
-            syllabusData.horasTeoriaLectivaPresencial ?? null,
-          horasTeoriaLectivaDistancia:
-            syllabusData.horasTeoriaLectivaDistancia ?? null,
-          horasTeoriaNoLectivaPresencial:
-            syllabusData.horasTeoriaNoLectivaPresencial ?? null,
-          horasTeoriaNoLectivaDistancia:
-            syllabusData.horasTeoriaNoLectivaDistancia ?? null,
+        horasTeoriaLectivaPresencial:
+          syllabusData.horasTeoriaLectivaPresencial ?? null,
+        horasTeoriaLectivaDistancia:
+          syllabusData.horasTeoriaLectivaDistancia ?? null,
+        horasTeoriaNoLectivaPresencial:
+          syllabusData.horasTeoriaNoLectivaPresencial ?? null,
+        horasTeoriaNoLectivaDistancia:
+          syllabusData.horasTeoriaNoLectivaDistancia ?? null,
 
-          horasPracticaLectivaPresencial:
-            syllabusData.horasPracticaLectivaPresencial ?? null,
-          horasPracticaLectivaDistancia:
-            syllabusData.horasPracticaLectivaDistancia ?? null,
-          horasPracticaNoLectivaPresencial:
-            syllabusData.horasPracticaNoLectivaPresencial ?? null,
-          horasPracticaNoLectivaDistancia:
-            syllabusData.horasPracticaNoLectivaDistancia ?? null,
+        horasPracticaLectivaPresencial:
+          syllabusData.horasPracticaLectivaPresencial ?? null,
+        horasPracticaLectivaDistancia:
+          syllabusData.horasPracticaLectivaDistancia ?? null,
+        horasPracticaNoLectivaPresencial:
+          syllabusData.horasPracticaNoLectivaPresencial ?? null,
+        horasPracticaNoLectivaDistancia:
+          syllabusData.horasPracticaNoLectivaDistancia ?? null,
 
-          creditosTeoria: syllabusData.creditosTeoria ?? null,
-          creditosPractica: syllabusData.creditosPractica ?? null,
+        creditosTeoria: syllabusData.creditosTeoria ?? null,
+        creditosPractica: syllabusData.creditosPractica ?? null,
 
-          creadoPorDocenteId: docenteId,
-          actualizadoPorDocenteId: docenteId,
-          asignadoADocenteId: docenteId,
-          estadoRevision,
-        })
-        .returning({ id: silabo.id });
+        creadoPorDocenteId: docenteId,
+        actualizadoPorDocenteId: docenteId,
+        asignadoADocenteId: docenteId,
+        estadoRevision,
+      })
+      .returning({ id: silabo.id });
 
-      const silaboId = result[0].id;
+    const silaboId = result[0].id;
 
-      if (docenteId) {
-        await this.db.insert(silaboDocente).values({
-          silaboId,
-          docenteId,
-          rol: "DOCENTE",
-        });
-      }
-
-      return silaboId;
+    if (docenteId) {
+      await this.db.insert(silaboDocente).values({
+        silaboId,
+        docenteId,
+        rol: "DOCENTE",
+      });
     }
+
+    return silaboId;
+  }
 
   async updateSumilla(silaboId: number, sumilla: string) {
     await this.db
@@ -1030,6 +1028,142 @@ export class SyllabusRepository extends BaseRepository {
     };
   }
 
+  async createSyllabusVersion(
+    syllabusId: number,
+    snapshotJson: unknown,
+    modifiedBy?: number | null,
+  ) {
+    const [currentSyllabus] = await this.db
+      .select({ estadoRevision: silabo.estadoRevision })
+      .from(silabo)
+      .where(eq(silabo.id, syllabusId))
+      .limit(1);
+
+    if (!currentSyllabus) {
+      return null;
+    }
+
+    const [latestVersion] = await this.db
+      .select({ versionNumber: schema.syllabusVersions.versionNumber })
+      .from(schema.syllabusVersions)
+      .where(eq(schema.syllabusVersions.syllabusId, syllabusId))
+      .orderBy(desc(schema.syllabusVersions.versionNumber))
+      .limit(1);
+
+    const nextVersion = Number(latestVersion?.versionNumber ?? 0) + 1;
+
+    const [created] = await this.db
+      .insert(schema.syllabusVersions)
+      .values({
+        syllabusId,
+        versionNumber: nextVersion,
+        snapshotJson,
+        status: currentSyllabus.estadoRevision ?? null,
+        modifiedBy: modifiedBy ?? null,
+        modifiedAt: new Date().toISOString(),
+      })
+      .returning();
+
+    return created;
+  }
+
+  async listSyllabusVersionSummaries(filters?: {
+    periodo?: string;
+    ciclo?: string;
+  }) {
+    const conditions: SQL[] = [];
+
+    if (filters?.periodo?.trim()) {
+      conditions.push(eq(silabo.semestreAcademico, filters.periodo.trim()));
+    }
+
+    if (filters?.ciclo?.trim()) {
+      conditions.push(eq(silabo.ciclo, filters.ciclo.trim()));
+    }
+
+    let query = this.db
+      .select({
+        syllabusId: silabo.id,
+        cursoCodigo: silabo.cursoCodigo,
+        cursoNombre: silabo.cursoNombre,
+        ciclo: silabo.ciclo,
+        semestreAcademico: silabo.semestreAcademico,
+        escuelaProfesional: silabo.escuelaProfesional,
+        programaAcademico: silabo.programaAcademico,
+        estadoRevision: silabo.estadoRevision,
+        versionId: schema.syllabusVersions.id,
+        versionNumber: schema.syllabusVersions.versionNumber,
+        versionStatus: schema.syllabusVersions.status,
+        modifiedAt: schema.syllabusVersions.modifiedAt,
+        modifiedBy: schema.syllabusVersions.modifiedBy,
+        modifiedByName: docente.nombreDocente,
+        modifiedByEmail: docente.correo,
+      })
+      .from(silabo)
+      .leftJoin(
+        schema.syllabusVersions,
+        eq(schema.syllabusVersions.syllabusId, silabo.id),
+      )
+      .leftJoin(docente, eq(schema.syllabusVersions.modifiedBy, docente.id))
+      .$dynamic();
+
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+
+    return await query.orderBy(
+      asc(silabo.ciclo),
+      asc(silabo.cursoNombre),
+      desc(schema.syllabusVersions.versionNumber),
+    );
+  }
+
+  async listVersionsBySyllabusId(syllabusId: number) {
+    return await this.db
+      .select({
+        id: schema.syllabusVersions.id,
+        syllabusId: schema.syllabusVersions.syllabusId,
+        versionNumber: schema.syllabusVersions.versionNumber,
+        status: schema.syllabusVersions.status,
+        modifiedAt: schema.syllabusVersions.modifiedAt,
+        createdAt: schema.syllabusVersions.createdAt,
+        modifiedBy: schema.syllabusVersions.modifiedBy,
+        modifiedByName: docente.nombreDocente,
+        modifiedByEmail: docente.correo,
+      })
+      .from(schema.syllabusVersions)
+      .leftJoin(docente, eq(schema.syllabusVersions.modifiedBy, docente.id))
+      .where(eq(schema.syllabusVersions.syllabusId, syllabusId))
+      .orderBy(desc(schema.syllabusVersions.versionNumber));
+  }
+
+  async findSyllabusVersionSnapshot(syllabusId: number, versionId: number) {
+    const [version] = await this.db
+      .select({
+        id: schema.syllabusVersions.id,
+        syllabusId: schema.syllabusVersions.syllabusId,
+        versionNumber: schema.syllabusVersions.versionNumber,
+        snapshotJson: schema.syllabusVersions.snapshotJson,
+        status: schema.syllabusVersions.status,
+        modifiedAt: schema.syllabusVersions.modifiedAt,
+        createdAt: schema.syllabusVersions.createdAt,
+        modifiedBy: schema.syllabusVersions.modifiedBy,
+        modifiedByName: docente.nombreDocente,
+        modifiedByEmail: docente.correo,
+      })
+      .from(schema.syllabusVersions)
+      .leftJoin(docente, eq(schema.syllabusVersions.modifiedBy, docente.id))
+      .where(
+        and(
+          eq(schema.syllabusVersions.syllabusId, syllabusId),
+          eq(schema.syllabusVersions.id, versionId),
+        ),
+      )
+      .limit(1);
+
+    return version ?? null;
+  }
+
   /**
    * Parsea el texto de estrategias metodológicas a un array estructurado
    * Formato esperado: "Nombre método|Descripción\nOtro método|Otra descripción"
@@ -1250,7 +1384,9 @@ export class SyllabusRepository extends BaseRepository {
     return updated[0] || null;
   }
 
-  async findRejectedRevisionSectionNumbers(silaboId: number): Promise<number[]> {
+  async findRejectedRevisionSectionNumbers(
+    silaboId: number,
+  ): Promise<number[]> {
     const sections = await this.findRevisionSections(silaboId);
     const rejected = new Set<number>();
 
@@ -1322,7 +1458,7 @@ export class SyllabusRepository extends BaseRepository {
     return result;
   }
 
-    async upsertRevisionSections(
+  async upsertRevisionSections(
     silaboId: number,
     secciones: Array<{
       numeroSeccion: number;

@@ -1,9 +1,6 @@
 import { syllabusRepository } from "./repository";
 import { permissionsRepository } from "../permissions/repository";
-import {
-  getSectionLabel,
-  SYLLABUS_SECTION,
-} from "./section-permissions";
+import { getSectionLabel, SYLLABUS_SECTION } from "./section-permissions";
 import {
   UpsertCompetenciesSchema,
   CreateComponentsSchema, //
@@ -33,6 +30,7 @@ import {
   type AuthUser,
 } from "../../lib/auth-context";
 import {
+  curriculumCourses,
   CurriculumCourse,
   findCurriculumCourseByName,
   getCourseComparableNames,
@@ -42,7 +40,26 @@ import {
 } from "./curriculum-courses";
 
 const DOCENTE_ROLE_ID = 1;
-const PRIVILEGED_ROLE_IDS = new Set([2, 3, 4]);
+const DIRECTOR_ROLE_ID = 2;
+const COORDINADOR_ROLE_ID = 3;
+const ADMIN_ROLE_ID = 4;
+const COMITE_CURRICULAR_OPERATIVO_ROLE_ID = 5;
+
+const PRIVILEGED_ROLE_IDS = new Set([
+  DIRECTOR_ROLE_ID,
+  COORDINADOR_ROLE_ID,
+  ADMIN_ROLE_ID,
+]);
+
+const DIRECTOR_ROLE_IDS = new Set([DIRECTOR_ROLE_ID, ADMIN_ROLE_ID]);
+
+const SYLLABUS_READ_ALL_ROLE_IDS = new Set([
+  DIRECTOR_ROLE_ID,
+  COORDINADOR_ROLE_ID,
+  ADMIN_ROLE_ID,
+  COMITE_CURRICULAR_OPERATIVO_ROLE_ID,
+]);
+
 const BLOCKED_EDIT_STATES = new Set([
   "ANALIZANDO",
   "EN_REVISION",
@@ -51,6 +68,7 @@ const BLOCKED_EDIT_STATES = new Set([
   "BLOQUEADO",
 ]);
 const REQUIRED_REVISION_SECTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+const EVALUATION_SECTION_NUMBER = 7;
 
 const REVISION_SECTION_NAMES: Record<number, string> = {
   1: "Datos generales",
@@ -81,8 +99,38 @@ export class SyllabusService {
       throw new AppError("NotFound", "NOT_FOUND", "Sílabo no encontrado");
     }
 
-    const estadoRaw = String(current.estadoRevision ?? "").trim();
-    const estadoKey = this.normalizeEstadoRevision(estadoRaw);
+    let estadoRaw = String(current.estadoRevision ?? "").trim();
+    let estadoKey = this.normalizeEstadoRevision(estadoRaw);
+
+    /**
+     * Reparación de consistencia:
+     * Si el sílabo quedó APROBADO pero tiene secciones RECHAZADO,
+     * el estado real debe ser DESAPROBADO.
+     *
+     * Esto corrige casos antiguos donde el coordinador rechazó una sección,
+     * pero el estado global no se actualizó correctamente.
+     */
+    if (estadoKey === "APROBADO") {
+      const rejectedSections =
+        await syllabusRepository.findRejectedRevisionSectionNumbers(silaboId);
+
+      if (rejectedSections.length > 0) {
+        await syllabusRepository.updateSyllabusStatus(silaboId, {
+          estadoRevision: "DESAPROBADO",
+          observaciones:
+            "Estado corregido automáticamente porque existen secciones rechazadas.",
+          actualizadoPorDocenteId: null,
+        });
+
+        estadoRaw = "DESAPROBADO";
+        estadoKey = "DESAPROBADO";
+
+        return {
+          ...current,
+          estadoRevision: "DESAPROBADO",
+        };
+      }
+    }
 
     const blockedKeys = new Set([
       "ANALIZANDO",
@@ -180,13 +228,13 @@ export class SyllabusService {
     const id = resolveAuthUserId(user ?? {});
     const role = resolveAuthUserRole(user ?? {});
 
-      if (!id || !role) {
-        throw new AppError(
-          "Unauthorized",
-          "UNAUTHORIZED",
-          "Usuario autenticado requerido",
-        );
-      }
+    if (!id || !role) {
+      throw new AppError(
+        "Unauthorized",
+        "UNAUTHORIZED",
+        "Usuario autenticado requerido",
+      );
+    }
 
     return {
       ...(user as any),
@@ -197,9 +245,7 @@ export class SyllabusService {
     } as UserSession;
   }
 
-  private assertAuthenticatedUser(
-    user?: UserSession | AuthUser,
-  ): UserSession {
+  private assertAuthenticatedUser(user?: UserSession | AuthUser): UserSession {
     return this.toUserSession(user);
   }
 
@@ -229,7 +275,11 @@ export class SyllabusService {
       if (!current || visited.has(current)) continue;
       visited.add(current);
 
-      const record = current as { message?: string; code?: string; cause?: unknown };
+      const record = current as {
+        message?: string;
+        code?: string;
+        cause?: unknown;
+      };
       const message = String(record.message ?? "");
       const code = String(record.code ?? "");
 
@@ -260,8 +310,17 @@ export class SyllabusService {
     const current = await syllabusRepository.findById(silaboId);
 
     if (!current) return false;
-    if (this.isPrivilegedReviewer(user)) return true;
-    if (this.isDocente(user)) return this.isAssignedDocente(user, silaboId);
+
+    const roleId = Number(user.role);
+
+    if (SYLLABUS_READ_ALL_ROLE_IDS.has(roleId)) {
+      return true;
+    }
+
+    if (this.isDocente(user)) {
+      return this.isAssignedDocente(user, silaboId);
+    }
+
     return false;
   }
 
@@ -284,7 +343,9 @@ export class SyllabusService {
   ) {
     const currentUser = this.assertAuthenticatedUser(user);
     const current = await this.assertSyllabusCanBeEdited(silaboId);
-    const estadoKey = this.normalizeEstadoRevision(current.estadoRevision ?? "");
+    const estadoKey = this.normalizeEstadoRevision(
+      current.estadoRevision ?? "",
+    );
 
     if (
       await this.canPrivilegedEditUnassignedBorrador(
@@ -313,7 +374,10 @@ export class SyllabusService {
     }
 
     if (estadoKey === "DESAPROBADO") {
-      const docenteId = await this.resolveDocenteIdForUser(currentUser, silaboId);
+      const docenteId = await this.resolveDocenteIdForUser(
+        currentUser,
+        silaboId,
+      );
 
       if (!docenteId) {
         throw new AppError(
@@ -362,7 +426,9 @@ export class SyllabusService {
     docenteId: number,
   ) {
     const permisos = this.normalizeSectionNumbers(sectionNumbers).map(
-      (numeroSeccion) => ({ numeroSeccion }),
+      (numeroSeccion) => ({
+        numeroSeccion,
+      }),
     );
 
     if (permisos.length === 0) {
@@ -386,7 +452,9 @@ export class SyllabusService {
       return;
     }
 
-    const estadoKey = this.normalizeEstadoRevision(current.estadoRevision ?? "");
+    const estadoKey = this.normalizeEstadoRevision(
+      current.estadoRevision ?? "",
+    );
 
     if (estadoKey !== "DESAPROBADO") {
       return;
@@ -408,10 +476,11 @@ export class SyllabusService {
       return;
     }
 
-    const enabledSections = await permissionsRepository.findEnabledSectionNumbers(
-      docenteId,
-      silaboId,
-    );
+    const enabledSections =
+      await permissionsRepository.findEnabledSectionNumbers(
+        docenteId,
+        silaboId,
+      );
 
     const rejectedSet = new Set(rejectedSections);
     const enabledSet = new Set(enabledSections);
@@ -465,7 +534,10 @@ export class SyllabusService {
     }
   }
 
-  async assertCanReviewSyllabus(user: UserSession | undefined, silaboId: number) {
+  async assertCanReviewSyllabus(
+    user: UserSession | undefined,
+    silaboId: number,
+  ) {
     const currentUser = this.assertAuthenticatedUser(user);
     const current = await syllabusRepository.findById(silaboId);
 
@@ -494,6 +566,439 @@ export class SyllabusService {
     }
   }
 
+  assertCanAccessSyllabusVersions(user: UserSession | undefined) {
+    const currentUser = this.assertAuthenticatedUser(user);
+
+    const roleRaw = String(currentUser.role ?? "").trim();
+    const roleKey = roleRaw
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/\s+/g, "_");
+
+    const roleId = Number(currentUser.role);
+
+    const isDirector =
+      DIRECTOR_ROLE_IDS.has(roleId) ||
+      roleKey === "DIRECTOR" ||
+      roleKey === "DIRECTOR_ESCUELA" ||
+      roleKey === "INDETERMINADO";
+
+    if (!isDirector) {
+      throw new AppError(
+        "Forbidden",
+        "FORBIDDEN",
+        "Solo el director de escuela puede acceder a versiones de sílabos",
+      );
+    }
+
+    return currentUser;
+  }
+
+  private getVersionModifier(row: {
+    modifiedBy?: number | null;
+    modifiedByName?: string | null;
+    modifiedByEmail?: string | null;
+  }) {
+    if (!row.modifiedBy) return null;
+
+    return {
+      id: row.modifiedBy,
+      nombre: row.modifiedByName ?? null,
+      correo: row.modifiedByEmail ?? null,
+    };
+  }
+
+  private normalizeVersionCycle(value?: string | number | null): string | null {
+    const raw = String(value ?? "").trim();
+
+    if (!raw) {
+      return null;
+    }
+
+    const normalized = raw
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/^CICLO\s+/i, "")
+      .trim();
+
+    const romanToNumber: Record<string, number> = {
+      I: 1,
+      II: 2,
+      III: 3,
+      IV: 4,
+      V: 5,
+      VI: 6,
+      VII: 7,
+      VIII: 8,
+      IX: 9,
+      X: 10,
+    };
+
+    if (/^\d+$/.test(normalized)) {
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) && parsed > 0 ? String(parsed) : null;
+    }
+
+    if (romanToNumber[normalized]) {
+      return String(romanToNumber[normalized]);
+    }
+
+    return null;
+  }
+
+  private getCycleSortValue(ciclo?: string | number | null) {
+    const normalized = this.normalizeVersionCycle(ciclo);
+    const parsed = Number(normalized);
+
+    return Number.isFinite(parsed) ? parsed : 999;
+  }
+
+  private getCycleRoman(value?: string | number | null) {
+    const normalized = this.normalizeVersionCycle(value);
+
+    const romanByNumber: Record<string, string> = {
+      "1": "I",
+      "2": "II",
+      "3": "III",
+      "4": "IV",
+      "5": "V",
+      "6": "VI",
+      "7": "VII",
+      "8": "VIII",
+      "9": "IX",
+      "10": "X",
+    };
+
+    return normalized ? (romanByNumber[normalized] ?? normalized) : null;
+  }
+
+  private getCycleDisplayName(ciclo?: string | number | null) {
+    const roman = this.getCycleRoman(ciclo);
+
+    return roman ? `Ciclo ${roman}` : "Sin ciclo";
+  }
+
+  async saveCurrentVersion(silaboId: number, user?: UserSession | AuthUser) {
+    if (!silaboId || Number.isNaN(silaboId) || !Number.isFinite(silaboId)) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "ID de sÃ­labo invÃ¡lido",
+      );
+    }
+
+    const currentUser = this.assertAuthenticatedUser(user);
+    const snapshot = await this.getCompleteSyllabus(silaboId);
+
+    return await syllabusRepository.createSyllabusVersion(
+      silaboId,
+      snapshot,
+      currentUser.id,
+    );
+  }
+
+  async listSyllabusVersionSummaries(
+    user: UserSession | undefined,
+    filters?: { periodo?: string; ciclo?: string },
+  ) {
+    this.assertCanAccessSyllabusVersions(user);
+
+    const selectedPeriodo = filters?.periodo?.trim() || null;
+    const selectedCiclo = this.normalizeVersionCycle(filters?.ciclo);
+
+    /*
+     * No enviamos ciclo al repository porque en la BD puede venir como:
+     * "8", "VIII" o "Ciclo VIII".
+     * Lo normalizamos aquí para evitar duplicados.
+     */
+    const rows = await syllabusRepository.listSyllabusVersionSummaries({
+      periodo: selectedPeriodo ?? undefined,
+    });
+
+    const byCourseKey = new Map<string, any>();
+    const aliasToCourseKey = new Map<string, string>();
+
+    const normalizeAlias = (value: unknown) =>
+      normalizeCourseName(String(value ?? ""));
+
+    const makeAliases = (codigo?: unknown, nombre?: unknown) => {
+      const aliases: string[] = [];
+
+      const code = normalizeAlias(codigo);
+      const name = normalizeAlias(nombre);
+
+      if (code) aliases.push(`code:${code}`);
+      if (name) aliases.push(`name:${name}`);
+
+      return aliases;
+    };
+
+    const getPrimaryKey = (codigo?: unknown, nombre?: unknown) => {
+      const aliases = makeAliases(codigo, nombre);
+      return aliases[0] ?? `unknown:${String(nombre ?? codigo ?? "").trim()}`;
+    };
+
+    const registerAliases = (
+      primaryKey: string,
+      codigo?: unknown,
+      nombre?: unknown,
+    ) => {
+      for (const alias of makeAliases(codigo, nombre)) {
+        aliasToCourseKey.set(alias, primaryKey);
+      }
+    };
+
+    /*
+     * Primero registramos todos los cursos de la malla.
+     * Así el director ve cursos aunque no tengan versiones guardadas.
+     */
+    for (const course of curriculumCourses) {
+      const normalizedCycle = this.normalizeVersionCycle(course.ciclo);
+
+      if (selectedCiclo && normalizedCycle !== selectedCiclo) {
+        continue;
+      }
+
+      const primaryKey = getPrimaryKey(course.codigo, course.nombre);
+
+      byCourseKey.set(primaryKey, {
+        syllabusId: null,
+        cursoCodigo: course.codigo,
+        cursoNombre: course.nombre,
+        ciclo: normalizedCycle,
+        semestreAcademico: selectedPeriodo,
+        escuelaProfesional: "Ingeniería de Computación y Sistemas",
+        programaAcademico: "Ingeniería de Computación y Sistemas",
+        estadoRevision: null,
+        versionsCount: 0,
+        latestVersion: null,
+        versions: [],
+        _versionIds: new Set<number>(),
+      });
+
+      registerAliases(primaryKey, course.codigo, course.nombre);
+
+      for (const alias of course.aliases ?? []) {
+        const normalized = normalizeAlias(alias);
+
+        if (normalized) {
+          aliasToCourseKey.set(`name:${normalized}`, primaryKey);
+        }
+      }
+    }
+
+    /*
+     * Luego mezclamos los sílabos/versiones reales.
+     * Si el curso ya existe en malla, se combina.
+     * Si no existe, se agrega sin duplicar por ciclo romano/número.
+     */
+    for (const row of rows) {
+      const rowCycle = this.normalizeVersionCycle(row.ciclo);
+
+      if (selectedCiclo && rowCycle !== selectedCiclo) {
+        continue;
+      }
+
+      const rowAliases = makeAliases(row.cursoCodigo, row.cursoNombre);
+      const existingKey =
+        rowAliases.map((alias) => aliasToCourseKey.get(alias)).find(Boolean) ??
+        null;
+
+      const primaryKey =
+        existingKey ?? getPrimaryKey(row.cursoCodigo, row.cursoNombre);
+
+      const current = byCourseKey.get(primaryKey) ?? {
+        syllabusId: null,
+        cursoCodigo: row.cursoCodigo ?? null,
+        cursoNombre: row.cursoNombre ?? null,
+        ciclo: rowCycle,
+        semestreAcademico: row.semestreAcademico ?? selectedPeriodo,
+        escuelaProfesional: row.escuelaProfesional ?? null,
+        programaAcademico: row.programaAcademico ?? null,
+        estadoRevision: row.estadoRevision ?? null,
+        versionsCount: 0,
+        latestVersion: null,
+        versions: [],
+        _versionIds: new Set<number>(),
+      };
+
+      current.syllabusId = row.syllabusId ?? current.syllabusId ?? null;
+      current.cursoCodigo = row.cursoCodigo ?? current.cursoCodigo ?? null;
+      current.cursoNombre = row.cursoNombre ?? current.cursoNombre ?? null;
+      current.ciclo = rowCycle ?? current.ciclo ?? null;
+      current.semestreAcademico =
+        row.semestreAcademico ?? current.semestreAcademico ?? selectedPeriodo;
+      current.escuelaProfesional =
+        row.escuelaProfesional ?? current.escuelaProfesional ?? null;
+      current.programaAcademico =
+        row.programaAcademico ?? current.programaAcademico ?? null;
+      current.estadoRevision =
+        row.estadoRevision ?? current.estadoRevision ?? null;
+
+      if (row.versionId && !current._versionIds.has(Number(row.versionId))) {
+        current._versionIds.add(Number(row.versionId));
+
+        const version = {
+          id: row.versionId,
+          versionId: row.versionId,
+          versionNumber: row.versionNumber,
+          status: row.versionStatus ?? row.estadoRevision ?? null,
+          modifiedAt: row.modifiedAt ?? null,
+          modifiedBy: this.getVersionModifier(row),
+        };
+
+        current.versions.push(version);
+        current.versionsCount += 1;
+
+        if (
+          !current.latestVersion ||
+          Number(version.versionNumber) >
+            Number(current.latestVersion?.versionNumber ?? 0)
+        ) {
+          current.latestVersion = version;
+        }
+      }
+
+      byCourseKey.set(primaryKey, current);
+      registerAliases(primaryKey, current.cursoCodigo, current.cursoNombre);
+    }
+
+    const items = Array.from(byCourseKey.values())
+      .map((item) => {
+        const { _versionIds, ...publicItem } = item;
+        void _versionIds;
+
+        return publicItem;
+      })
+      .sort((a, b) => {
+        const cycleDiff =
+          this.getCycleSortValue(a.ciclo) - this.getCycleSortValue(b.ciclo);
+
+        if (cycleDiff !== 0) return cycleDiff;
+
+        return String(a.cursoNombre ?? "").localeCompare(
+          String(b.cursoNombre ?? ""),
+        );
+      });
+
+    const cycleMap = new Map<string, any>();
+
+    for (const item of items) {
+      const normalizedCycle = this.normalizeVersionCycle(item.ciclo);
+      const key = normalizedCycle ?? "SIN_CICLO";
+
+      if (!cycleMap.has(key)) {
+        cycleMap.set(key, {
+          ciclo: normalizedCycle,
+          nombre: this.getCycleDisplayName(normalizedCycle),
+          cursos: [],
+        });
+      }
+
+      cycleMap.get(key).cursos.push({
+        ...item,
+        ciclo: normalizedCycle,
+      });
+    }
+
+    const ciclos = Array.from(cycleMap.values()).sort((a, b) => {
+      return this.getCycleSortValue(a.ciclo) - this.getCycleSortValue(b.ciclo);
+    });
+
+    return { ciclos, items };
+  }
+
+  async listSyllabusVersions(user: UserSession | undefined, silaboId: number) {
+    this.assertCanAccessSyllabusVersions(user);
+
+    if (!silaboId || Number.isNaN(silaboId) || !Number.isFinite(silaboId)) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "ID de sÃ­labo invÃ¡lido",
+      );
+    }
+
+    const current = await syllabusRepository.findById(silaboId);
+    if (!current) {
+      throw new AppError("NotFound", "NOT_FOUND", "SÃ­labo no encontrado");
+    }
+
+    const versions =
+      await syllabusRepository.listVersionsBySyllabusId(silaboId);
+
+    return versions.map((version) => ({
+      id: version.id,
+      versionId: version.id,
+      syllabusId: version.syllabusId,
+      versionNumber: version.versionNumber,
+      status: version.status ?? null,
+      modifiedAt: version.modifiedAt ?? null,
+      createdAt: version.createdAt ?? null,
+      modifiedBy: this.getVersionModifier(version),
+    }));
+  }
+
+  async getSyllabusVersionSnapshot(
+    user: UserSession | undefined,
+    silaboId: number,
+    versionId: number,
+  ) {
+    this.assertCanAccessSyllabusVersions(user);
+
+    if (
+      !silaboId ||
+      !versionId ||
+      Number.isNaN(silaboId) ||
+      Number.isNaN(versionId)
+    ) {
+      throw new AppError("BadRequest", "BAD_REQUEST", "ParÃ¡metros invÃ¡lidos");
+    }
+
+    const version = await syllabusRepository.findSyllabusVersionSnapshot(
+      silaboId,
+      versionId,
+    );
+
+    if (!version) {
+      throw new AppError(
+        "NotFound",
+        "NOT_FOUND",
+        "VersiÃ³n de sÃ­labo no encontrada",
+      );
+    }
+
+    return {
+      id: version.id,
+      versionId: version.id,
+      syllabusId: version.syllabusId,
+      versionNumber: version.versionNumber,
+      status: version.status ?? null,
+      modifiedAt: version.modifiedAt ?? null,
+      createdAt: version.createdAt ?? null,
+      modifiedBy: this.getVersionModifier(version),
+      snapshot: version.snapshotJson,
+    };
+  }
+
+  private async assertCanEditEvaluationSection(
+    silaboId: number,
+    user?: UserSession,
+  ) {
+    if (user) {
+      await this.assertCanEditSyllabus(
+        user,
+        silaboId,
+        EVALUATION_SECTION_NUMBER,
+      );
+      return;
+    }
+
+    await this.assertSyllabusCanBeEdited(silaboId);
+  }
+
   async getFormulaSyllabusId(formulaId: number) {
     const silaboId = await syllabusRepository.getFormulaSyllabusId(formulaId);
 
@@ -516,7 +1021,9 @@ export class SyllabusService {
       throw new AppError("NotFound", "NOT_FOUND", "Sílabo no encontrado");
     }
 
-    const estadoKey = this.normalizeEstadoRevision(current.estadoRevision ?? "");
+    const estadoKey = this.normalizeEstadoRevision(
+      current.estadoRevision ?? "",
+    );
 
     if (action === "submit") {
       if (!this.isDocente(currentUser)) {
@@ -702,7 +1209,6 @@ export class SyllabusService {
     }
   }
 
-  
   private normalizeText(value: unknown): string {
     return String(value ?? "").trim();
   }
@@ -770,8 +1276,7 @@ export class SyllabusService {
       missingSections.push("Componentes");
     }
 
-    const unidades =
-      await syllabusRepository.findUnidadesBySilaboId(silaboId);
+    const unidades = await syllabusRepository.findUnidadesBySilaboId(silaboId);
 
     if (!this.hasItems(unidades)) {
       missingSections.push("Programación del contenido");
@@ -825,13 +1330,10 @@ export class SyllabusService {
       throw new AppError(
         "BadRequest",
         "BAD_REQUEST",
-        `No se puede enviar el sílabo a revisión. Faltan completar: ${missingSections.join(
-          ", ",
-        )}`,
+        `No se puede enviar el sílabo a revisión. Faltan completar: ${missingSections.join(", ")}`,
       );
     }
   }
-
 
   // ---------- COMPETENCIAS ----------
   async getCompetencies(syllabusId: string) {
@@ -954,9 +1456,11 @@ export class SyllabusService {
       throw new AppError("BadRequest", "BAD_REQUEST", "syllabusId inválido");
     }
 
-    const mapRows = (rows: Awaited<
-      ReturnType<typeof syllabusRepository.listAllComponentsByGrupo>
-    >) => rows.map((r) => this.mapComponentRow(r));
+    const mapRows = (
+      rows: Awaited<
+        ReturnType<typeof syllabusRepository.listAllComponentsByGrupo>
+      >,
+    ) => rows.map((r) => this.mapComponentRow(r));
 
     if (grupo === "ACT") {
       const actRows = await syllabusRepository.listAttitudes(sId);
@@ -1093,10 +1597,7 @@ export class SyllabusService {
     return data;
   }
 
-  async createSyllabus(
-    payload: unknown,
-    _authUser?: UserSession | AuthUser,
-  ) {
+  async createSyllabus(payload: unknown, _authUser?: UserSession | AuthUser) {
     let data;
     try {
       data = SyllabusCreateSchema.parse(payload);
@@ -1392,13 +1893,15 @@ export class SyllabusService {
     }
   }
 
-  async createFormulaEvaluacion(data: FormulaEvaluacionCreate) {
-    // Validar datos con Zod
+  async createFormulaEvaluacion(
+    data: FormulaEvaluacionCreate,
+    user?: UserSession,
+  ) {
     try {
       const validatedData = FormulaEvaluacionCreateSchema.parse(data);
-      await this.assertSyllabusCanBeEdited(validatedData.silaboId);
 
-      // Crear la fórmula en el repositorio
+      await this.assertCanEditEvaluationSection(validatedData.silaboId, user);
+
       const formula =
         await syllabusRepository.createFormulaEvaluacion(validatedData);
 
@@ -1414,18 +1917,23 @@ export class SyllabusService {
               .join(", "),
         );
       }
+
       throw error;
     }
   }
 
-  async updateFormulaEvaluacion(id: number, data: FormulaEvaluacionUpdate) {
+  async updateFormulaEvaluacion(
+    id: number,
+    data: FormulaEvaluacionUpdate,
+    user?: UserSession,
+  ) {
     const silaboId = await this.getFormulaSyllabusId(id);
-    await this.assertSyllabusCanBeEdited(silaboId);
+
+    await this.assertCanEditEvaluationSection(silaboId, user);
 
     try {
       const validatedData = FormulaEvaluacionUpdateSchema.parse(data);
 
-      // Actualizar la fórmula en el repositorio
       const formula = await syllabusRepository.updateFormulaEvaluacion(
         id,
         validatedData,
@@ -1443,6 +1951,7 @@ export class SyllabusService {
               .join(", "),
         );
       }
+
       throw error;
     }
   }
@@ -1678,15 +2187,11 @@ export class SyllabusService {
     }) as any;
 
     if (existing) {
-      const updated = await syllabusRepository.updateContribution(
-        silaboId,
-        0,
-        {
-          resultadoProgramaCodigo,
-          resultadoProgramaDescripcion,
-          aporteValor,
-        } as any,
-      );
+      const updated = await syllabusRepository.updateContribution(silaboId, 0, {
+        resultadoProgramaCodigo,
+        resultadoProgramaDescripcion,
+        aporteValor,
+      } as any);
 
       return {
         ok: true,
@@ -1784,8 +2289,8 @@ export class SyllabusService {
   }
 
   async disapproveSyllabus(id: number, data: any) {
-    // Verificar que el sílabo existe
     const syllabus = await syllabusRepository.findById(id);
+
     if (!syllabus) {
       throw new AppError("NotFound", "NOT_FOUND", "Sílabo no encontrado");
     }
@@ -1793,12 +2298,13 @@ export class SyllabusService {
     const revisionData = await syllabusRepository.findRevisionSections(id);
     this.validateRevisionSectionsForDisapproval(revisionData);
 
-    // Validar con el esquema DesaprobarSilabo
     const parsed = DesaprobarSilabo.safeParse(data);
+
     if (!parsed.success) {
       const details = parsed.error.issues
         .map((e) => `${e.path.join(".")}: ${e.message}`)
         .join("; ");
+
       throw new AppError("BadRequest", "BAD_REQUEST", details);
     }
 
@@ -1829,6 +2335,30 @@ export class SyllabusService {
         : rejectedFromPayload,
     );
 
+    if (rejectedSectionNumbers.length === 0) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "No se encontraron secciones rechazadas para desaprobar el sílabo.",
+      );
+    }
+
+    const observaciones = parsed.data.observaciones
+      .map((item) => {
+        const sectionName =
+          REVISION_SECTION_NAMES[Number(item.numeroSeccion)] ??
+          `Sección ${item.numeroSeccion}`;
+
+        return `${sectionName}: ${item.comentario}`;
+      })
+      .join("\n");
+
+    const result = await syllabusRepository.updateSyllabusStatus(id, {
+      estadoRevision: "DESAPROBADO",
+      observaciones,
+      actualizadoPorDocenteId: parsed.data.docenteId ?? null,
+    });
+
     const assignedDocenteIds =
       await syllabusRepository.getAssignedDocenteIds(id);
 
@@ -1839,6 +2369,14 @@ export class SyllabusService {
         docenteId,
       );
     }
+
+    return {
+      ok: true,
+      message: "Sílabo desaprobado correctamente",
+      estadoRevision: "DESAPROBADO",
+      rejectedSectionNumbers,
+      data: result,
+    };
   }
 
   // ---------- DATOS DE REVISIÓN ----------
@@ -1914,7 +2452,7 @@ export class SyllabusService {
   async getSyllabusCatalog() {
     return await syllabusRepository.getSyllabusCatalog();
   }
-  
+
   // ---------- SECCIÓN I: DATOS GENERALES ----------
   async updateDatosGenerales(id: number, data: DatosGeneralesUpdate) {
     await this.assertSyllabusCanBeEdited(id);
@@ -2000,7 +2538,9 @@ export class SyllabusService {
         continue;
       }
 
-      const existing = await syllabusRepository.findSemanasByUnidadId(unidad.id);
+      const existing = await syllabusRepository.findSemanasByUnidadId(
+        unidad.id,
+      );
 
       for (const row of existing) {
         const semana = Number(row.semana);
@@ -2146,38 +2686,38 @@ export class SyllabusService {
 
     return rows
       .map((row: any, index: number) => {
-      const codigo = String(
-        row.resultadoProgramaCodigo ?? row.resultado_programa_codigo ?? "",
-      ).trim();
+        const codigo = String(
+          row.resultadoProgramaCodigo ?? row.resultado_programa_codigo ?? "",
+        ).trim();
 
-      if (!/^RP\d+$/i.test(codigo)) {
-        return null;
-      }
+        if (!/^RP\d+$/i.test(codigo)) {
+          return null;
+        }
 
-      const rpMatch = codigo.match(/^RP(\d+)$/i);
-      const stableId = rpMatch ? Number(rpMatch[1]) : index + 1;
+        const rpMatch = codigo.match(/^RP(\d+)$/i);
+        const stableId = rpMatch ? Number(rpMatch[1]) : index + 1;
 
-      const descripcion =
-        row.resultadoProgramaDescripcion ??
-        row.resultado_programa_descripcion ??
-        "";
+        const descripcion =
+          row.resultadoProgramaDescripcion ??
+          row.resultado_programa_descripcion ??
+          "";
 
-      const aporteValor = row.aporteValor ?? row.aporte_valor ?? "";
+        const aporteValor = row.aporteValor ?? row.aporte_valor ?? "";
 
-      return {
-        id: stableId,
-        silaboId: row.silaboId ?? silaboId,
-        resultadoProgramaCodigo: codigo,
-        resultadoProgramaDescripcion: descripcion,
-        aporteValor,
-        codigo,
-        descripcion,
-        nivel: aporteValor,
-        level: aporteValor,
-        code: codigo,
-        description: descripcion,
-      };
-    })
+        return {
+          id: stableId,
+          silaboId: row.silaboId ?? silaboId,
+          resultadoProgramaCodigo: codigo,
+          resultadoProgramaDescripcion: descripcion,
+          aporteValor,
+          codigo,
+          descripcion,
+          nivel: aporteValor,
+          level: aporteValor,
+          code: codigo,
+          description: descripcion,
+        };
+      })
       .filter((row): row is NonNullable<typeof row> => row !== null);
   }
 
@@ -2193,7 +2733,10 @@ export class SyllabusService {
       );
     }
 
-    const result = await syllabusRepository.deleteContribution(silaboId, codigo);
+    const result = await syllabusRepository.deleteContribution(
+      silaboId,
+      codigo,
+    );
     if (!result) {
       throw new AppError("NotFound", "NOT_FOUND", "Aporte no encontrado");
     }
@@ -2267,7 +2810,9 @@ export class SyllabusService {
 
   private findSilaboByCurriculumCourse(
     course: CurriculumCourse,
-    silaboRefs: Awaited<ReturnType<typeof syllabusRepository.listSilaboCourseRefs>>,
+    silaboRefs: Awaited<
+      ReturnType<typeof syllabusRepository.listSilaboCourseRefs>
+    >,
   ) {
     const comparableNames = getCourseComparableNames(course);
     const found = silaboRefs.find((ref) => {
@@ -2284,7 +2829,9 @@ export class SyllabusService {
       string,
       { id: number; cursoNombre: string; cursoCodigo: string | null }
     >,
-    silaboRows: Awaited<ReturnType<typeof syllabusRepository.listSilaboCourseRefs>>,
+    silaboRows: Awaited<
+      ReturnType<typeof syllabusRepository.listSilaboCourseRefs>
+    >,
     user?: UserSession,
   ) {
     const curriculumCourse = findCurriculumCourseByName(nombreMalla);
@@ -2354,13 +2901,23 @@ export class SyllabusService {
 
     const anteriores = await Promise.all(
       getCurriculumAnteriores(curriculum).map((nombre) =>
-        this.mapRelatedCurriculumCourse(nombre, index, silaboRows, options.user),
+        this.mapRelatedCurriculumCourse(
+          nombre,
+          index,
+          silaboRows,
+          options.user,
+        ),
       ),
     );
 
     const posteriores = await Promise.all(
       getCurriculumPosteriores(curriculum).map((nombre) =>
-        this.mapRelatedCurriculumCourse(nombre, index, silaboRows, options.user),
+        this.mapRelatedCurriculumCourse(
+          nombre,
+          index,
+          silaboRows,
+          options.user,
+        ),
       ),
     );
 
@@ -2412,6 +2969,101 @@ export class SyllabusService {
       courseName: normalizedName,
       user,
     });
+  }
+
+  async getSyllabusDownloadByCycle(
+    user: UserSession | undefined,
+    filters?: { periodo?: string; ciclo?: string },
+  ) {
+    this.assertCanAccessSyllabusVersions(user);
+
+    const periodo = filters?.periodo?.trim() || null;
+    const ciclo = this.normalizeVersionCycle(filters?.ciclo);
+
+    if (!periodo) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "El periodo académico es obligatorio",
+      );
+    }
+
+    if (!ciclo) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "El ciclo académico es obligatorio",
+      );
+    }
+
+    const summary = await this.listSyllabusVersionSummaries(user, {
+      periodo,
+      ciclo,
+    });
+
+    const selectedCourses = summary.items.filter((item: any) => {
+      return (
+        this.normalizeVersionCycle(item.ciclo) === ciclo &&
+        item.syllabusId &&
+        item.latestVersion?.versionId
+      );
+    });
+
+    const syllabi = await Promise.all(
+      selectedCourses.map(async (item: any) => {
+        const version = await syllabusRepository.findSyllabusVersionSnapshot(
+          Number(item.syllabusId),
+          Number(item.latestVersion.versionId),
+        );
+
+        if (!version) {
+          return null;
+        }
+
+        return {
+          syllabusId: item.syllabusId,
+          versionId: version.id,
+          versionNumber: version.versionNumber,
+          cursoCodigo: item.cursoCodigo,
+          cursoNombre: item.cursoNombre,
+          ciclo,
+          cicloNombre: this.getCycleDisplayName(ciclo),
+          periodo,
+          estado: version.status ?? item.estadoRevision ?? null,
+          modifiedAt: version.modifiedAt ?? null,
+          createdAt: version.createdAt ?? null,
+          modifiedBy: this.getVersionModifier(version),
+          snapshot: version.snapshotJson,
+        };
+      }),
+    );
+
+    const validSyllabi = syllabi.filter(
+      (item): item is NonNullable<typeof item> => item !== null,
+    );
+
+    const missingCourses = summary.items
+      .filter((item: any) => this.normalizeVersionCycle(item.ciclo) === ciclo)
+      .filter((item: any) => !item.latestVersion?.versionId)
+      .map((item: any) => ({
+        syllabusId: item.syllabusId ?? null,
+        cursoCodigo: item.cursoCodigo ?? null,
+        cursoNombre: item.cursoNombre ?? null,
+        ciclo,
+        motivo: "Sin versiones guardadas",
+      }));
+
+    return {
+      periodo,
+      ciclo,
+      cicloNombre: this.getCycleDisplayName(ciclo),
+      totalCursos: summary.items.filter(
+        (item: any) => this.normalizeVersionCycle(item.ciclo) === ciclo,
+      ).length,
+      totalDescargables: validSyllabi.length,
+      syllabi: validSyllabi,
+      missingCourses,
+    };
   }
 }
 
