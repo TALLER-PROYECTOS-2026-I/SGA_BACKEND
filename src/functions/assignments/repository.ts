@@ -1,20 +1,57 @@
-import { and, asc, eq, ilike } from "drizzle-orm";
+import { and, asc, eq, ilike, isNull, SQL } from "drizzle-orm";
 import { silabo, silaboDocente, docente } from "../../../drizzle/schema";
 import { AppError } from "../../error";
 import { BaseRepository } from "../../lib/repository";
-import type {
-  CreateAssignmentPayload,
-  SilaboFilters,
-  SilaboListItem,
-  CourseSimple,
+import {
+  SYLLABUS_ALREADY_ASSIGNED_MESSAGE,
+  type CreateAssignmentPayload,
+  type SilaboFilters,
+  type SilaboListItem,
+  type CourseSimple,
 } from "./types";
 
+const PENDING_ASSIGNMENT_ESTADO = "BORRADOR";
+
+function pendingAssignmentConditions(): SQL[] {
+  return [
+    isNull(silaboDocente.docenteId),
+    eq(silabo.estadoRevision, PENDING_ASSIGNMENT_ESTADO),
+  ];
+}
+
 class AssignmentsRepository extends BaseRepository {
+  async hasDocenteForSilabo(silaboId: number): Promise<boolean> {
+    const rows = await this.db
+      .select({ id: silaboDocente.id })
+      .from(silaboDocente)
+      .where(eq(silaboDocente.silaboId, silaboId))
+      .limit(1);
+
+    return rows.length > 0;
+  }
+
+  async getAssignmentState(silaboId: number) {
+    const rows = await this.db
+      .select({
+        syllabusId: silabo.id,
+        estadoRevision: silabo.estadoRevision,
+        asignadoADocenteId: silabo.asignadoADocenteId,
+        docenteId: silaboDocente.docenteId,
+        nombreDocente: docente.nombreDocente,
+      })
+      .from(silabo)
+      .leftJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
+      .leftJoin(docente, eq(silaboDocente.docenteId, docente.id))
+      .where(eq(silabo.id, silaboId))
+      .limit(1);
+
+    return rows[0] ?? null;
+  }
+
   async getAll(filters?: SilaboFilters): Promise<SilaboListItem[]> {
     try {
       const conditions: any[] = [];
 
-      // Construir condiciones de filtrado
       if (filters?.codigo?.trim()) {
         conditions.push(
           ilike(silabo.cursoCodigo, `%${filters.codigo.trim()}%`),
@@ -31,9 +68,12 @@ class AssignmentsRepository extends BaseRepository {
         conditions.push(eq(silabo.id, Number(filters.idSilabo)));
       }
 
-      if (filters?.idDocente !== undefined) {
+      if (filters?.sinAsignar) {
+        conditions.push(...pendingAssignmentConditions());
+      } else if (filters?.idDocente !== undefined) {
         conditions.push(eq(silaboDocente.docenteId, Number(filters.idDocente)));
       }
+
       if (filters?.areaCurricular !== undefined) {
         conditions.push(eq(silabo.areaCurricular, filters.areaCurricular));
       }
@@ -50,11 +90,10 @@ class AssignmentsRepository extends BaseRepository {
           areaCurricular: silabo.areaCurricular,
         })
         .from(silabo)
-        .innerJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
-        .innerJoin(docente, eq(silaboDocente.docenteId, docente.id))
-        .where(and(...(conditions.length > 0 ? conditions : [])));
-
-      query.orderBy(asc(silabo.cursoCodigo));
+        .leftJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
+        .leftJoin(docente, eq(silaboDocente.docenteId, docente.id))
+        .where(and(...(conditions.length > 0 ? conditions : [])))
+        .orderBy(asc(silabo.cursoCodigo));
 
       const result = await query;
 
@@ -82,8 +121,22 @@ class AssignmentsRepository extends BaseRepository {
   }
 
   async create(assigment: CreateAssignmentPayload) {
-    return await this.db.transaction((transaction) => {
-      return transaction
+    return await this.db.transaction(async (transaction) => {
+      const existing = await transaction
+        .select({ id: silaboDocente.id })
+        .from(silaboDocente)
+        .where(eq(silaboDocente.silaboId, assigment.syllabus.id))
+        .limit(1);
+
+      if (existing.length > 0) {
+        throw new AppError(
+          "Conflicto de asignación",
+          "CONFLICT",
+          SYLLABUS_ALREADY_ASSIGNED_MESSAGE,
+        );
+      }
+
+      const inserted = await transaction
         .insert(silaboDocente)
         .values({
           silaboId: assigment.syllabus.id,
@@ -92,24 +145,77 @@ class AssignmentsRepository extends BaseRepository {
           observaciones: assigment.message,
         })
         .returning();
+
+      await transaction
+        .update(silabo)
+        .set({
+          asignadoADocenteId: assigment.teacher.id,
+          actualizadoPorDocenteId: assigment.teacher.id,
+          estadoRevision: "ASIGNADO",
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(silabo.id, assigment.syllabus.id));
+
+      return inserted;
     });
   }
 
-  async getAllCourses(): Promise<CourseSimple[]> {
+  async unassign(silaboId: number, updatedById?: number | null) {
+    return await this.db.transaction(async (transaction) => {
+      await transaction
+        .delete(silaboDocente)
+        .where(eq(silaboDocente.silaboId, silaboId));
+
+      const [updated] = await transaction
+        .update(silabo)
+        .set({
+          asignadoADocenteId: null,
+          actualizadoPorDocenteId: updatedById ?? null,
+          estadoRevision: "BORRADOR",
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(silabo.id, silaboId))
+        .returning({
+          id: silabo.id,
+          cursoCodigo: silabo.cursoCodigo,
+          cursoNombre: silabo.cursoNombre,
+          estadoRevision: silabo.estadoRevision,
+          asignadoADocenteId: silabo.asignadoADocenteId,
+        });
+
+      return updated ?? null;
+    });
+  }
+
+  async getAllCourses(options?: {
+    sinAsignar?: boolean;
+  }): Promise<CourseSimple[]> {
     try {
-      const result = await this.db
-        .selectDistinct({
+      const conditions: SQL[] = options?.sinAsignar
+        ? pendingAssignmentConditions()
+        : [];
+
+      let query = this.db
+        .select({
           id: silabo.id,
           code: silabo.cursoCodigo,
           name: silabo.cursoNombre,
           ciclo: silabo.ciclo,
           escuela: silabo.escuelaProfesional,
           estadoRevision: silabo.estadoRevision,
+          docenteId: silaboDocente.docenteId,
+          nombreDocente: docente.nombreDocente,
         })
         .from(silabo)
-        .innerJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
-        .innerJoin(docente, eq(silaboDocente.docenteId, docente.id))
-        .orderBy(asc(silabo.cursoCodigo));
+        .leftJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
+        .leftJoin(docente, eq(silaboDocente.docenteId, docente.id))
+        .$dynamic();
+
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions));
+      }
+
+      const result = await query.orderBy(asc(silabo.cursoCodigo));
 
       return result.map((r) => ({
         id: r.id,
@@ -118,6 +224,8 @@ class AssignmentsRepository extends BaseRepository {
         ciclo: r.ciclo ?? null,
         escuela: r.escuela ?? null,
         estadoRevision: r.estadoRevision ?? null,
+        docenteId: r.docenteId ?? null,
+        nombreDocente: r.nombreDocente ?? null,
       }));
     } catch (error) {
       if (error instanceof AppError) {

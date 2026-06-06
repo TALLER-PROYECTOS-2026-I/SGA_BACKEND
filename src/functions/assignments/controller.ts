@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponseInit } from "@azure/functions";
-import { controller, route } from "../../lib/decorators";
+import { controller, getAuthenticatedUser, route } from "../../lib/decorators";
 import { STATUS_CODES } from "../../status-codes";
 import { Listable } from "../../types";
 import { assignmentsService } from "./service";
@@ -14,6 +14,7 @@ export class AssignmentsController implements Listable {
     const idSilaboParam = req.query.get("idSilabo")?.trim() || undefined;
     const idDocenteParam = req.query.get("idDocente")?.trim() || undefined;
     const areaCurricular = req.query.get("areaCurricular")?.trim() || undefined;
+    const sinAsignarParam = req.query.get("sinAsignar")?.trim() || undefined;
 
     const filters = listQueryParamsSchema.parse({
       codigo,
@@ -21,6 +22,7 @@ export class AssignmentsController implements Listable {
       idSilabo: idSilaboParam,
       idDocente: idDocenteParam,
       areaCurricular: areaCurricular,
+      sinAsignar: sinAsignarParam,
     });
 
     const items = await assignmentsService.list(filters);
@@ -37,7 +39,9 @@ export class AssignmentsController implements Listable {
 
   @route("/courses", "GET")
   async getAllCourses(req: HttpRequest): Promise<HttpResponseInit> {
-    const courses = await assignmentsService.getAllCourses();
+    const sinAsignarParam = req.query.get("sinAsignar")?.trim();
+    const sinAsignar = sinAsignarParam === "true" || sinAsignarParam === "1";
+    const courses = await assignmentsService.getAllCourses({ sinAsignar });
 
     return {
       status: STATUS_CODES.OK,
@@ -52,14 +56,32 @@ export class AssignmentsController implements Listable {
 
   @route("/", "POST")
   async createAssignment(req: HttpRequest) {
+    const user = getAuthenticatedUser(req);
     const body = await req.json();
     const parsedBody = createAssignmentRequestSchema.parse(body);
-    await assignmentsService.create(parsedBody);
+    await assignmentsService.create(parsedBody, user);
     return {
       status: STATUS_CODES.OK,
       headers: { "Content-Type": "application/json" },
       jsonBody: {
         message: "Asignación creada correctamente.",
+      },
+    };
+  }
+
+  @route("/{syllabusId}", "DELETE")
+  async unassignTeacher(req: HttpRequest): Promise<HttpResponseInit> {
+    const user = getAuthenticatedUser(req);
+    const syllabusId = Number(req.params.syllabusId);
+    const result = await assignmentsService.unassign(syllabusId, user);
+
+    return {
+      status: STATUS_CODES.OK,
+      headers: { "Content-Type": "application/json" },
+      jsonBody: {
+        success: true,
+        message: result.message,
+        data: result.data,
       },
     };
   }

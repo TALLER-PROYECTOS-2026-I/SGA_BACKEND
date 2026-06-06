@@ -6,6 +6,7 @@ export const silaboFiltersSchema = z.object({
   nombre: z.string().optional(),
   idSilabo: z.number().int().positive().optional(),
   idDocente: z.number().int().positive().optional(),
+  sinAsignar: z.boolean().optional(),
   areaCurricular: z.string().optional(),
 });
 export type SilaboFilters = z.infer<typeof silaboFiltersSchema>;
@@ -31,6 +32,8 @@ export const courseSimpleSchema = z.object({
   ciclo: z.string().nullable(),
   escuela: z.string().nullable(),
   estadoRevision: z.string().nullable(),
+  docenteId: z.number().int().positive().nullable().optional(),
+  nombreDocente: z.string().nullable().optional(),
 });
 export type CourseSimple = z.infer<typeof courseSimpleSchema>;
 
@@ -55,6 +58,10 @@ export const listQueryParamsSchema = z.object({
       "idDocente inválido",
     ),
   areaCurricular: z.string().optional(),
+  sinAsignar: z
+    .string()
+    .optional()
+    .transform((val) => val === "true" || val === "1"),
 });
 
 export const createAssignmentRequestSchema = z.object({
@@ -90,3 +97,6 @@ export const createAssignmentPayloadSchema = z.object({
 export type CreateAssignmentPayload = z.infer<
   typeof createAssignmentPayloadSchema
 >;
+
+export const SYLLABUS_ALREADY_ASSIGNED_MESSAGE =
+  "Este sílabo ya tiene docente asignado. Primero debe desasignarlo.";

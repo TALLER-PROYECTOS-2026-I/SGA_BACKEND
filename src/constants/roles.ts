@@ -4,9 +4,11 @@
  */
 export const USER_ROLES = {
   DOCENTE: 1,
-  INDETERMINADO: 2,
+  DIRECTOR_ESCUELA: 2,
+  INDETERMINADO: 2, // Alias temporal: antes el Director estaba registrado con este nombre técnico
   COORDINADOR: 3,
   ADMIN: 4,
+  COMITE_CURRICULAR_OPERATIVO: 5,
 } as const;
 
 /**
@@ -22,15 +24,13 @@ export type RoleId = (typeof USER_ROLES)[RoleName];
 /**
  * Mapeo inverso: de ID a nombre de rol
  */
-export const ROLE_ID_TO_NAME: Record<number, RoleName> = Object.entries(
-  USER_ROLES,
-).reduce(
-  (acc, [name, id]) => {
-    acc[id] = name as RoleName;
-    return acc;
-  },
-  {} as Record<number, RoleName>,
-);
+export const ROLE_ID_TO_NAME: Record<number, RoleName> = {
+  [USER_ROLES.DOCENTE]: "DOCENTE",
+  [USER_ROLES.DIRECTOR_ESCUELA]: "DIRECTOR_ESCUELA",
+  [USER_ROLES.COORDINADOR]: "COORDINADOR",
+  [USER_ROLES.ADMIN]: "ADMIN",
+  [USER_ROLES.COMITE_CURRICULAR_OPERATIVO]: "COMITE_CURRICULAR_OPERATIVO",
+};
 
 /**
  * Convierte nombres de roles a sus IDs correspondientes
