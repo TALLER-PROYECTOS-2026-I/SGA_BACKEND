@@ -46,7 +46,6 @@ import {
 @controller("syllabus")
 export class SyllabusController implements Updatable {
   private getUser(req: HttpRequest): UserSession {
-
     const authUser = getAuthUser(req);
 
     if (!authUser) {
@@ -97,6 +96,40 @@ export class SyllabusController implements Updatable {
     await syllabusService.assertCanReviewSyllabus(this.getUser(req), silaboId);
   }
 
+  private async saveVersionAfterMutation(req: HttpRequest, silaboId: number) {
+    try {
+      await syllabusService.saveCurrentVersion(silaboId, this.getUser(req));
+    } catch (error) {
+      console.warn("No se pudo guardar la versiÃ³n del sÃ­labo", {
+        silaboId,
+        error,
+      });
+    }
+  }
+
+  @route("/download-by-cycle", "GET")
+  async downloadByCycle(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const user = this.getUser(req);
+    const periodo = req.query.get("periodo") ?? undefined;
+    const ciclo = req.query.get("ciclo") ?? undefined;
+
+    const data = await syllabusService.getSyllabusDownloadByCycle(user, {
+      periodo,
+      ciclo,
+    });
+
+    return {
+      status: 200,
+      jsonBody: {
+        success: true,
+        message: "Sílabos del ciclo obtenidos correctamente",
+        data,
+      },
+    };
+  }
   // ========================================
   // SECCIÓN 0: OPERACIONES GENERALES
   // ========================================
@@ -115,8 +148,9 @@ export class SyllabusController implements Updatable {
     const user = this.getUser(req);
     const body = (await req.json()) as Record<string, unknown>;
 
-  await service.assertCanCreateSyllabus(user, body);
+    await service.assertCanCreateSyllabus(user, body);
     const idNewSyllabus = await service.createSyllabus(body, authUser ?? user);
+    await this.saveVersionAfterMutation(req, idNewSyllabus);
 
     return {
       status: 201,
@@ -172,6 +206,67 @@ export class SyllabusController implements Updatable {
   }
 
   /**
+   * GET /api/syllabus/versions?periodo=2026-I&ciclo=8
+   * Listar sÃ­labos con versiones guardadas para el director.
+   */
+  @route("/versions", "GET")
+  async listSyllabusVersionsSummary(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const periodo = req.query.get("periodo")?.trim() || undefined;
+    const ciclo = req.query.get("ciclo")?.trim() || undefined;
+
+    const data = await syllabusService.listSyllabusVersionSummaries(
+      this.getUser(req),
+      {
+        periodo,
+        ciclo,
+      },
+    );
+
+    return response.ok("Versiones de sÃ­labos obtenidas correctamente", data);
+  }
+
+  /**
+   * GET /api/syllabus/{id}/versions
+   * Obtener versiones guardadas de un sÃ­labo.
+   */
+  @route("/{id}/versions", "GET")
+  async listSyllabusVersions(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const id = Number(req.params.id);
+    const data = await syllabusService.listSyllabusVersions(
+      this.getUser(req),
+      id,
+    );
+
+    return response.ok("Historial de versiones obtenido correctamente", data);
+  }
+
+  /**
+   * GET /api/syllabus/{id}/versions/{versionId}
+   * Obtener snapshot de una versiÃ³n especÃ­fica.
+   */
+  @route("/{id}/versions/{versionId}", "GET")
+  async getSyllabusVersionSnapshot(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise<HttpResponseInit> {
+    const id = Number(req.params.id);
+    const versionId = Number(req.params.versionId);
+    const data = await syllabusService.getSyllabusVersionSnapshot(
+      this.getUser(req),
+      id,
+      versionId,
+    );
+
+    return response.ok("VersiÃ³n de sÃ­labo obtenida correctamente", data);
+  }
+
+  /**
    * GET /api/syllabus/catalog
    * Obtener catálogo de todos los sílabos con su sumilla si existe
    */
@@ -192,8 +287,6 @@ export class SyllabusController implements Updatable {
       },
     };
   }
-
-
 
   /**
    * PUT /api/syllabus/{syllabusId}/state
@@ -216,6 +309,7 @@ export class SyllabusController implements Updatable {
       "state",
     );
     const result = await syllabusService.updateRevisionStatus(id, body);
+    await this.saveVersionAfterMutation(req, id);
 
     return { status: 200, jsonBody: result };
   }
@@ -240,6 +334,7 @@ export class SyllabusController implements Updatable {
       "submit",
     );
     const result = await syllabusService.setAnalizandoStatus(id);
+    await this.saveVersionAfterMutation(req, id);
     return response.ok(result.message, result);
   }
 
@@ -293,7 +388,10 @@ export class SyllabusController implements Updatable {
     }
 
     await this.assertRead(req, id);
-    const data = await syllabusService.getCurriculumContext(id, this.getUser(req));
+    const data = await syllabusService.getCurriculumContext(
+      id,
+      this.getUser(req),
+    );
 
     return {
       status: STATUS_CODES.OK,
@@ -355,6 +453,7 @@ export class SyllabusController implements Updatable {
 
     await this.assertEdit(req, id, SYLLABUS_SECTION.DATOS_GENERALES);
     const result = await syllabusService.updateDatosGenerales(id, parsed.data);
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Datos generales actualizados correctamente", result);
   }
@@ -398,6 +497,7 @@ export class SyllabusController implements Updatable {
     const body = await req.json();
     await this.assertEdit(req, id, SYLLABUS_SECTION.SUMILLA);
     const result = await service.registerSumilla(id, body);
+    await this.saveVersionAfterMutation(req, id);
     return {
       status: 200,
       jsonBody: {
@@ -421,6 +521,7 @@ export class SyllabusController implements Updatable {
     const body = await req.json();
     await this.assertEdit(req, id, SYLLABUS_SECTION.SUMILLA);
     const result = await service.updateSumilla(id, body);
+    await this.saveVersionAfterMutation(req, id);
     return {
       status: 200,
       jsonBody: {
@@ -460,8 +561,13 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.createCompetencies(syllabusId, body);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 201, jsonBody: res };
   }
 
@@ -480,8 +586,13 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.updateCompetencies(syllabusId, body);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 200, jsonBody: res };
   }
 
@@ -495,8 +606,13 @@ export class SyllabusController implements Updatable {
     _ctx: InvocationContext,
   ): Promise<HttpResponseInit> {
     const { syllabusId, id } = req.params as { syllabusId: string; id: string };
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.removeCompetency(syllabusId, id);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 200, jsonBody: res };
   }
 
@@ -550,8 +666,13 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.createComponents(syllabusId, body);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 201, jsonBody: res };
   }
 
@@ -570,8 +691,13 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.updateComponents(syllabusId, body);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 200, jsonBody: res };
   }
 
@@ -585,8 +711,13 @@ export class SyllabusController implements Updatable {
     _ctx: InvocationContext,
   ): Promise<HttpResponseInit> {
     const { syllabusId, id } = req.params as { syllabusId: string; id: string };
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.removeComponent(syllabusId, id);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 200, jsonBody: res };
   }
 
@@ -616,8 +747,13 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.createAttitudes(syllabusId, body);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 201, jsonBody: res };
   }
 
@@ -636,8 +772,13 @@ export class SyllabusController implements Updatable {
   ): Promise<HttpResponseInit> {
     const { syllabusId } = req.params as { syllabusId: string };
     const body = await req.json();
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.updateAttitudes(syllabusId, body);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 200, jsonBody: res };
   }
 
@@ -651,8 +792,13 @@ export class SyllabusController implements Updatable {
     _ctx: InvocationContext,
   ): Promise<HttpResponseInit> {
     const { syllabusId, id } = req.params as { syllabusId: string; id: string };
-    await this.assertEdit(req, Number(syllabusId), SYLLABUS_SECTION.COMPETENCIAS);
+    await this.assertEdit(
+      req,
+      Number(syllabusId),
+      SYLLABUS_SECTION.COMPETENCIAS,
+    );
     const res = await syllabusService.removeAttitude(syllabusId, id);
+    await this.saveVersionAfterMutation(req, Number(syllabusId));
     return { status: 200, jsonBody: res };
   }
 
@@ -731,6 +877,7 @@ export class SyllabusController implements Updatable {
 
     await this.assertEdit(req, id, SYLLABUS_SECTION.PROGRAMACION);
     const result = await syllabusService.createUnidad(id, parsed.data);
+    await this.saveVersionAfterMutation(req, id);
 
     return response.created("Unidad creada correctamente", result);
   }
@@ -770,6 +917,7 @@ export class SyllabusController implements Updatable {
       unidadId,
       parsed.data,
     );
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Unidad actualizada correctamente", result);
   }
@@ -792,6 +940,7 @@ export class SyllabusController implements Updatable {
 
     await this.assertEdit(req, id, SYLLABUS_SECTION.PROGRAMACION);
     await syllabusService.deleteUnidad(id, unidadId);
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Unidad eliminada correctamente", null);
   }
@@ -844,6 +993,7 @@ export class SyllabusController implements Updatable {
       id,
       estrategias_metodologicas,
     );
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok(
       "Estrategias metodológicas actualizadas correctamente",
@@ -911,6 +1061,7 @@ export class SyllabusController implements Updatable {
       id,
       recursos_didacticos_notas,
     );
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok(
       "Recursos didácticos actualizados correctamente",
@@ -976,6 +1127,7 @@ export class SyllabusController implements Updatable {
         SYLLABUS_SECTION.EVALUACION,
       );
       const result = await syllabusService.createFormulaEvaluacion(body);
+      await this.saveVersionAfterMutation(req, Number(body?.silaboId));
       return response.created(
         "Fórmula de evaluación creada correctamente",
         result,
@@ -1008,6 +1160,7 @@ export class SyllabusController implements Updatable {
       const silaboId = await syllabusService.getFormulaSyllabusId(id);
       await this.assertEdit(req, silaboId, SYLLABUS_SECTION.EVALUACION);
       const result = await syllabusService.updateFormulaEvaluacion(id, body);
+      await this.saveVersionAfterMutation(req, silaboId);
       return response.ok(
         "Fórmula de evaluación actualizada correctamente",
         result,
@@ -1073,6 +1226,7 @@ export class SyllabusController implements Updatable {
 
     await this.assertEdit(req, id, SYLLABUS_SECTION.FUENTES);
     const result = await syllabusService.createFuente(id, parsed.data);
+    await this.saveVersionAfterMutation(req, id);
 
     return response.created("Fuente creada correctamente", result);
   }
@@ -1112,6 +1266,7 @@ export class SyllabusController implements Updatable {
       fuenteId,
       parsed.data,
     );
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Fuente actualizada correctamente", result);
   }
@@ -1134,6 +1289,7 @@ export class SyllabusController implements Updatable {
 
     await this.assertEdit(req, id, SYLLABUS_SECTION.FUENTES);
     await syllabusService.deleteFuente(id, fuenteId);
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Fuente eliminada correctamente", null);
   }
@@ -1197,6 +1353,7 @@ export class SyllabusController implements Updatable {
       ...parsed.data,
       syllabusId,
     });
+    await this.saveVersionAfterMutation(req, syllabusId);
 
     return response.created("Aporte creado correctamente", result);
   }
@@ -1224,6 +1381,7 @@ export class SyllabusController implements Updatable {
       contributionId,
       body,
     );
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Aporte actualizado correctamente", result);
   }
@@ -1246,6 +1404,7 @@ export class SyllabusController implements Updatable {
 
     await this.assertEdit(req, id, SYLLABUS_SECTION.APORTES);
     const result = await syllabusService.deleteContribution(id, codigo);
+    await this.saveVersionAfterMutation(req, id);
 
     return response.ok("Aporte eliminado correctamente", result);
   }
@@ -1377,6 +1536,7 @@ export class SyllabusController implements Updatable {
       ...body,
       docenteId: Number(this.getUser(req).id),
     });
+    await this.saveVersionAfterMutation(req, id);
     return {
       status: 200,
       jsonBody: {
@@ -1407,6 +1567,7 @@ export class SyllabusController implements Updatable {
       ...body,
       docenteId: Number(this.getUser(req).id),
     });
+    await this.saveVersionAfterMutation(req, id);
     return {
       status: 200,
       jsonBody: {
