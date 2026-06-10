@@ -30,6 +30,24 @@ class AssignmentsRepository extends BaseRepository {
     return rows.length > 0;
   }
 
+  async getAssignmentState(silaboId: number) {
+    const rows = await this.db
+      .select({
+        syllabusId: silabo.id,
+        estadoRevision: silabo.estadoRevision,
+        asignadoADocenteId: silabo.asignadoADocenteId,
+        docenteId: silaboDocente.docenteId,
+        nombreDocente: docente.nombreDocente,
+      })
+      .from(silabo)
+      .leftJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
+      .leftJoin(docente, eq(silaboDocente.docenteId, docente.id))
+      .where(eq(silabo.id, silaboId))
+      .limit(1);
+
+    return rows[0] ?? null;
+  }
+
   async getAll(filters?: SilaboFilters): Promise<SilaboListItem[]> {
     try {
       const conditions: any[] = [];
@@ -142,7 +160,36 @@ class AssignmentsRepository extends BaseRepository {
     });
   }
 
-  async getAllCourses(options?: { sinAsignar?: boolean }): Promise<CourseSimple[]> {
+  async unassign(silaboId: number, updatedById?: number | null) {
+    return await this.db.transaction(async (transaction) => {
+      await transaction
+        .delete(silaboDocente)
+        .where(eq(silaboDocente.silaboId, silaboId));
+
+      const [updated] = await transaction
+        .update(silabo)
+        .set({
+          asignadoADocenteId: null,
+          actualizadoPorDocenteId: updatedById ?? null,
+          estadoRevision: "BORRADOR",
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(silabo.id, silaboId))
+        .returning({
+          id: silabo.id,
+          cursoCodigo: silabo.cursoCodigo,
+          cursoNombre: silabo.cursoNombre,
+          estadoRevision: silabo.estadoRevision,
+          asignadoADocenteId: silabo.asignadoADocenteId,
+        });
+
+      return updated ?? null;
+    });
+  }
+
+  async getAllCourses(options?: {
+    sinAsignar?: boolean;
+  }): Promise<CourseSimple[]> {
     try {
       const conditions: SQL[] = options?.sinAsignar
         ? pendingAssignmentConditions()
