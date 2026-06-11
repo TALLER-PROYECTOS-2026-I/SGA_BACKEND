@@ -83,16 +83,16 @@ jobs:
         run: |
           mkdir -p jscpd-results
 
-          # jscpd v3.x — sin dependencias nativas Rust
+          # jscpd v3.x — opciones compatibles con v3
+          # --languages NO existe en v3, jscpd detecta el tipo por extension
+          # --gitignore NO existe en v3
           jscpd src \
             --min-lines ${{ inputs.min_lines || '5' }} \
             --min-tokens ${{ inputs.min_tokens || '50' }} \
             --threshold ${{ inputs.threshold || '0' }} \
             --reporters json,console \
             --output jscpd-results \
-            --languages typescript,javascript \
-            --ignore "**/*.test.ts,**/*.spec.ts" \
-            --gitignore \
+            --ignore "**/*.test.ts,**/*.spec.ts,**/node_modules/**,**/dist/**" \
             --exitCode 0 || true
 
           # Verificar JSON generado
