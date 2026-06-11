@@ -311,7 +311,7 @@
       <span class="badge" style="background:var(--amber-bg);color:var(--amber);
             border:1px solid var(--amber-border);font-size:10px;">jscpd</span>
       <span class="badge badge-branch">⎇ dev</span>
-      <span class="badge badge-ok">A — Clean</span>
+      <span class="badge badge-warn">B — 3.99%</span>
     </div>
   </header>
 
@@ -336,7 +336,7 @@
         </svg>
         Todos los bloques
         <span class="sev-counter" style="background:var(--surface2);color:var(--text2);
-              border:1px solid var(--border);">0</span>
+              border:1px solid var(--border);">15</span>
       </div>
       <div class="sidebar-item" onclick="filterSameFile()">
         <span class="method-dot" style="background:var(--red)"></span>
@@ -347,7 +347,7 @@
         Archivos distintos
       </div>
 
-      
+      <div class="sidebar-divider"></div><div class="sidebar-label">Módulos afectados</div><div class="sidebar-item" onclick="filterModule('Malla Curricular')"><span class="method-dot" style="background:#059669"></span>Malla Curricular<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;font-size:10px;">176L</span></div><div class="sidebar-item" onclick="filterModule('Sílabos')"><span class="method-dot" style="background:#7C3AED"></span>Sílabos<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;font-size:10px;">82L</span></div><div class="sidebar-item" onclick="filterModule('Docentes')"><span class="method-dot" style="background:#0284C7"></span>Docentes<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;font-size:10px;">66L</span></div><div class="sidebar-item" onclick="filterModule('Asignaciones')"><span class="method-dot" style="background:#D97706"></span>Asignaciones<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;font-size:10px;">30L</span></div><div class="sidebar-item" onclick="filterModule('Librería')"><span class="method-dot" style="background:#94A3B8"></span>Librería<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;font-size:10px;">30L</span></div>
 
       <div class="sidebar-divider"></div>
       <div class="sidebar-label">Configuración</div>
@@ -369,9 +369,9 @@
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
-        11 Jun 2026 03:35 UTC
+        11 Jun 2026 03:41 UTC
       </div>
-      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">Run #27322024048</div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">Run #27322204754</div>
     </aside>
 
     <main class="main">
@@ -397,46 +397,46 @@
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
-            11 Jun 2026 03:35 UTC
+            11 Jun 2026 03:41 UTC
           </span>
         </div>
       </section>
 
       <div class="status-banner">
-        <div class="status-icon si-ok">
-          ✓
+        <div class="status-icon si-warn">
+          !
         </div>
         <div class="status-text">
-          <h2>Sin duplicados detectados</h2>
-          <p>El código no tiene bloques duplicados con los umbrales configurados.</p>
+          <h2>Duplicación: 3.99% — 15 bloques</h2>
+          <p>Revisa los bloques duplicados y considera refactorizar a funciones o servicios compartidos.</p>
         </div>
         <div class="status-meta">
-          <span class="badge" style="background:#ECFDF5;color:#059669;
-                border:1px solid #05966940;font-size:13px;font-weight:800;padding:4px 14px;">
-            Rating A
+          <span class="badge" style="background:#F0FDF4;color:#16A34A;
+                border:1px solid #16A34A40;font-size:13px;font-weight:800;padding:4px 14px;">
+            Rating B
           </span>
         </div>
       </div>
 
       <div class="stats">
         <div class="stat-item">
-          <span class="stat-value" style="color:#059669;">0.0%</span>
+          <span class="stat-value" style="color:#16A34A;">3.99%</span>
           <span class="stat-label">Duplicación</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value" style="color:#059669;font-size:32px;">A</span>
+          <span class="stat-value" style="color:#16A34A;font-size:32px;">B</span>
           <span class="stat-label">Rating</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value c-amber">0</span>
+          <span class="stat-value c-amber">15</span>
           <span class="stat-label">Bloques</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value c-red">0</span>
+          <span class="stat-value c-red">177</span>
           <span class="stat-label">Líneas dup.</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value c-slate">0</span>
+          <span class="stat-value c-slate">4,437</span>
           <span class="stat-label">Total líneas</span>
         </div>
       </div>
@@ -444,22 +444,22 @@
       <!-- RATING CARD estilo SonarQube -->
       <div class="rating-section">
         <div class="rating-card"
-             style="background:#ECFDF5;border-color:#05966940;color:#059669;">
-          <span class="rating-letter">A</span>
-          <span class="rating-label">Excelente</span>
+             style="background:#F0FDF4;border-color:#16A34A40;color:#16A34A;">
+          <span class="rating-letter">B</span>
+          <span class="rating-label">Bueno</span>
           <span class="rating-desc">Duplicación</span>
         </div>
         <div class="rating-metrics">
           <div class="rating-metric">
-            <span class="rating-metric-val" style="color:#059669;">0.0%</span>
+            <span class="rating-metric-val" style="color:#16A34A;">3.99%</span>
             <span class="rating-metric-lbl">Porcentaje duplicado</span>
           </div>
           <div class="rating-metric">
-            <span class="rating-metric-val">0</span>
-            <span class="rating-metric-lbl">Líneas duplicadas de 0</span>
+            <span class="rating-metric-val">177</span>
+            <span class="rating-metric-lbl">Líneas duplicadas de 4,437</span>
           </div>
           <div class="rating-metric">
-            <span class="rating-metric-val">0</span>
+            <span class="rating-metric-val">15</span>
             <span class="rating-metric-lbl">Bloques duplicados detectados</span>
           </div>
         </div>
@@ -467,7 +467,7 @@
           <strong>Escala de rating (como SonarQube):</strong><br>
           A ≤ 3% · B ≤ 5% · C ≤ 10% · D ≤ 20% · E &gt; 20%<br><br>
           <strong>Umbral configurado:</strong> 0%
-          <br><span style="color:var(--green)">✓ Por debajo del umbral</span>
+          <br><span style="color:var(--red)">✗ Supera el umbral</span>
         </div>
       </div>
 
@@ -475,36 +475,935 @@
 
         
         
+    <div class="section-card">
+      <h3 class="section-title">📦 Duplicados por módulo SGA</h3>
+      <div class="modules-bars">
+        <div class="module-bar-item">
+          <div class="module-bar-label">
+            <span class="method-dot" style="background:#059669"></span>
+            <span>Malla Curricular</span>
+          </div>
+          <div class="module-bar-track">
+            <div class="module-bar-fill" style="width:46%;background:#059669;"></div>
+          </div>
+          <span class="module-bar-val">176 líneas</span>
+        </div>
+        <div class="module-bar-item">
+          <div class="module-bar-label">
+            <span class="method-dot" style="background:#7C3AED"></span>
+            <span>Sílabos</span>
+          </div>
+          <div class="module-bar-track">
+            <div class="module-bar-fill" style="width:21%;background:#7C3AED;"></div>
+          </div>
+          <span class="module-bar-val">82 líneas</span>
+        </div>
+        <div class="module-bar-item">
+          <div class="module-bar-label">
+            <span class="method-dot" style="background:#0284C7"></span>
+            <span>Docentes</span>
+          </div>
+          <div class="module-bar-track">
+            <div class="module-bar-fill" style="width:17%;background:#0284C7;"></div>
+          </div>
+          <span class="module-bar-val">66 líneas</span>
+        </div>
+        <div class="module-bar-item">
+          <div class="module-bar-label">
+            <span class="method-dot" style="background:#D97706"></span>
+            <span>Asignaciones</span>
+          </div>
+          <div class="module-bar-track">
+            <div class="module-bar-fill" style="width:8%;background:#D97706;"></div>
+          </div>
+          <span class="module-bar-val">30 líneas</span>
+        </div>
+        <div class="module-bar-item">
+          <div class="module-bar-label">
+            <span class="method-dot" style="background:#94A3B8"></span>
+            <span>Librería</span>
+          </div>
+          <div class="module-bar-track">
+            <div class="module-bar-fill" style="width:8%;background:#94A3B8;"></div>
+          </div>
+          <span class="module-bar-val">30 líneas</span>
+        </div></div>
+    </div>
         
+    <div class="section-card">
+      <h3 class="section-title">📁 Archivos con más clones</h3>
+      <div class="table-container">
+        <table class="data-table">
+          <thead><tr><th>Archivo</th><th>Módulo</th><th>Clones</th></tr></thead>
+          <tbody><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/syllabus/types.ts</td>
+          <td><span class="module-badge" style="background:#7C3AED20;color:#7C3AED;
+              border:1px solid #7C3AED40;">Sílabos</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:100%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">8</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/curriculum/types.ts</td>
+          <td><span class="module-badge" style="background:#05966920;color:#059669;
+              border:1px solid #05966940;">Malla Curricular</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:62%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">5</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/teacher/repository.ts</td>
+          <td><span class="module-badge" style="background:#0284C720;color:#0284C7;
+              border:1px solid #0284C740;">Docentes</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:50%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">4</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/teacher/controller.ts</td>
+          <td><span class="module-badge" style="background:#0284C720;color:#0284C7;
+              border:1px solid #0284C740;">Docentes</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:25%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">2</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/curriculum/service.ts</td>
+          <td><span class="module-badge" style="background:#05966920;color:#059669;
+              border:1px solid #05966940;">Malla Curricular</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:25%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">2</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/curriculum/controller.ts</td>
+          <td><span class="module-badge" style="background:#05966920;color:#059669;
+              border:1px solid #05966940;">Malla Curricular</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:25%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">2</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/assignments/types.ts</td>
+          <td><span class="module-badge" style="background:#D9770620;color:#D97706;
+              border:1px solid #D9770640;">Asignaciones</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:25%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">2</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/assignments/repository.ts</td>
+          <td><span class="module-badge" style="background:#D9770620;color:#D97706;
+              border:1px solid #D9770640;">Asignaciones</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:25%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">2</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">src/lib/auth-context.ts</td>
+          <td><span class="module-badge" style="background:#94A3B820;color:#94A3B8;
+              border:1px solid #94A3B840;">Librería</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:25%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">2</span>
+            </div>
+          </td>
+        </tr><tr>
+          <td style="font-family:var(--mono);font-size:12px;">functions/curriculum/repository.ts</td>
+          <td><span class="module-badge" style="background:#05966920;color:#059669;
+              border:1px solid #05966940;">Malla Curricular</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                <div style="width:12%;height:100%;background:var(--accent);border-radius:3px;"></div>
+              </div>
+              <span style="font-family:var(--mono);font-weight:700;color:var(--accent);
+                           font-size:12px;min-width:20px;">1</span>
+            </div>
+          </td>
+        </tr></tbody>
+        </table>
+      </div>
+    </div>
 
         <!-- BLOQUES DUPLICADOS -->
         <div class="section-card">
           <div class="toolbar">
             <h3 class="section-title" style="margin-bottom:0;">🔁 Bloques duplicados</h3>
             <div style="margin-left:auto;display:flex;gap:8px;">
-              <button class="filter-btn active" onclick="filterBtnBlocks(this,'all')">Todos (0)</button>
+              <button class="filter-btn active" onclick="filterBtnBlocks(this,'all')">Todos (15)</button>
               <button class="filter-btn" onclick="filterBtnBlocks(this,'same')">Mismo archivo</button>
               <button class="filter-btn" onclick="filterBtnBlocks(this,'diff')">Distintos</button>
             </div>
           </div>
           <div class="blocks-list" id="blocksList" style="margin-top:16px;">
             
-    <div class="empty-state">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="1.5" style="color:var(--green);margin-bottom:12px;">
-        <polyline points="9 11 12 14 22 4"/>
-        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-      </svg>
-      <h3>Sin código duplicado detectado</h3>
-      <p>No se encontraron bloques duplicados con los umbrales configurados.</p>
+<div class="block-card" data-module1="Docentes" data-module2="Docentes">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">15 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Docentes</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
     </div>
+    <span class="block-idx">#1</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/teacher/repository.ts
+        <span class="line-range">L144 – L158</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/teacher/repository.ts
+        <span class="line-range">L64 – L78</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">nombre: schema.docente.nombreDocente,
+        correo: schema.docente.correo,
+        telefono: schema.docente.numeroCelular,
+        gradoCatalogo: schema.gradoAcademicoCatalogo.nombre,
+        gradoTexto: schema.docente.gradoAcademico,
+      })
+      .from(schema.docente)
+      .leftJoin(
+        schema.gradoAcademicoCatalogo,
+        eq(schema.docente.gradoAcademicoId, schema.gradoAcademicoCatalogo.id),
+      )
+      .where(eq(schema.docente.id, docenteId))
+      .limit(1);
+
+    const r = afte</pre>
+</div>
+<div class="block-card" data-module1="Docentes" data-module2="Docentes">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">9 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Docentes</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#2</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/teacher/repository.ts
+        <span class="line-range">L162 – L170</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/teacher/repository.ts
+        <span class="line-range">L83 – L92</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">nombre: r.nombre ?? null,
+      correo: r.correo ?? null,
+      telefono: r.telefono ?? null,
+      grado: r.gradoTexto ?? r.gradoCatalogo ?? null,
+      apellido: null,
+      bachiller: null,
+    };
+  }
+}</pre>
+</div>
+<div class="block-card" data-module1="Docentes" data-module2="Docentes">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">9 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Docentes</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#3</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/teacher/controller.ts
+        <span class="line-range">L49 – L57</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/teacher/controller.ts
+        <span class="line-range">L31 – L39</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">(req: HttpRequest): Promise&lt;HttpResponseInit&gt; {
+    const { teacherId } = (req.params ?? {}) as { teacherId?: string };
+    const id = Number(teacherId);
+
+    if (!Number.isFinite(id) || id &lt;= 0) {
+      throw new AppError(
+        "BadRequest",
+        "BAD_REQUEST",
+        "Debe especificar un teacherId válido en la ruta."</pre>
+</div>
+<div class="block-card" data-module1="Sílabos" data-module2="Sílabos">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">11 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Sílabos</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#4</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L132 – L142</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L113 – L123</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">= z.object({
+  items: z
+    .array(
+      z.object({
+        id: IdSchema.optional(),
+        text: z
+          .string()
+          .trim()
+          .min(1, "El campo 'text' es obligatorio")
+          .max(MEDIUM_TEXT_MAX),
+        code: CodeSchemaAttitude</pre>
+</div>
+<div class="block-card" data-module1="Sílabos" data-module2="Sílabos">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">10 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Sílabos</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#5</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L249 – L258</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L239 – L248</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">: z.array(
+    z.object({
+      id: z.number(),
+      codigo: z.string().nullable(),
+      descripcion: z.string(),
+      orden: z.number().nullable(),
+    }),
+  ),
+
+  componentesProcedimentales</pre>
+</div>
+<div class="block-card" data-module1="Sílabos" data-module2="Sílabos">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">10 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Sílabos</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#6</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L258 – L267</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L239 – L248</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">: z.array(
+    z.object({
+      id: z.number(),
+      codigo: z.string().nullable(),
+      descripcion: z.string(),
+      orden: z.number().nullable(),
+    }),
+  ),
+
+  componentesActitudinales</pre>
+</div>
+<div class="block-card" data-module1="Sílabos" data-module2="Sílabos">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">10 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Sílabos</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#7</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L267 – L276</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/syllabus/types.ts
+        <span class="line-range">L239 – L248</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">: z.array(
+    z.object({
+      id: z.number(),
+      codigo: z.string().nullable(),
+      descripcion: z.string(),
+      orden: z.number().nullable(),
+    }),
+  ),
+
+  // V. RESULTADOS DE APRENDIZAJE</pre>
+</div>
+<div class="block-card" data-module1="Malla Curricular" data-module2="Malla Curricular">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">16 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Malla Curricular</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#8</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/types.ts
+        <span class="line-range">L90 – L105</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/types.ts
+        <span class="line-range">L27 – L41</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">),
+
+  ciclo: z
+    .number()
+    .int("El ciclo debe ser un número entero")
+    .min(1, "El ciclo debe ser mayor o igual a 1")
+    .max(10, "El ciclo no debe superar 10")
+    .nullable()
+    .optional(),
+
+  creditos: z
+    .number()
+    .int("Los créditos deben ser un número entero")
+    .min(0, "Los créditos no pueden ser negativos")
+    .max(30, "Los créditos no deben superar 30")
+    .</pre>
+</div>
+<div class="block-card" data-module1="Malla Curricular" data-module2="Malla Curricular">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">37 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Malla Curricular</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#9</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/types.ts
+        <span class="line-range">L105 – L141</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/types.ts
+        <span class="line-range">L41 – L77</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">),
+
+  horasTeoria: z
+    .number()
+    .int("Las horas de teoría deben ser un número entero")
+    .min(0, "Las horas de teoría no pueden ser negativas")
+    .max(30, "Las horas de teoría no deben superar 30")
+    .optional(),
+
+  horasPractica: z
+    .number()
+    .int("Las horas de práctica deben ser un número entero")
+    .min(0, "Las horas de práctica no pueden ser negativas")
+    .max(30, "Las horas de práctica no deben superar 30")
+    .optional(),
+
+  modalidad: z
+    .string()
+    .trim()
+ </pre>
+</div>
+<div class="block-card" data-module1="Malla Curricular" data-module2="Malla Curricular">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">13 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Malla Curricular</span>
+      
+      
+    </div>
+    <span class="block-idx">#10</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/service.ts
+        <span class="line-range">L106 – L118</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/types.ts
+        <span class="line-range">L149 – L161</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">{
+    id: number;
+    periodo: string;
+    codigo: string;
+    nombre: string;
+    ciclo: number | null;
+    creditos: number;
+    horasTeoria: number;
+    horasPractica: number;
+    modalidad: string;
+    tipoCurso: string | null;
+    areaCurricular: string | null;
+    prerrequisitos: unknown</pre>
+</div>
+<div class="block-card" data-module1="Malla Curricular" data-module2="Malla Curricular">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">11 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Malla Curricular</span>
+      
+      
+    </div>
+    <span class="block-idx">#11</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/repository.ts
+        <span class="line-range">L62 – L72</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/service.ts
+        <span class="line-range">L85 – L95</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">codigo: course.codigo,
+          nombre: course.nombre,
+          ciclo: course.ciclo,
+          creditos: course.creditos,
+          horasTeoria: course.horasTeoria,
+          horasPractica: course.horasPractica,
+          modalidad: course.modalidad,
+          tipoCurso: course.tipoCurso ?? null,
+          areaCurricular: course.areaCurricular ?? null,
+          prerrequisitos: course.prerrequisitos,
+          activo</pre>
+</div>
+<div class="block-card" data-module1="Malla Curricular" data-module2="Malla Curricular">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">11 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Malla Curricular</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#12</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/controller.ts
+        <span class="line-range">L127 – L137</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/curriculum/controller.ts
+        <span class="line-range">L82 – L92</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">(
+    req: HttpRequest,
+    _ctx: InvocationContext,
+  ): Promise&lt;HttpResponseInit&gt; {
+    const id = Number(req.params.id);
+
+    if (!Number.isFinite(id) || id &lt;= 0) {
+      throw new AppError("BadRequest", "BAD_REQUEST", "ID de curso inválido");
+    }
+
+    const data</pre>
+</div>
+<div class="block-card" data-module1="Asignaciones" data-module2="Asignaciones">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">7 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Asignaciones</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#13</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/assignments/types.ts
+        <span class="line-range">L52 – L58</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/assignments/types.ts
+        <span class="line-range">L44 – L50</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">: z
+    .string()
+    .optional()
+    .transform((val) =&gt; (val ? parseInt(val, 10) : undefined))
+    .refine(
+      (v) =&gt; v === undefined || (Number.isInteger(v) &amp;&amp; v &gt; 0),
+      "idDocente inválido"</pre>
+</div>
+<div class="block-card" data-module1="Asignaciones" data-module2="Asignaciones">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">8 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Asignaciones</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#14</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/assignments/repository.ts
+        <span class="line-range">L205 – L212</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        functions/assignments/repository.ts
+        <span class="line-range">L38 – L45</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">,
+          docenteId: silaboDocente.docenteId,
+          nombreDocente: docente.nombreDocente,
+        })
+        .from(silabo)
+        .leftJoin(silaboDocente, eq(silabo.id, silaboDocente.silaboId))
+        .leftJoin(docente, eq(silaboDocente.docenteId, docente.id))
+        .$dynamic</pre>
+</div>
+<div class="block-card" data-module1="Librería" data-module2="Librería">
+  <div class="block-header">
+    <div class="block-meta">
+      <span class="lines-badge">15 líneas</span>
+      
+      <span class="module-badge" style="background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border);">Librería</span>
+      
+      <span class="same-file-badge">Mismo archivo</span>
+    </div>
+    <span class="block-idx">#15</span>
+  </div>
+
+  <div class="files-grid">
+    <div class="file-entry">
+      <div class="file-label">Archivo A</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        src/lib/auth-context.ts
+        <span class="line-range">L182 – L196</span>
+      </div>
+    </div>
+    <div class="file-entry">
+      <div class="file-label">Archivo B</div>
+      <div class="file-path">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        src/lib/auth-context.ts
+        <span class="line-range">L127 – L141</span>
+      </div>
+    </div>
+  </div>
+
+  <pre class="code-fragment">= [
+    user.role,
+    user.rol,
+    user.roleName,
+    user.rolNombre,
+    user.nombreRol,
+    user.categoriaNombre,
+    user.perfil,
+    user.perfilNombre,
+    user.selectedRole,
+    user.currentRole,
+    ...(Array.isArray(user.roles) ? user.roles : []),
+  ];
+
+  return</pre>
+</div>
           </div>
         </div>
 
       </div>
 
       <footer class="footer">
-        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 03:35 UTC</span>
+        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 03:41 UTC</span>
         <span>Powered by <a href="https://github.com/kucherenko/jscpd" target="_blank">jscpd</a></span>
       </footer>
     </main>
