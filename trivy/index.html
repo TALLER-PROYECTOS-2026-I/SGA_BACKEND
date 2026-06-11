@@ -386,7 +386,7 @@
     <div class="header-right">
       <span class="badge badge-tech">npm · fs scan</span>
       <span class="badge badge-branch">⎇ dev</span>
-      <span class="badge badge-ok">Passed</span>
+      <span class="badge badge-fail">Failed</span>
     </div>
   </header>
 
@@ -404,7 +404,7 @@
       <div class="sidebar-label" style="margin-top:8px;">Severidad</div>
       <div class="sidebar-item active" data-sev="all" onclick="filterSidebar('all')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Todos <span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);">0</span>
+        Todos <span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);">39</span>
       </div>
       <div class="sidebar-item" data-sev="CRITICAL" onclick="filterSidebar('CRITICAL')">
         <span class="method-dot" style="background:var(--red)"></span>Crítico
@@ -412,22 +412,22 @@
       </div>
       <div class="sidebar-item" data-sev="HIGH" onclick="filterSidebar('HIGH')">
         <span class="method-dot" style="background:var(--amber)"></span>Alto
-        <span class="sev-counter sc-high">0</span>
+        <span class="sev-counter sc-high">20</span>
       </div>
       <div class="sidebar-item" data-sev="MEDIUM" onclick="filterSidebar('MEDIUM')">
         <span class="method-dot" style="background:var(--blue)"></span>Medio
-        <span class="sev-counter sc-medium">0</span>
+        <span class="sev-counter sc-medium">13</span>
       </div>
       <div class="sidebar-item" data-sev="LOW" onclick="filterSidebar('LOW')">
         <span class="method-dot" style="background:var(--green)"></span>Bajo
-        <span class="sev-counter sc-low">0</span>
+        <span class="sev-counter sc-low">6</span>
       </div>
 
       <div class="sidebar-divider"></div>
       <div class="sidebar-label">Tipos</div>
       <div class="sidebar-item" onclick="switchTab('vulns')">
         <span class="method-dot" style="background:var(--red)"></span>CVE npm
-        <span class="sev-counter sc-critical">0</span>
+        <span class="sev-counter sc-critical">39</span>
       </div>
       <div class="sidebar-item" onclick="switchTab('secrets')">
         <span class="method-dot" style="background:var(--amber)"></span>Secretos
@@ -446,9 +446,9 @@
       </div>
       <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        11 Jun 2026 02:51 UTC
+        11 Jun 2026 03:00 UTC
       </div>
-      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Run #27320493093</div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Run #27320807464</div>
     </aside>
 
     <!-- MAIN -->
@@ -472,41 +472,80 @@
           <span class="hero-pill">⚙️ Misconfig</span>
           <span class="hero-pill">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            11 Jun 2026 02:51 UTC
+            11 Jun 2026 03:00 UTC
           </span>
         </div>
       </section>
 
       <!-- STATUS BANNER -->
       <div class="status-banner">
-        <div class="status-icon si-ok">✓</div>
+        <div class="status-icon si-warn">!</div>
         <div class="status-text">
-          <h2>Análisis superado — sin hallazgos</h2>
-          <p>No se detectaron vulnerabilidades.</p>
+          <h2>39 hallazgos encontrados</h2>
+          <p>Revisa los hallazgos antes de fusionar a producción.</p>
         </div>
         <div class="status-meta">
-          <span class="badge badge-ok">✓ Clean</span>
+          <span class="badge badge-fail">✗ 39 issues</span>
           <a href="https://github.com/TALLER-PROYECTOS-2026-I/SGA_BACKEND/security" target="_blank" class="filter-btn" style="text-decoration:none;">Ver en GitHub →</a>
         </div>
       </div>
 
       <!-- STATS -->
       <div class="stats">
-        <div class="stat-item"><span class="stat-value c-accent">0</span><span class="stat-label">Total</span></div>
+        <div class="stat-item"><span class="stat-value c-accent">39</span><span class="stat-label">Total</span></div>
         <div class="stat-item"><span class="stat-value c-red">0</span><span class="stat-label">Crítico</span></div>
-        <div class="stat-item"><span class="stat-value c-amber">0</span><span class="stat-label">Alto</span></div>
-        <div class="stat-item"><span class="stat-value c-blue">0</span><span class="stat-label">Medio</span></div>
-        <div class="stat-item"><span class="stat-value c-green">0</span><span class="stat-label">Bajo</span></div>
-        <div class="stat-item"><span class="stat-value c-red">0</span><span class="stat-label">CVE npm</span></div>
+        <div class="stat-item"><span class="stat-value c-amber">20</span><span class="stat-label">Alto</span></div>
+        <div class="stat-item"><span class="stat-value c-blue">13</span><span class="stat-label">Medio</span></div>
+        <div class="stat-item"><span class="stat-value c-green">6</span><span class="stat-label">Bajo</span></div>
+        <div class="stat-item"><span class="stat-value c-red">39</span><span class="stat-label">CVE npm</span></div>
         <div class="stat-item"><span class="stat-value c-amber">0</span><span class="stat-label">Secretos</span></div>
       </div>
 
       <!-- DONUT -->
       
+    <div class="chart-section">
+      <div class="donut-wrap">
+        <svg viewBox="0 0 160 160" style="transform:rotate(-90deg);width:100%;height:100%;">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#E2E8F0" stroke-width="18"/>
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#D97706" stroke-width="18" stroke-dasharray="193.33 376.99" stroke-dashoffset="-0.00" stroke-linecap="butt"/>
+<circle cx="80" cy="80" r="60" fill="none" stroke="#0284C7" stroke-width="18" stroke-dasharray="125.66 376.99" stroke-dashoffset="-193.33" stroke-linecap="butt"/>
+<circle cx="80" cy="80" r="60" fill="none" stroke="#059669" stroke-width="18" stroke-dasharray="58.00 376.99" stroke-dashoffset="-318.99" stroke-linecap="butt"/>
+        </svg>
+        <div class="donut-center">
+          <div class="donut-total">39</div>
+          <div class="donut-label">issues</div>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#DC2626"></span>
+          <span class="legend-name">Crítico</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:0%;background:#DC2626"></div></div>
+          <span class="legend-count">0</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#D97706"></span>
+          <span class="legend-name">Alto</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:51%;background:#D97706"></div></div>
+          <span class="legend-count">20</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#0284C7"></span>
+          <span class="legend-name">Medio</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:33%;background:#0284C7"></div></div>
+          <span class="legend-count">13</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#059669"></span>
+          <span class="legend-name">Bajo</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:15%;background:#059669"></div></div>
+          <span class="legend-count">6</span>
+        </div></div>
+    </div>
 
       <!-- TABS -->
       <div class="tabs-bar">
-        <button class="tab-btn active" data-tab="vulns"     onclick="switchTab('vulns')">🔴 CVE / npm <span class="tab-badge tb-green">0</span></button>
+        <button class="tab-btn active" data-tab="vulns"     onclick="switchTab('vulns')">🔴 CVE / npm <span class="tab-badge tb-red">39</span></button>
         <button class="tab-btn"        data-tab="secrets"   onclick="switchTab('secrets')">🔑 Secretos <span class="tab-badge tb-green">0</span></button>
         <button class="tab-btn"        data-tab="misconfigs" onclick="switchTab('misconfigs')">⚙️ Misconfig <span class="tab-badge tb-green">0</span></button>
       </div>
@@ -518,17 +557,932 @@
         <div id="panel-vulns" class="tab-panel active">
           <div class="toolbar">
           <span class="toolbar-label">Filtrar:</span>
-          <button class="filter-btn active" data-sev="all"      onclick="filterBySev(this,'all')">Todos (0)</button>
+          <button class="filter-btn active" data-sev="all"      onclick="filterBySev(this,'all')">Todos (39)</button>
           <button class="filter-btn fb-critical" data-sev="CRITICAL" onclick="filterBySev(this,'CRITICAL')">Crítico (0)</button>
-          <button class="filter-btn fb-high"     data-sev="HIGH"     onclick="filterBySev(this,'HIGH')">Alto (0)</button>
-          <button class="filter-btn fb-medium"   data-sev="MEDIUM"   onclick="filterBySev(this,'MEDIUM')">Medio (0)</button>
-          <button class="filter-btn fb-low"      data-sev="LOW"      onclick="filterBySev(this,'LOW')">Bajo (0)</button>
+          <button class="filter-btn fb-high"     data-sev="HIGH"     onclick="filterBySev(this,'HIGH')">Alto (20)</button>
+          <button class="filter-btn fb-medium"   data-sev="MEDIUM"   onclick="filterBySev(this,'MEDIUM')">Medio (13)</button>
+          <button class="filter-btn fb-low"      data-sev="LOW"      onclick="filterBySev(this,'LOW')">Bajo (6)</button>
         </div>
-          <div class="findings-list"><div class="empty-state">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-           style="color:var(--green);margin-bottom:12px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      <polyline points="9 12 11 14 15 10"/></svg>
-      <h3>Sin vulnerabilidades CVE</h3><p>No se encontraron CVEs en las dependencias npm.</p></div></div>
+          <div class="findings-list">
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-26171</span>
+      <span class="fixed-badge">Fix: 10.0.6, 9.0.15, 8.0.3</span>
+    </div>
+    <span class="finding-idx">#1</span>
+  </div>
+  <h3 class="finding-title">dotnet: .NET: Security Bypass and Denial of Service Vulnerability</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>System.Security.Cryptography.Xml</strong>
+    <span class="ver-badge">instalado: 8.0.2</span>
+  </div>
+  <p class="finding-desc">Uncontrolled resource consumption in .NET allows an unauthorized attacker to deny service over a network.</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-26171" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-26171</a><a href="https://access.redhat.com/errata/RHSA-2026:8469" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:8469</a><a href="https://access.redhat.com/security/cve/CVE-2026-26171" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-26171</a><a href="https://bugzilla.redhat.com/2457739" target="_blank" class="ref-link">https://bugzilla.redhat.com/2457739</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-33116</span>
+      <span class="fixed-badge">Fix: 10.0.6, 9.0.15, 8.0.3</span>
+    </div>
+    <span class="finding-idx">#2</span>
+  </div>
+  <h3 class="finding-title">dotnet: .NET: Denial of Service via Infinite Recursion in XmlDecryptionTransform</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>System.Security.Cryptography.Xml</strong>
+    <span class="ver-badge">instalado: 8.0.2</span>
+  </div>
+  <p class="finding-desc">Loop with unreachable exit condition ('infinite loop') in .NET, .NET Framework, Visual Studio allows an unauthorized attacker to deny service over a network.</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33116" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33116</a><a href="https://access.redhat.com/errata/RHSA-2026:8469" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:8469</a><a href="https://access.redhat.com/security/cve/CVE-2026-33116" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33116</a><a href="https://bugzilla.redhat.com/2457739" target="_blank" class="ref-link">https://bugzilla.redhat.com/2457739</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-26171</span>
+      <span class="fixed-badge">Fix: 10.0.6, 9.0.15, 8.0.3</span>
+    </div>
+    <span class="finding-idx">#3</span>
+  </div>
+  <h3 class="finding-title">dotnet: .NET: Security Bypass and Denial of Service Vulnerability</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>System.Security.Cryptography.Xml</strong>
+    <span class="ver-badge">instalado: 8.0.2</span>
+  </div>
+  <p class="finding-desc">Uncontrolled resource consumption in .NET allows an unauthorized attacker to deny service over a network.</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-26171" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-26171</a><a href="https://access.redhat.com/errata/RHSA-2026:8469" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:8469</a><a href="https://access.redhat.com/security/cve/CVE-2026-26171" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-26171</a><a href="https://bugzilla.redhat.com/2457739" target="_blank" class="ref-link">https://bugzilla.redhat.com/2457739</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-33116</span>
+      <span class="fixed-badge">Fix: 10.0.6, 9.0.15, 8.0.3</span>
+    </div>
+    <span class="finding-idx">#4</span>
+  </div>
+  <h3 class="finding-title">dotnet: .NET: Denial of Service via Infinite Recursion in XmlDecryptionTransform</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>System.Security.Cryptography.Xml</strong>
+    <span class="ver-badge">instalado: 8.0.2</span>
+  </div>
+  <p class="finding-desc">Loop with unreachable exit condition ('infinite loop') in .NET, .NET Framework, Visual Studio allows an unauthorized attacker to deny service over a network.</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33116" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33116</a><a href="https://access.redhat.com/errata/RHSA-2026:8469" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:8469</a><a href="https://access.redhat.com/security/cve/CVE-2026-33116" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33116</a><a href="https://bugzilla.redhat.com/2457739" target="_blank" class="ref-link">https://bugzilla.redhat.com/2457739</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-39356</span>
+      <span class="fixed-badge">Fix: 0.45.2, 1.0.0-beta.20</span>
+    </div>
+    <span class="finding-idx">#5</span>
+  </div>
+  <h3 class="finding-title">Drizzle ORM has SQL injection via improperly escaped SQL identifiers</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>drizzle-orm</strong>
+    <span class="ver-badge">instalado: 0.44.6</span>
+  </div>
+  <p class="finding-desc">Drizzle is a modern TypeScript ORM. Prior to 0.45.2 and 1.0.0-beta.20, Drizzle ORM improperly escaped quoted SQL identifiers in its dialect-specific escapeName() implementations. In affected versions, embedded identifier delimiters were not escaped before the identifier was wrapped in quotes or back…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-39356" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-39356</a><a href="https://github.com/drizzle-team/drizzle-orm" target="_blank" class="ref-link">https://github.com/drizzle-team/drizzle-orm</a><a href="https://github.com/drizzle-team/drizzle-orm/security/advisories/GHSA-gpj5-g38j-94v9" target="_blank" class="ref-link">https://github.com/drizzle-team/drizzle-orm/security/advisor…</a><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39356" target="_blank" class="ref-link">https://nvd.nist.gov/vuln/detail/CVE-2026-39356</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-32141</span>
+      <span class="fixed-badge">Fix: 3.4.0</span>
+    </div>
+    <span class="finding-idx">#6</span>
+  </div>
+  <h3 class="finding-title">flatted: flatted: Unbounded recursion DoS in parse() revive phase</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>flatted</strong>
+    <span class="ver-badge">instalado: 3.3.3</span>
+  </div>
+  <p class="finding-desc">flatted is a circular JSON parser. Prior to 3.4.0, flatted's parse() function uses a recursive revive() phase to resolve circular references in deserialized JSON. When given a crafted payload with deeply nested or self-referential $ indices, the recursion depth is unbounded, causing a stack overflow…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-32141" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-32141</a><a href="https://access.redhat.com/security/cve/CVE-2026-32141" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-32141</a><a href="https://github.com/WebReflection/flatted" target="_blank" class="ref-link">https://github.com/WebReflection/flatted</a><a href="https://github.com/WebReflection/flatted/commit/7eb65d857e1a40de11c47461cdbc8541449f0606" target="_blank" class="ref-link">https://github.com/WebReflection/flatted/commit/7eb65d857e1a…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 9.8</span>
+      <span class="rule-id">CVE-2026-33228</span>
+      <span class="fixed-badge">Fix: 3.4.2</span>
+    </div>
+    <span class="finding-idx">#7</span>
+  </div>
+  <h3 class="finding-title">flatted: Flatted: Prototype pollution vulnerability allows arbitrary code execution via crafted JSON.</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>flatted</strong>
+    <span class="ver-badge">instalado: 3.3.3</span>
+  </div>
+  <p class="finding-desc">flatted is a circular JSON parser. Prior to version 3.4.2, the parse() function in flatted can use attacker-controlled string values from the parsed JSON as direct array index keys, without validating that they are numeric. Since the internal input buffer is a JavaScript Array, accessing it with the…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33228" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33228</a><a href="https://access.redhat.com/security/cve/CVE-2026-33228" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33228</a><a href="https://github.com/WebReflection/flatted" target="_blank" class="ref-link">https://github.com/WebReflection/flatted</a><a href="https://github.com/WebReflection/flatted/commit/885ddcc33cf9657caf38c57c7be45ae1c5272802" target="_blank" class="ref-link">https://github.com/WebReflection/flatted/commit/885ddcc33cf9…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2025-65945</span>
+      <span class="fixed-badge">Fix: 3.2.3, 4.0.1</span>
+    </div>
+    <span class="finding-idx">#8</span>
+  </div>
+  <h3 class="finding-title">node-jws: auth0/node-jws: Improper signature verification in HS256 algorithm</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>jws</strong>
+    <span class="ver-badge">instalado: 3.2.2</span>
+  </div>
+  <p class="finding-desc">auth0/node-jws is a JSON Web Signature implementation for Node.js. In versions 3.2.2 and earlier and version 4.0.0, auth0/node-jws has an improper signature verification vulnerability when using the HS256 algorithm under specific conditions. Applications are affected when they use the jws.createVeri…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2025-65945" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2025-65945</a><a href="https://access.redhat.com/security/cve/CVE-2025-65945" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2025-65945</a><a href="https://github.com/auth0/node-jws" target="_blank" class="ref-link">https://github.com/auth0/node-jws</a><a href="https://github.com/auth0/node-jws/commit/34c45b2c04434f925b638de6a061de9339c0ea2e" target="_blank" class="ref-link">https://github.com/auth0/node-jws/commit/34c45b2c04434f925b6…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-26996</span>
+      <span class="fixed-badge">Fix: 10.2.1, 9.0.6, 8.0.5, 7.4.7, 6.2.1, 5.1.7, 4.2.4, 3.1.3</span>
+    </div>
+    <span class="finding-idx">#9</span>
+  </div>
+  <h3 class="finding-title">minimatch: minimatch: Denial of Service via specially crafted glob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 3.1.2</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Versions 10.2.0 and below are vulnerable to Regular Expression Denial of Service (ReDoS) when a glob pattern contains many consecutive * wildcards followed by a literal character that doesn't appe…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-26996" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-26996</a><a href="https://access.redhat.com/errata/RHSA-2026:7896" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7896</a><a href="https://access.redhat.com/security/cve/CVE-2026-26996" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-26996</a><a href="https://bugzilla.redhat.com/2441268" target="_blank" class="ref-link">https://bugzilla.redhat.com/2441268</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-27903</span>
+      <span class="fixed-badge">Fix: 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, 3.1.3</span>
+    </div>
+    <span class="finding-idx">#10</span>
+  </div>
+  <h3 class="finding-title">minimatch: minimatch: Denial of Service due to unbounded recursive backtracking via crafted glob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 3.1.2</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to version 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, and 3.1.3, `matchOne()` performs unbounded recursive backtracking when a glob pattern contains multiple non-adjacent `**` (GLOBST…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-27903" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-27903</a><a href="https://access.redhat.com/security/cve/CVE-2026-27903" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-27903</a><a href="https://github.com/isaacs/minimatch" target="_blank" class="ref-link">https://github.com/isaacs/minimatch</a><a href="https://github.com/isaacs/minimatch/commit/0bf499aa45f5059b56809cc3b75ff3eafeb8d748" target="_blank" class="ref-link">https://github.com/isaacs/minimatch/commit/0bf499aa45f5059b5…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-27904</span>
+      <span class="fixed-badge">Fix: 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, 3.1.4</span>
+    </div>
+    <span class="finding-idx">#11</span>
+  </div>
+  <h3 class="finding-title">minimatch: Minimatch: Denial of Service via catastrophic backtracking in glob expressions</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 3.1.2</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to version 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, and 3.1.4, nested `*()` extglobs produce regexps with nested unbounded quantifiers (e.g. `(?:(?:a|b)*)*`), which exhibit catastro…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-27904" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-27904</a><a href="https://access.redhat.com/errata/RHSA-2026:7896" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7896</a><a href="https://access.redhat.com/security/cve/CVE-2026-27904" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-27904</a><a href="https://bugzilla.redhat.com/2441268" target="_blank" class="ref-link">https://bugzilla.redhat.com/2441268</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-26996</span>
+      <span class="fixed-badge">Fix: 10.2.1, 9.0.6, 8.0.5, 7.4.7, 6.2.1, 5.1.7, 4.2.4, 3.1.3</span>
+    </div>
+    <span class="finding-idx">#12</span>
+  </div>
+  <h3 class="finding-title">minimatch: minimatch: Denial of Service via specially crafted glob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 8.0.4</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Versions 10.2.0 and below are vulnerable to Regular Expression Denial of Service (ReDoS) when a glob pattern contains many consecutive * wildcards followed by a literal character that doesn't appe…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-26996" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-26996</a><a href="https://access.redhat.com/errata/RHSA-2026:7896" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7896</a><a href="https://access.redhat.com/security/cve/CVE-2026-26996" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-26996</a><a href="https://bugzilla.redhat.com/2441268" target="_blank" class="ref-link">https://bugzilla.redhat.com/2441268</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-27903</span>
+      <span class="fixed-badge">Fix: 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, 3.1.3</span>
+    </div>
+    <span class="finding-idx">#13</span>
+  </div>
+  <h3 class="finding-title">minimatch: minimatch: Denial of Service due to unbounded recursive backtracking via crafted glob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 8.0.4</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to version 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, and 3.1.3, `matchOne()` performs unbounded recursive backtracking when a glob pattern contains multiple non-adjacent `**` (GLOBST…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-27903" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-27903</a><a href="https://access.redhat.com/security/cve/CVE-2026-27903" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-27903</a><a href="https://github.com/isaacs/minimatch" target="_blank" class="ref-link">https://github.com/isaacs/minimatch</a><a href="https://github.com/isaacs/minimatch/commit/0bf499aa45f5059b56809cc3b75ff3eafeb8d748" target="_blank" class="ref-link">https://github.com/isaacs/minimatch/commit/0bf499aa45f5059b5…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-27904</span>
+      <span class="fixed-badge">Fix: 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, 3.1.4</span>
+    </div>
+    <span class="finding-idx">#14</span>
+  </div>
+  <h3 class="finding-title">minimatch: Minimatch: Denial of Service via catastrophic backtracking in glob expressions</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 8.0.4</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to version 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, and 3.1.4, nested `*()` extglobs produce regexps with nested unbounded quantifiers (e.g. `(?:(?:a|b)*)*`), which exhibit catastro…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-27904" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-27904</a><a href="https://access.redhat.com/errata/RHSA-2026:7896" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7896</a><a href="https://access.redhat.com/security/cve/CVE-2026-27904" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-27904</a><a href="https://bugzilla.redhat.com/2441268" target="_blank" class="ref-link">https://bugzilla.redhat.com/2441268</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-26996</span>
+      <span class="fixed-badge">Fix: 10.2.1, 9.0.6, 8.0.5, 7.4.7, 6.2.1, 5.1.7, 4.2.4, 3.1.3</span>
+    </div>
+    <span class="finding-idx">#15</span>
+  </div>
+  <h3 class="finding-title">minimatch: minimatch: Denial of Service via specially crafted glob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 9.0.5</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Versions 10.2.0 and below are vulnerable to Regular Expression Denial of Service (ReDoS) when a glob pattern contains many consecutive * wildcards followed by a literal character that doesn't appe…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-26996" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-26996</a><a href="https://access.redhat.com/errata/RHSA-2026:7896" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7896</a><a href="https://access.redhat.com/security/cve/CVE-2026-26996" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-26996</a><a href="https://bugzilla.redhat.com/2441268" target="_blank" class="ref-link">https://bugzilla.redhat.com/2441268</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-27903</span>
+      <span class="fixed-badge">Fix: 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, 3.1.3</span>
+    </div>
+    <span class="finding-idx">#16</span>
+  </div>
+  <h3 class="finding-title">minimatch: minimatch: Denial of Service due to unbounded recursive backtracking via crafted glob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 9.0.5</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to version 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, and 3.1.3, `matchOne()` performs unbounded recursive backtracking when a glob pattern contains multiple non-adjacent `**` (GLOBST…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-27903" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-27903</a><a href="https://access.redhat.com/security/cve/CVE-2026-27903" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-27903</a><a href="https://github.com/isaacs/minimatch" target="_blank" class="ref-link">https://github.com/isaacs/minimatch</a><a href="https://github.com/isaacs/minimatch/commit/0bf499aa45f5059b56809cc3b75ff3eafeb8d748" target="_blank" class="ref-link">https://github.com/isaacs/minimatch/commit/0bf499aa45f5059b5…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-27904</span>
+      <span class="fixed-badge">Fix: 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, 3.1.4</span>
+    </div>
+    <span class="finding-idx">#17</span>
+  </div>
+  <h3 class="finding-title">minimatch: Minimatch: Denial of Service via catastrophic backtracking in glob expressions</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>minimatch</strong>
+    <span class="ver-badge">instalado: 9.0.5</span>
+  </div>
+  <p class="finding-desc">minimatch is a minimal matching utility for converting glob expressions into JavaScript RegExp objects. Prior to version 10.2.3, 9.0.7, 8.0.6, 7.4.8, 6.2.2, 5.1.8, 4.2.5, and 3.1.4, nested `*()` extglobs produce regexps with nested unbounded quantifiers (e.g. `(?:(?:a|b)*)*`), which exhibit catastro…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-27904" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-27904</a><a href="https://access.redhat.com/errata/RHSA-2026:7896" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7896</a><a href="https://access.redhat.com/security/cve/CVE-2026-27904" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-27904</a><a href="https://bugzilla.redhat.com/2441268" target="_blank" class="ref-link">https://bugzilla.redhat.com/2441268</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-33671</span>
+      <span class="fixed-badge">Fix: 4.0.4, 3.0.2, 2.3.2</span>
+    </div>
+    <span class="finding-idx">#18</span>
+  </div>
+  <h3 class="finding-title">picomatch: Picomatch: Regular Expression Denial of Service via crafted extglob patterns</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>picomatch</strong>
+    <span class="ver-badge">instalado: 2.3.1</span>
+  </div>
+  <p class="finding-desc">Picomatch is a glob matcher written JavaScript. Versions prior to 4.0.4, 3.0.2, and 2.3.2 are vulnerable to Regular Expression Denial of Service (ReDoS) when processing crafted extglob patterns. Certain patterns using extglob quantifiers such as `+()` and `*()`, especially when combined with overlap…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33671" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33671</a><a href="https://access.redhat.com/security/cve/CVE-2026-33671" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33671</a><a href="https://github.com/micromatch/picomatch" target="_blank" class="ref-link">https://github.com/micromatch/picomatch</a><a href="https://github.com/micromatch/picomatch/commit/5eceecd27543b8e056b9307d69e105ea03618a7d" target="_blank" class="ref-link">https://github.com/micromatch/picomatch/commit/5eceecd27543b…</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-1526</span>
+      <span class="fixed-badge">Fix: 6.24.0, 7.24.0</span>
+    </div>
+    <span class="finding-idx">#19</span>
+  </div>
+  <h3 class="finding-title">undici: undici: Denial of Service via unbounded memory consumption during WebSocket permessage-deflate decompression</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>undici</strong>
+    <span class="ver-badge">instalado: 5.29.0</span>
+  </div>
+  <p class="finding-desc">The undici WebSocket client is vulnerable to a denial-of-service attack via unbounded memory consumption during permessage-deflate decompression. When a WebSocket connection negotiates the permessage-deflate extension, the client decompresses incoming compressed frames without enforcing any limit on…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-1526" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-1526</a><a href="https://access.redhat.com/errata/RHSA-2026:7350" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7350</a><a href="https://access.redhat.com/security/cve/CVE-2026-1526" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-1526</a><a href="https://bugzilla.redhat.com/2431340" target="_blank" class="ref-link">https://bugzilla.redhat.com/2431340</a></div>
+</div>
+<div class="finding-card sev-card-high"
+     data-severity="HIGH" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-2229</span>
+      <span class="fixed-badge">Fix: 6.24.0, 7.24.0</span>
+    </div>
+    <span class="finding-idx">#20</span>
+  </div>
+  <h3 class="finding-title">undici: Undici: Denial of Service via invalid WebSocket permessage-deflate extension parameter</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>undici</strong>
+    <span class="ver-badge">instalado: 5.29.0</span>
+  </div>
+  <p class="finding-desc">ImpactThe undici WebSocket client is vulnerable to a denial-of-service attack due to improper validation of the server_max_window_bits parameter in the permessage-deflate extension. When a WebSocket client connects to a server, it automatically advertises support for permessage-deflate compression. …</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-2229" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-2229</a><a href="https://access.redhat.com/errata/RHSA-2026:7350" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7350</a><a href="https://access.redhat.com/security/cve/CVE-2026-2229" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-2229</a><a href="https://bugzilla.redhat.com/2431340" target="_blank" class="ref-link">https://bugzilla.redhat.com/2431340</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 5.3</span>
+      <span class="rule-id">CVE-2026-40894</span>
+      <span class="fixed-badge">Fix: 1.15.3</span>
+    </div>
+    <span class="finding-idx">#21</span>
+  </div>
+  <h3 class="finding-title">OpenTelemetry dotnet: Excessive memory allocation when parsing OpenTelemetry propagation headers</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>OpenTelemetry.Api</strong>
+    <span class="ver-badge">instalado: 1.9.0</span>
+  </div>
+  <p class="finding-desc">OpenTelemetry dotnet is a dotnet telemetry framework. In OpenTelemetry.Api 0.5.0-beta.2 to 1.15.2 and OpenTelemetry.Extensions.Propagators 1.3.1 to 1.15.2, The implementation details of the baggage, B3 and Jaeger processing code in the OpenTelemetry.Api and OpenTelemetry.Extensions.Propagators NuGet…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-40894" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-40894</a><a href="https://github.com/open-telemetry/opentelemetry-dotnet" target="_blank" class="ref-link">https://github.com/open-telemetry/opentelemetry-dotnet</a><a href="https://github.com/open-telemetry/opentelemetry-dotnet/pull/1048" target="_blank" class="ref-link">https://github.com/open-telemetry/opentelemetry-dotnet/pull/…</a><a href="https://github.com/open-telemetry/opentelemetry-dotnet/pull/3244" target="_blank" class="ref-link">https://github.com/open-telemetry/opentelemetry-dotnet/pull/…</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 7.8</span>
+      <span class="rule-id">CVE-2026-42191</span>
+      <span class="fixed-badge">Fix: 1.15.3</span>
+    </div>
+    <span class="finding-idx">#22</span>
+  </div>
+  <h3 class="finding-title">OpenTelemetry's disk retry default temp path enables local blob injection via OTLP Exporter</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>OpenTelemetry.Exporter.OpenTelemetryProtocol</strong>
+    <span class="ver-badge">instalado: 1.9.0</span>
+  </div>
+  <p class="finding-desc">OpenTelemetry.Exporter.OpenTelemetryProtocol is the OTLP (OpenTelemetry Protocol) exporter implementation. From 1.8.0 to 1.15.2, the OTLP disk retry feature in OpenTelemetry.Exporter.OpenTelemetryProtocol silently fell back to Path.GetTempPath() when OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=disk was set …</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-42191" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-42191</a><a href="https://github.com/open-telemetry/opentelemetry-dotnet" target="_blank" class="ref-link">https://github.com/open-telemetry/opentelemetry-dotnet</a><a href="https://github.com/open-telemetry/opentelemetry-dotnet/commit/78dffdc5ebdf3dc090fdb94e3f1a32d3d1e26dfd" target="_blank" class="ref-link">https://github.com/open-telemetry/opentelemetry-dotnet/commi…</a><a href="https://github.com/open-telemetry/opentelemetry-dotnet/pull/7106" target="_blank" class="ref-link">https://github.com/open-telemetry/opentelemetry-dotnet/pull/…</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 5.9</span>
+      <span class="rule-id">CVE-2022-34716</span>
+      <span class="fixed-badge">Fix: 4.7.1, 6.0.1</span>
+    </div>
+    <span class="finding-idx">#23</span>
+  </div>
+  <h3 class="finding-title">dotnet: External Entity Injection during XML signature verification</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>System.Security.Cryptography.Xml</strong>
+    <span class="ver-badge">instalado: 4.7.0</span>
+  </div>
+  <p class="finding-desc">.NET Spoofing Vulnerability</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2022-34716" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2022-34716</a><a href="https://access.redhat.com/errata/RHSA-2022:6043" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2022:6043</a><a href="https://access.redhat.com/hydra/rest/securitydata/cve/CVE-2022-34716.json" target="_blank" class="ref-link">https://access.redhat.com/hydra/rest/securitydata/cve/CVE-20…</a><a href="https://access.redhat.com/security/cve/CVE-2022-34716" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2022-34716</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 5.9</span>
+      <span class="rule-id">CVE-2022-34716</span>
+      <span class="fixed-badge">Fix: 4.7.1, 6.0.1</span>
+    </div>
+    <span class="finding-idx">#24</span>
+  </div>
+  <h3 class="finding-title">dotnet: External Entity Injection during XML signature verification</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>System.Security.Cryptography.Xml</strong>
+    <span class="ver-badge">instalado: 4.7.0</span>
+  </div>
+  <p class="finding-desc">.NET Spoofing Vulnerability</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2022-34716" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2022-34716</a><a href="https://access.redhat.com/errata/RHSA-2022:6043" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2022:6043</a><a href="https://access.redhat.com/hydra/rest/securitydata/cve/CVE-2022-34716.json" target="_blank" class="ref-link">https://access.redhat.com/hydra/rest/securitydata/cve/CVE-20…</a><a href="https://access.redhat.com/security/cve/CVE-2022-34716" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2022-34716</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2025-69873</span>
+      <span class="fixed-badge">Fix: 8.18.0, 6.14.0</span>
+    </div>
+    <span class="finding-idx">#25</span>
+  </div>
+  <h3 class="finding-title">ajv: ReDoS via $data reference</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>ajv</strong>
+    <span class="ver-badge">instalado: 6.12.6</span>
+  </div>
+  <p class="finding-desc">ajv (Another JSON Schema Validator) before 8.18.0 is vulnerable to Regular Expression Denial of Service (ReDoS) when the $data option is enabled. The pattern keyword accepts runtime data via JSON Pointer syntax ($data reference), which is passed directly to the JavaScript RegExp() constructor withou…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2025-69873" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2025-69873</a><a href="https://access.redhat.com/security/cve/CVE-2025-69873" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2025-69873</a><a href="https://github.com/EthanKim88/ethan-cve-disclosures/blob/main/CVE-2025-69873-ajv-ReDoS.md" target="_blank" class="ref-link">https://github.com/EthanKim88/ethan-cve-disclosures/blob/mai…</a><a href="https://github.com/advisories/GHSA-2g4f-4pwh-qvx6" target="_blank" class="ref-link">https://github.com/advisories/GHSA-2g4f-4pwh-qvx6</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-33750</span>
+      <span class="fixed-badge">Fix: 5.0.5, 3.0.2, 2.0.3, 1.1.13</span>
+    </div>
+    <span class="finding-idx">#26</span>
+  </div>
+  <h3 class="finding-title">brace-expansion: brace-expansion: Denial of Service via zero step value in brace pattern</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>brace-expansion</strong>
+    <span class="ver-badge">instalado: 1.1.12</span>
+  </div>
+  <p class="finding-desc">The brace-expansion library generates arbitrary strings containing a common prefix and suffix. Prior to versions 5.0.5, 3.0.2, 2.0.3, and 1.1.13, a brace pattern with a zero step value (e.g., `{1..2..0}`) causes the sequence generation loop to run indefinitely, making the process hang for seconds an…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33750" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33750</a><a href="https://access.redhat.com/security/cve/CVE-2026-33750" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33750</a><a href="https://github.com/juliangruber/brace-expansion" target="_blank" class="ref-link">https://github.com/juliangruber/brace-expansion</a><a href="https://github.com/juliangruber/brace-expansion/blob/daa71bcb4a30a2df9bcb7f7b8daaf2ab30e5794a/src/index.ts#L107-L113" target="_blank" class="ref-link">https://github.com/juliangruber/brace-expansion/blob/daa71bc…</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-33750</span>
+      <span class="fixed-badge">Fix: 5.0.5, 3.0.2, 2.0.3, 1.1.13</span>
+    </div>
+    <span class="finding-idx">#27</span>
+  </div>
+  <h3 class="finding-title">brace-expansion: brace-expansion: Denial of Service via zero step value in brace pattern</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>brace-expansion</strong>
+    <span class="ver-badge">instalado: 2.0.2</span>
+  </div>
+  <p class="finding-desc">The brace-expansion library generates arbitrary strings containing a common prefix and suffix. Prior to versions 5.0.5, 3.0.2, 2.0.3, and 1.1.13, a brace pattern with a zero step value (e.g., `{1..2..0}`) causes the sequence generation loop to run indefinitely, making the process hang for seconds an…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33750" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33750</a><a href="https://access.redhat.com/security/cve/CVE-2026-33750" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33750</a><a href="https://github.com/juliangruber/brace-expansion" target="_blank" class="ref-link">https://github.com/juliangruber/brace-expansion</a><a href="https://github.com/juliangruber/brace-expansion/blob/daa71bcb4a30a2df9bcb7f7b8daaf2ab30e5794a/src/index.ts#L107-L113" target="_blank" class="ref-link">https://github.com/juliangruber/brace-expansion/blob/daa71bc…</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 5.3</span>
+      <span class="rule-id">CVE-2025-64718</span>
+      <span class="fixed-badge">Fix: 4.1.1, 3.14.2</span>
+    </div>
+    <span class="finding-idx">#28</span>
+  </div>
+  <h3 class="finding-title">js-yaml: js-yaml prototype pollution in merge</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>js-yaml</strong>
+    <span class="ver-badge">instalado: 4.1.0</span>
+  </div>
+  <p class="finding-desc">js-yaml is a JavaScript YAML parser and dumper. In js-yaml before 4.1.1 and 3.14.2, it's possible for an attacker to modify the prototype of the result of a parsed yaml document via prototype pollution (`__proto__`). All users who parse untrusted yaml documents may be impacted. The problem is patche…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2025-64718" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2025-64718</a><a href="https://access.redhat.com/security/cve/CVE-2025-64718" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2025-64718</a><a href="https://github.com/advisories/GHSA-mh29-5h37-fv8m" target="_blank" class="ref-link">https://github.com/advisories/GHSA-mh29-5h37-fv8m</a><a href="https://github.com/nodeca/js-yaml" target="_blank" class="ref-link">https://github.com/nodeca/js-yaml</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 5.3</span>
+      <span class="rule-id">CVE-2026-33672</span>
+      <span class="fixed-badge">Fix: 4.0.4, 3.0.2, 2.3.2</span>
+    </div>
+    <span class="finding-idx">#29</span>
+  </div>
+  <h3 class="finding-title">picomatch: Picomatch: Data integrity compromised via method injection with crafted POSIX bracket expressions</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>picomatch</strong>
+    <span class="ver-badge">instalado: 2.3.1</span>
+  </div>
+  <p class="finding-desc">Picomatch is a glob matcher written JavaScript. Versions prior to 4.0.4, 3.0.2, and 2.3.2 are vulnerable to a method injection vulnerability affecting the `POSIX_REGEX_SOURCE` object. Because the object inherits from `Object.prototype`, specially crafted POSIX bracket expressions (e.g., `[[:construc…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33672" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33672</a><a href="https://access.redhat.com/security/cve/CVE-2026-33672" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33672</a><a href="https://github.com/micromatch/picomatch" target="_blank" class="ref-link">https://github.com/micromatch/picomatch</a><a href="https://github.com/micromatch/picomatch/commit/4516eb521f13a46b2fe1a1d2c9ef6b20ddc0e903" target="_blank" class="ref-link">https://github.com/micromatch/picomatch/commit/4516eb521f13a…</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 9.8</span>
+      <span class="rule-id">CVE-2026-1525</span>
+      <span class="fixed-badge">Fix: 6.24.0, 7.24.0</span>
+    </div>
+    <span class="finding-idx">#30</span>
+  </div>
+  <h3 class="finding-title">undici: Undici: HTTP Request Smuggling and Denial of Service due to duplicate Content-Length headers</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>undici</strong>
+    <span class="ver-badge">instalado: 5.29.0</span>
+  </div>
+  <p class="finding-desc">Undici allows duplicate HTTP Content-Length headers when they are provided in an array with case-variant names (e.g., Content-Length and content-length). This produces malformed HTTP/1.1 requests with multiple conflicting Content-Length values on the wire.
+
+Who is impacted:
+
+  *  Applications using …</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-1525" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-1525</a><a href="https://access.redhat.com/errata/RHSA-2026:7350" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7350</a><a href="https://access.redhat.com/security/cve/CVE-2026-1525" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-1525</a><a href="https://bugzilla.redhat.com/2431340" target="_blank" class="ref-link">https://bugzilla.redhat.com/2431340</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 4.6</span>
+      <span class="rule-id">CVE-2026-1527</span>
+      <span class="fixed-badge">Fix: 6.24.0, 7.24.0</span>
+    </div>
+    <span class="finding-idx">#31</span>
+  </div>
+  <h3 class="finding-title">undici: Undici: HTTP header injection and request smuggling vulnerability</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>undici</strong>
+    <span class="ver-badge">instalado: 5.29.0</span>
+  </div>
+  <p class="finding-desc">ImpactWhen an application passes user-controlled input to the upgrade option of client.request(), an attacker can inject CRLF sequences (\r\n) to:
+
+  *  Inject arbitrary HTTP headers
+  *  Terminate the HTTP request prematurely and smuggle raw data to non-HTTP services (Redis, Memcached, Elasticsearc…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-1527" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-1527</a><a href="https://access.redhat.com/errata/RHSA-2026:7350" target="_blank" class="ref-link">https://access.redhat.com/errata/RHSA-2026:7350</a><a href="https://access.redhat.com/security/cve/CVE-2026-1527" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-1527</a><a href="https://bugzilla.redhat.com/2431340" target="_blank" class="ref-link">https://bugzilla.redhat.com/2431340</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 7.5</span>
+      <span class="rule-id">CVE-2026-22036</span>
+      <span class="fixed-badge">Fix: 7.18.2, 6.23.0</span>
+    </div>
+    <span class="finding-idx">#32</span>
+  </div>
+  <h3 class="finding-title">undici: Undici: Denial of Service via excessive decompression steps</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>undici</strong>
+    <span class="ver-badge">instalado: 5.29.0</span>
+  </div>
+  <p class="finding-desc">Undici is an HTTP/1.1 client for Node.js. Prior to 7.18.0 and 6.23.0, the number of links in the decompression chain is unbounded and the default maxHeaderSize allows a malicious server to insert thousands compression steps leading to high CPU usage and excessive memory allocation. This vulnerabilit…</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-22036" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-22036</a><a href="https://access.redhat.com/security/cve/CVE-2026-22036" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-22036</a><a href="https://github.com/nodejs/undici" target="_blank" class="ref-link">https://github.com/nodejs/undici</a><a href="https://github.com/nodejs/undici/commit/b04e3cbb569c1596f86c108e9b52c79d8475dcb3" target="_blank" class="ref-link">https://github.com/nodejs/undici/commit/b04e3cbb569c1596f86c…</a></div>
+</div>
+<div class="finding-card sev-card-medium"
+     data-severity="MEDIUM" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--blue);background:var(--blue-bg);border-color:var(--blue-border);">Medio</span>
+      <span class="cvss-score">CVSS 4.3</span>
+      <span class="rule-id">CVE-2026-33532</span>
+      <span class="fixed-badge">Fix: 2.8.3, 1.10.3</span>
+    </div>
+    <span class="finding-idx">#33</span>
+  </div>
+  <h3 class="finding-title">yaml: yaml: Denial of Service via deeply nested YAML document parsing</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>yaml</strong>
+    <span class="ver-badge">instalado: 2.8.1</span>
+  </div>
+  <p class="finding-desc">`yaml` is a YAML parser and serialiser for JavaScript. Parsing a YAML document with a version of `yaml` on the 1.x branch prior to 1.10.3 or on the 2.x branch prior to 2.8.3 may throw a RangeError due to a stack overflow. The node resolution/composition phase uses recursive function calls without a …</p>
+  <div class="refs-row"><a href="https://avd.aquasec.com/nvd/cve-2026-33532" target="_blank" class="ref-link">https://avd.aquasec.com/nvd/cve-2026-33532</a><a href="https://access.redhat.com/security/cve/CVE-2026-33532" target="_blank" class="ref-link">https://access.redhat.com/security/cve/CVE-2026-33532</a><a href="https://github.com/eemeli/yaml" target="_blank" class="ref-link">https://github.com/eemeli/yaml</a><a href="https://github.com/eemeli/yaml/commit/1e84ebbea7ec35011a4c61bbb820a529ee4f359b" target="_blank" class="ref-link">https://github.com/eemeli/yaml/commit/1e84ebbea7ec35011a4c61…</a></div>
+</div>
+<div class="finding-card sev-card-low"
+     data-severity="LOW" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border);">Bajo</span>
+      
+      <span class="rule-id">GHSA-g4vj-cjjj-v7hg</span>
+      <span class="fixed-badge">Fix: 4.9.7, 5.11.7, 6.8.2, 6.11.2, 6.12.5, 6.14.3, 7.0.3, 7.3.1</span>
+    </div>
+    <span class="finding-idx">#34</span>
+  </div>
+  <h3 class="finding-title">Defense in Depth update for NuGet Client</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>NuGet.Packaging</strong>
+    <span class="ver-badge">instalado: 5.11.6</span>
+  </div>
+  <p class="finding-desc">### Impact
+This update adds validation of the package ID and version during package download, in addition to the existing package signature validation.
+
+### Patches
+
+#### NuGet
+
+The following NuGet.exe, NuGet.CommandLine, NuGet.Packaging, and NuGet.Protocol versions have been patched:
+
+|Affected ver…</p>
+  <div class="refs-row"><a href="https://github.com/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/advisories/GHSA-g4vj-cjjj-v7hg</a><a href="https://github.com/NuGet/NuGet.Client" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client</a><a href="https://github.com/NuGet/NuGet.Client/security/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client/security/advisories/GH…</a><a href="https://github.com/NuGet/NuGetGallery/security/advisories/GHSA-9r3h-v4hx-rhfr" target="_blank" class="ref-link">https://github.com/NuGet/NuGetGallery/security/advisories/GH…</a></div>
+</div>
+<div class="finding-card sev-card-low"
+     data-severity="LOW" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border);">Bajo</span>
+      
+      <span class="rule-id">GHSA-g4vj-cjjj-v7hg</span>
+      <span class="fixed-badge">Fix: 4.9.7, 5.11.7, 6.8.2, 6.11.2, 6.12.5, 6.14.3, 7.0.3, 7.3.1</span>
+    </div>
+    <span class="finding-idx">#35</span>
+  </div>
+  <h3 class="finding-title">Defense in Depth update for NuGet Client</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>NuGet.Protocol</strong>
+    <span class="ver-badge">instalado: 5.11.6</span>
+  </div>
+  <p class="finding-desc">### Impact
+This update adds validation of the package ID and version during package download, in addition to the existing package signature validation.
+
+### Patches
+
+#### NuGet
+
+The following NuGet.exe, NuGet.CommandLine, NuGet.Packaging, and NuGet.Protocol versions have been patched:
+
+|Affected ver…</p>
+  <div class="refs-row"><a href="https://github.com/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/advisories/GHSA-g4vj-cjjj-v7hg</a><a href="https://github.com/NuGet/NuGet.Client" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client</a><a href="https://github.com/NuGet/NuGet.Client/security/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client/security/advisories/GH…</a><a href="https://github.com/NuGet/NuGetGallery/security/advisories/GHSA-9r3h-v4hx-rhfr" target="_blank" class="ref-link">https://github.com/NuGet/NuGetGallery/security/advisories/GH…</a></div>
+</div>
+<div class="finding-card sev-card-low"
+     data-severity="LOW" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border);">Bajo</span>
+      
+      <span class="rule-id">GHSA-g4vj-cjjj-v7hg</span>
+      <span class="fixed-badge">Fix: 4.9.7, 5.11.7, 6.8.2, 6.11.2, 6.12.5, 6.14.3, 7.0.3, 7.3.1</span>
+    </div>
+    <span class="finding-idx">#36</span>
+  </div>
+  <h3 class="finding-title">Defense in Depth update for NuGet Client</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>NuGet.Packaging</strong>
+    <span class="ver-badge">instalado: 5.11.6</span>
+  </div>
+  <p class="finding-desc">### Impact
+This update adds validation of the package ID and version during package download, in addition to the existing package signature validation.
+
+### Patches
+
+#### NuGet
+
+The following NuGet.exe, NuGet.CommandLine, NuGet.Packaging, and NuGet.Protocol versions have been patched:
+
+|Affected ver…</p>
+  <div class="refs-row"><a href="https://github.com/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/advisories/GHSA-g4vj-cjjj-v7hg</a><a href="https://github.com/NuGet/NuGet.Client" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client</a><a href="https://github.com/NuGet/NuGet.Client/security/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client/security/advisories/GH…</a><a href="https://github.com/NuGet/NuGetGallery/security/advisories/GHSA-9r3h-v4hx-rhfr" target="_blank" class="ref-link">https://github.com/NuGet/NuGetGallery/security/advisories/GH…</a></div>
+</div>
+<div class="finding-card sev-card-low"
+     data-severity="LOW" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border);">Bajo</span>
+      
+      <span class="rule-id">GHSA-g4vj-cjjj-v7hg</span>
+      <span class="fixed-badge">Fix: 4.9.7, 5.11.7, 6.8.2, 6.11.2, 6.12.5, 6.14.3, 7.0.3, 7.3.1</span>
+    </div>
+    <span class="finding-idx">#37</span>
+  </div>
+  <h3 class="finding-title">Defense in Depth update for NuGet Client</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>NuGet.Protocol</strong>
+    <span class="ver-badge">instalado: 5.11.6</span>
+  </div>
+  <p class="finding-desc">### Impact
+This update adds validation of the package ID and version during package download, in addition to the existing package signature validation.
+
+### Patches
+
+#### NuGet
+
+The following NuGet.exe, NuGet.CommandLine, NuGet.Packaging, and NuGet.Protocol versions have been patched:
+
+|Affected ver…</p>
+  <div class="refs-row"><a href="https://github.com/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/advisories/GHSA-g4vj-cjjj-v7hg</a><a href="https://github.com/NuGet/NuGet.Client" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client</a><a href="https://github.com/NuGet/NuGet.Client/security/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client/security/advisories/GH…</a><a href="https://github.com/NuGet/NuGetGallery/security/advisories/GHSA-9r3h-v4hx-rhfr" target="_blank" class="ref-link">https://github.com/NuGet/NuGetGallery/security/advisories/GH…</a></div>
+</div>
+<div class="finding-card sev-card-low"
+     data-severity="LOW" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border);">Bajo</span>
+      
+      <span class="rule-id">GHSA-g4vj-cjjj-v7hg</span>
+      <span class="fixed-badge">Fix: 4.9.7, 5.11.7, 6.8.2, 6.11.2, 6.12.5, 6.14.3, 7.0.3, 7.3.1</span>
+    </div>
+    <span class="finding-idx">#38</span>
+  </div>
+  <h3 class="finding-title">Defense in Depth update for NuGet Client</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>NuGet.Packaging</strong>
+    <span class="ver-badge">instalado: 5.11.6</span>
+  </div>
+  <p class="finding-desc">### Impact
+This update adds validation of the package ID and version during package download, in addition to the existing package signature validation.
+
+### Patches
+
+#### NuGet
+
+The following NuGet.exe, NuGet.CommandLine, NuGet.Packaging, and NuGet.Protocol versions have been patched:
+
+|Affected ver…</p>
+  <div class="refs-row"><a href="https://github.com/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/advisories/GHSA-g4vj-cjjj-v7hg</a><a href="https://github.com/NuGet/NuGet.Client" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client</a><a href="https://github.com/NuGet/NuGet.Client/security/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client/security/advisories/GH…</a><a href="https://github.com/NuGet/NuGetGallery/security/advisories/GHSA-9r3h-v4hx-rhfr" target="_blank" class="ref-link">https://github.com/NuGet/NuGetGallery/security/advisories/GH…</a></div>
+</div>
+<div class="finding-card sev-card-low"
+     data-severity="LOW" data-type="vuln">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge" style="color:var(--green);background:var(--green-bg);border-color:var(--green-border);">Bajo</span>
+      
+      <span class="rule-id">GHSA-g4vj-cjjj-v7hg</span>
+      <span class="fixed-badge">Fix: 4.9.7, 5.11.7, 6.8.2, 6.11.2, 6.12.5, 6.14.3, 7.0.3, 7.3.1</span>
+    </div>
+    <span class="finding-idx">#39</span>
+  </div>
+  <h3 class="finding-title">Defense in Depth update for NuGet Client</h3>
+  <div class="pkg-info">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    <strong>NuGet.Protocol</strong>
+    <span class="ver-badge">instalado: 5.11.6</span>
+  </div>
+  <p class="finding-desc">### Impact
+This update adds validation of the package ID and version during package download, in addition to the existing package signature validation.
+
+### Patches
+
+#### NuGet
+
+The following NuGet.exe, NuGet.CommandLine, NuGet.Packaging, and NuGet.Protocol versions have been patched:
+
+|Affected ver…</p>
+  <div class="refs-row"><a href="https://github.com/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/advisories/GHSA-g4vj-cjjj-v7hg</a><a href="https://github.com/NuGet/NuGet.Client" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client</a><a href="https://github.com/NuGet/NuGet.Client/security/advisories/GHSA-g4vj-cjjj-v7hg" target="_blank" class="ref-link">https://github.com/NuGet/NuGet.Client/security/advisories/GH…</a><a href="https://github.com/NuGet/NuGetGallery/security/advisories/GHSA-9r3h-v4hx-rhfr" target="_blank" class="ref-link">https://github.com/NuGet/NuGetGallery/security/advisories/GH…</a></div>
+</div></div>
         </div>
 
         <!-- TAB: SECRETS -->
@@ -568,7 +1522,7 @@
       </div>
 
       <footer class="footer">
-        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 02:51 UTC</span>
+        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 03:00 UTC</span>
         <span>Powered by <a href="https://trivy.dev" target="_blank">Aqua Trivy</a></span>
       </footer>
     </main>
