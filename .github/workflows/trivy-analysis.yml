@@ -63,30 +63,49 @@ jobs:
       - name: Trivy - Scan CVE dependencias npm
         run: |
           mkdir -p trivy-results
-          trivy fs . \
+          # Apunta directamente al lockfile — no escanea el runner
+          # Resultado equivalente a Snyk, sin ruido de .NET/NuGet
+          trivy fs package-lock.json \
             --scanners vuln \
             --severity "${{ inputs.severity || 'CRITICAL,HIGH,MEDIUM,LOW' }}" \
             --format json \
             --output trivy-results/npm-vulns.json \
-            --pkg-types library \
             --exit-code 0
           echo "Scan CVE completado"
 
       - name: Trivy - Scan secretos hardcodeados
         run: |
+          # Necesita escanear src/ — excluir carpetas del runner
           trivy fs . \
             --scanners secret \
             --format json \
             --output trivy-results/secrets.json \
+            --skip-dirs /usr \
+            --skip-dirs /opt \
+            --skip-dirs /snap \
+            --skip-dirs /home/runner/work/_tool \
+            --skip-dirs /home/runner/work/_temp \
+            --skip-dirs /home/runner/.dotnet \
+            --skip-dirs /home/runner/.nuget \
+            --skip-dirs /home/runner/tools \
             --exit-code 0
           echo "Scan secretos completado"
 
       - name: Trivy - Scan misconfiguraciones
         run: |
+          # Necesita escanear tsconfig, package.json, workflows — excluir runner
           trivy fs . \
             --scanners misconfig \
             --format json \
             --output trivy-results/misconfig.json \
+            --skip-dirs /usr \
+            --skip-dirs /opt \
+            --skip-dirs /snap \
+            --skip-dirs /home/runner/work/_tool \
+            --skip-dirs /home/runner/work/_temp \
+            --skip-dirs /home/runner/.dotnet \
+            --skip-dirs /home/runner/.nuget \
+            --skip-dirs /home/runner/tools \
             --exit-code 0
           echo "Scan misconfigs completado"
 
