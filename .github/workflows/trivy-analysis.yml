@@ -92,12 +92,12 @@ jobs:
             --pkg-types library \
             --exit-code 0
           echo "✅ Scan de dependencias completado"
-          echo "   Hallazgos: $(cat trivy-results/npm-vulns.json | python3 -c \"
-          import json,sys
-          d=json.load(sys.stdin)
-          total=sum(len(r.get('Vulnerabilities') or []) for r in d.get('Results',[]))
-          print(total)
-          \" 2>/dev/null || echo '?')"
+          VULN_COUNT=$(python3 -c "
+import json
+d=json.load(open('trivy-results/npm-vulns.json'))
+print(sum(len(r.get('Vulnerabilities') or []) for r in d.get('Results',[])))
+" 2>/dev/null || echo '?')
+          echo "   Hallazgos CVE: $VULN_COUNT"
 
       # ── Scan 2: Secretos hardcodeados ──
       - name: 🔬 Trivy — Secretos hardcodeados
@@ -108,12 +108,12 @@ jobs:
             --output trivy-results/secrets.json \
             --exit-code 0
           echo "✅ Scan de secretos completado"
-          echo "   Hallazgos: $(cat trivy-results/secrets.json | python3 -c \"
-          import json,sys
-          d=json.load(sys.stdin)
-          total=sum(len(r.get('Secrets') or []) for r in d.get('Results',[]))
-          print(total)
-          \" 2>/dev/null || echo '?')"
+          SEC_COUNT=$(python3 -c "
+import json
+d=json.load(open('trivy-results/secrets.json'))
+print(sum(len(r.get('Secrets') or []) for r in d.get('Results',[])))
+" 2>/dev/null || echo '?')
+          echo "   Secretos detectados: $SEC_COUNT"
 
       # ── Scan 3: Misconfigurations (package.json, tsconfig, etc) ──
       - name: 🔬 Trivy — Misconfiguraciones
