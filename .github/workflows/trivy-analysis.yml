@@ -68,7 +68,6 @@ jobs:
             --severity "${{ inputs.severity || 'CRITICAL,HIGH,MEDIUM,LOW' }}" \
             --format json \
             --output trivy-results/npm-vulns.json \
-            --ignore-unfixed \
             --pkg-types library \
             --exit-code 0
           echo "Scan CVE completado"
