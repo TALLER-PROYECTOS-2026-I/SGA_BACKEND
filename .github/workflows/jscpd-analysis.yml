@@ -1,0 +1,263 @@
+name: 🔁 Code Duplication Analysis & Report — SGA Backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Rama a analizar"
+        required: true
+        default: "dev"
+        type: string
+      min_lines:
+        description: "Mínimo de líneas para considerar duplicado"
+        required: true
+        default: "5"
+        type: choice
+        options:
+          - "3"
+          - "5"
+          - "10"
+          - "15"
+      min_tokens:
+        description: "Mínimo de tokens para considerar duplicado"
+        required: true
+        default: "50"
+        type: choice
+        options:
+          - "30"
+          - "50"
+          - "70"
+          - "100"
+      threshold:
+        description: "% duplicación permitido antes de fallar (0 = nunca falla)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "5"
+          - "10"
+          - "20"
+      publish_report:
+        description: "Publicar reporte HTML en gh-pages?"
+        required: true
+        default: "true"
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+
+  # ──────────────────────────────────────────────
+  # JOB 1 — Análisis jscpd
+  # ──────────────────────────────────────────────
+  jscpd-analysis:
+    name: "🔁 jscpd Duplication Analysis"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout codigo fuente
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || 'dev' }}
+          fetch-depth: 0
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Instalar dependencias
+        run: npm ci --prefer-offline
+
+      - name: Instalar jscpd
+        run: npm install -g jscpd
+
+      - name: Ejecutar analisis de duplicados
+        run: |
+          mkdir -p jscpd-results
+
+          # Ejecutar jscpd sobre src/ — genera JSON + reporte
+          jscpd src \
+            --min-lines ${{ inputs.min_lines || '5' }} \
+            --min-tokens ${{ inputs.min_tokens || '50' }} \
+            --threshold ${{ inputs.threshold || '0' }} \
+            --reporters json,console \
+            --output jscpd-results \
+            --languages typescript,javascript \
+            --ignore "**/node_modules/**,**/*.test.ts,**/*.spec.ts,**/dist/**" \
+            --exitCode 0
+
+          echo "Analisis completado"
+          ls -lh jscpd-results/
+
+      - name: Resumen de duplicados
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY', '/dev/null')
+          report_path  = 'jscpd-results/jscpd-report.json'
+
+          try:
+              d = json.load(open(report_path))
+              stats      = d.get('statistics', {})
+              duplicates = d.get('duplicates', [])
+              total      = stats.get('total', {})
+
+              lines_total   = total.get('lines', 0)
+              lines_dup     = total.get('duplicatedLines', 0)
+              pct           = round(lines_dup / lines_total * 100, 2) if lines_total > 0 else 0
+              clones        = len(duplicates)
+
+              lines = []
+              lines.append("## Reporte de Codigo Duplicado — SGA Backend\n")
+              lines.append(f"| Metrica | Valor |")
+              lines.append(f"|---------|-------|")
+              lines.append(f"| Lineas totales analizadas | {lines_total} |")
+              lines.append(f"| Lineas duplicadas | {lines_dup} |")
+              lines.append(f"| Porcentaje duplicacion | **{pct}%** |")
+              lines.append(f"| Bloques duplicados | {clones} |")
+              lines.append(f"| Umbral configurado | ${{ inputs.threshold || '0' }}% |")
+              lines.append("")
+
+              if pct == 0:
+                  lines.append("Sin duplicados detectados")
+              elif pct < 5:
+                  lines.append(f"Duplicacion aceptable ({pct}%)")
+              elif pct < 15:
+                  lines.append(f"Duplicacion moderada ({pct}%) — revisar")
+              else:
+                  lines.append(f"Duplicacion alta ({pct}%) — refactorizar")
+
+              # Top archivos con mas duplicados
+              file_counts = {}
+              for dup in duplicates:
+                  for frag in dup.get('firstFile', {}).get('name', ''), dup.get('secondFile', {}).get('name', ''):
+                      if frag:
+                          short = frag.split('SGA_BACKEND/')[-1] if 'SGA_BACKEND' in frag else frag
+                          file_counts[short] = file_counts.get(short, 0) + 1
+
+              if file_counts:
+                  lines.append("\n### Archivos con mas clones")
+                  top = sorted(file_counts.items(), key=lambda x: -x[1])[:10]
+                  lines.append("| Archivo | Clones |")
+                  lines.append("|---------|--------|")
+                  for f, c in top:
+                      lines.append(f"| `{f}` | {c} |")
+
+              with open(summary_path, 'w') as f:
+                  f.write('\n'.join(lines))
+
+              print(f"Duplicacion: {pct}% ({clones} bloques)")
+
+          except Exception as e:
+              print(f"Error: {e}")
+          PYEOF
+
+      - name: Subir resultados como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jscpd-results
+          path: jscpd-results/
+          retention-days: 30
+          if-no-files-found: warn
+
+
+  # ──────────────────────────────────────────────
+  # JOB 2 — Generar y publicar reporte HTML
+  # ──────────────────────────────────────────────
+  publish-report:
+    name: "📊 Generar & Publicar Reporte"
+    runs-on: ubuntu-latest
+    needs: jscpd-analysis
+    if: ${{ always() && inputs.publish_report != 'false' }}
+
+    steps:
+      - name: Checkout codigo fuente
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || 'dev' }}
+          path: source
+
+      - name: Checkout rama gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+        continue-on-error: true
+
+      - name: Inicializar gh-pages si no existe
+        run: |
+          if [ ! -d "gh-pages" ] || [ -z "$(ls -A gh-pages 2>/dev/null)" ]; then
+            mkdir -p gh-pages
+            cd gh-pages
+            git init
+            git checkout -b gh-pages
+          fi
+
+      - name: Descargar artefactos jscpd
+        uses: actions/download-artifact@v4
+        with:
+          name: jscpd-results
+          path: jscpd-results
+        continue-on-error: true
+
+      - name: Verificar artefactos
+        run: |
+          mkdir -p jscpd-results
+          if [ ! -f jscpd-results/jscpd-report.json ]; then
+            echo '{"duplicates":[],"statistics":{"total":{"lines":0,"duplicatedLines":0}}}' \
+              > jscpd-results/jscpd-report.json
+            echo "Creado JSON vacio"
+          fi
+          ls -lh jscpd-results/
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Preparar carpeta de destino
+        run: mkdir -p gh-pages/duplication
+
+      - name: Generar reporte HTML
+        run: |
+          python3 source/.github/scripts/generate_duplication_page.py \
+            jscpd-results/jscpd-report.json \
+            gh-pages/duplication \
+            --repo  "${{ github.repository }}" \
+            --branch "${{ inputs.branch || 'dev' }}" \
+            --run-id "${{ github.run_id }}" \
+            --min-lines "${{ inputs.min_lines || '5' }}" \
+            --threshold "${{ inputs.threshold || '0' }}"
+          echo "Reporte generado:"
+          ls -lh gh-pages/duplication/
+
+      - name: Publicar en gh-pages
+        run: |
+          cd gh-pages
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add duplication/
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+            exit 0
+          fi
+          git commit -m "quality: actualizar reporte duplicados SGA [skip ci]"
+          for i in 1 2 3; do
+            git pull --rebase origin gh-pages && \
+            git push origin gh-pages && \
+            echo "Publicado." && break || sleep $((i*5))
+          done
+
+      - name: URL del reporte
+        run: |
+          OWNER=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+          NAME=$(echo "${{ github.repository }}"  | cut -d'/' -f2)
+          echo "Reporte disponible en: https://${OWNER}.github.io/${NAME}/duplication/"
+          echo "[Ver reporte de duplicados]( https://${OWNER}.github.io/${NAME}/duplication/)" \
+            >> $GITHUB_STEP_SUMMARY
