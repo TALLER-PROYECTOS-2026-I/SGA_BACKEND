@@ -364,7 +364,7 @@
     <div class="header-right">
       <span class="badge badge-tech">Azure Functions · TS</span>
       <span class="badge badge-branch">⎇ dev</span>
-      <span class="badge badge-status-ok">Passed</span>
+      <span class="badge badge-status-fail">Failed</span>
     </div>
   </header>
 
@@ -383,7 +383,7 @@
       <div class="sidebar-item active" data-level="all" onclick="filterLevel('all')">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Todos
-        <span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);">0</span>
+        <span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);">7</span>
       </div>
       <div class="sidebar-item" data-level="critical" onclick="filterLevel('critical')">
         <span class="method-dot" style="background:var(--red)"></span>Crítico
@@ -391,7 +391,7 @@
       </div>
       <div class="sidebar-item" data-level="high" onclick="filterLevel('high')">
         <span class="method-dot" style="background:var(--amber)"></span>Alto
-        <span class="sev-counter sc-high">0</span>
+        <span class="sev-counter sc-high">7</span>
       </div>
       <div class="sidebar-item" data-level="medium" onclick="filterLevel('medium')">
         <span class="method-dot" style="background:var(--blue)"></span>Medio
@@ -402,8 +402,8 @@
         <span class="sev-counter sc-low">0</span>
       </div>
 
-      
-      
+      <div class="sidebar-divider"></div><div class="sidebar-label">Reglas detectadas</div><div class="sidebar-item rule-filter" data-rule="js/unused-local-variable" onclick="filterRule('js/unused-local-variable')"><span class="method-dot" style="background:var(--text3)"></span>js/unused-local-variable</div><div class="sidebar-item rule-filter" data-rule="js/useless-assignment-to-local" onclick="filterRule('js/useless-assignment-to-local')"><span class="method-dot" style="background:var(--text3)"></span>js/useless-assignment-to-local</div>
+      <div class="sidebar-divider"></div><div class="sidebar-label">Módulos afectados</div><div class="sidebar-item rule-filter" data-module="Docentes" onclick="filterModule('Docentes')"><span class="method-dot" style="background:#0284C7"></span>Docentes<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;">3</span></div><div class="sidebar-item rule-filter" data-module="Sílabos" onclick="filterModule('Sílabos')"><span class="method-dot" style="background:#7C3AED"></span>Sílabos<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;">3</span></div><div class="sidebar-item rule-filter" data-module="Autenticación" onclick="filterModule('Autenticación')"><span class="method-dot" style="background:#2563EB"></span>Autenticación<span class="sev-counter" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border);margin-left:auto;">1</span></div>
 
       <div class="sidebar-divider"></div>
       <div class="sidebar-label">Análisis</div>
@@ -413,9 +413,9 @@
       </div>
       <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        11 Jun 2026 02:26 UTC
+        11 Jun 2026 02:29 UTC
       </div>
-      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Run #27319579601</div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Run #27319703440</div>
     </aside>
 
     <!-- MAIN -->
@@ -453,66 +453,234 @@
           </span>
           <span class="hero-pill">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            11 Jun 2026 02:26 UTC
+            11 Jun 2026 02:29 UTC
           </span>
         </div>
       </section>
 
       <!-- STATUS BANNER -->
       <div class="status-banner">
-        <div class="status-icon si-ok">✓</div>
+        <div class="status-icon si-warn">!</div>
         <div class="status-text">
-          <h2>Análisis superado — sin hallazgos</h2>
-          <p>No se detectaron vulnerabilidades en el código analizado.</p>
+          <h2>7 hallazgos encontrados</h2>
+          <p>Revisa los hallazgos y aplica las correcciones sugeridas antes de fusionar a producción.</p>
         </div>
         <div class="status-meta">
-          <span class="badge badge-status-ok">✓ Clean</span>
+          <span class="badge badge-status-fail">✗ 7 issues</span>
           <a href="https://github.com/TALLER-PROYECTOS-2026-I/SGA_BACKEND/security/code-scanning" target="_blank" class="filter-btn" style="text-decoration:none;">Ver en GitHub →</a>
         </div>
       </div>
 
       <!-- STATS -->
       <div class="stats">
-        <div class="stat-item"><span class="stat-value c-accent">0</span><span class="stat-label">Total</span></div>
+        <div class="stat-item"><span class="stat-value c-accent">7</span><span class="stat-label">Total</span></div>
         <div class="stat-item"><span class="stat-value c-red">0</span><span class="stat-label">Crítico</span></div>
-        <div class="stat-item"><span class="stat-value c-amber">0</span><span class="stat-label">Alto</span></div>
+        <div class="stat-item"><span class="stat-value c-amber">7</span><span class="stat-label">Alto</span></div>
         <div class="stat-item"><span class="stat-value c-blue">0</span><span class="stat-label">Medio</span></div>
         <div class="stat-item"><span class="stat-value c-green">0</span><span class="stat-label">Bajo</span></div>
         <div class="stat-item">
-          <span class="stat-value" style="color:var(--purple);">0</span>
+          <span class="stat-value" style="color:var(--purple);">2</span>
           <span class="stat-label">Reglas</span>
         </div>
       </div>
 
       <!-- DONUT -->
       
+    <div class="chart-section">
+      <div class="donut-wrap">
+        <svg viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#E2E8F0" stroke-width="18"/>
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#D97706" stroke-width="18" stroke-dasharray="376.99 376.99" stroke-dashoffset="-0.00" stroke-linecap="butt"/>
+        </svg>
+        <div class="donut-center">
+          <div class="donut-total">7</div>
+          <div class="donut-label">issues</div>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#DC2626"></span>
+          <span class="legend-name">Crítico</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:0%;background:#DC2626"></div></div>
+          <span class="legend-count">0</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#D97706"></span>
+          <span class="legend-name">Alto</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:100%;background:#D97706"></div></div>
+          <span class="legend-count">7</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#0284C7"></span>
+          <span class="legend-name">Medio</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:0%;background:#0284C7"></div></div>
+          <span class="legend-count">0</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#059669"></span>
+          <span class="legend-name">Bajo</span>
+          <div class="legend-bar"><div class="legend-fill" style="width:0%;background:#059669"></div></div>
+          <span class="legend-count">0</span>
+        </div></div>
+    </div>
 
       <!-- CONTENT -->
       <div class="content">
         <div class="toolbar">
           <span class="toolbar-label">Filtrar:</span>
-          <button class="filter-btn active"      onclick="filterBtn(this,'all')">Todos (0)</button>
+          <button class="filter-btn active"      onclick="filterBtn(this,'all')">Todos (7)</button>
           <button class="filter-btn fb-critical" onclick="filterBtn(this,'critical')">Crítico (0)</button>
-          <button class="filter-btn fb-high"     onclick="filterBtn(this,'high')">Alto (0)</button>
+          <button class="filter-btn fb-high"     onclick="filterBtn(this,'high')">Alto (7)</button>
           <button class="filter-btn fb-medium"   onclick="filterBtn(this,'medium')">Medio (0)</button>
           <button class="filter-btn fb-low"      onclick="filterBtn(this,'low')">Bajo (0)</button>
         </div>
         <div class="findings-list" id="findingsList">
           
-<div class="empty-state">
-  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-       style="color:var(--green);margin-bottom:12px;">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    <polyline points="9 12 11 14 15 10"/>
-  </svg>
-  <h3>Sin hallazgos de seguridad</h3>
-  <p>El análisis CodeQL no encontró vulnerabilidades en el código.</p>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/unused-local-variable"
+     data-module="Docentes">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Docentes</span>
+      <span class="rule-id">js/unused-local-variable</span>
+    </div>
+    <span class="finding-idx">#1</span>
+  </div>
+  <h3 class="finding-title">js/unused-local-variable</h3>
+  <p class="finding-desc">Unused import InvocationContext.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/teacher/controller.ts:1</div>
+  
+  
+  
+</div>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/unused-local-variable"
+     data-module="Docentes">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Docentes</span>
+      <span class="rule-id">js/unused-local-variable</span>
+    </div>
+    <span class="finding-idx">#2</span>
+  </div>
+  <h3 class="finding-title">js/unused-local-variable</h3>
+  <p class="finding-desc">Unused import requireRole.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/teacher/controller.ts:7</div>
+  
+  
+  
+</div>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/unused-local-variable"
+     data-module="Sílabos">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Sílabos</span>
+      <span class="rule-id">js/unused-local-variable</span>
+    </div>
+    <span class="finding-idx">#3</span>
+  </div>
+  <h3 class="finding-title">js/unused-local-variable</h3>
+  <p class="finding-desc">Unused import boolean.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/syllabus/types.ts:2</div>
+  
+  
+  
+</div>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/unused-local-variable"
+     data-module="Docentes">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Docentes</span>
+      <span class="rule-id">js/unused-local-variable</span>
+    </div>
+    <span class="finding-idx">#4</span>
+  </div>
+  <h3 class="finding-title">js/unused-local-variable</h3>
+  <p class="finding-desc">Unused import isNotNull.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/teacher/repository.ts:2</div>
+  
+  
+  
+</div>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/useless-assignment-to-local"
+     data-module="Autenticación">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Autenticación</span>
+      <span class="rule-id">js/useless-assignment-to-local</span>
+    </div>
+    <span class="finding-idx">#5</span>
+  </div>
+  <h3 class="finding-title">js/useless-assignment-to-local</h3>
+  <p class="finding-desc">The value assigned to currentToken here is unused.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/auth/controller.ts:88</div>
+  
+  
+  
+</div>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/useless-assignment-to-local"
+     data-module="Sílabos">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Sílabos</span>
+      <span class="rule-id">js/useless-assignment-to-local</span>
+    </div>
+    <span class="finding-idx">#6</span>
+  </div>
+  <h3 class="finding-title">js/useless-assignment-to-local</h3>
+  <p class="finding-desc">The value assigned to estadoRaw here is unused.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/syllabus/service.ts:125</div>
+  
+  
+  
+</div>
+<div class="finding-card sev-card-high"
+     data-level="high"
+     data-rule="js/useless-assignment-to-local"
+     data-module="Sílabos">
+  <div class="finding-header">
+    <div class="finding-meta">
+      <span class="sev-badge sev-high" style="color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border);">Alto</span>
+      
+      <span class="module-badge">Sílabos</span>
+      <span class="rule-id">js/useless-assignment-to-local</span>
+    </div>
+    <span class="finding-idx">#7</span>
+  </div>
+  <h3 class="finding-title">js/useless-assignment-to-local</h3>
+  <p class="finding-desc">The value assigned to estadoKey here is unused.</p>
+  <div class="finding-loc"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>src/functions/syllabus/service.ts:126</div>
+  
+  
+  
 </div>
         </div>
       </div>
 
       <footer class="footer">
-        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 02:26 UTC</span>
+        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 02:29 UTC</span>
         <span>Powered by <a href="https://codeql.github.com" target="_blank">GitHub CodeQL</a></span>
       </footer>
 
