@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Code Duplication Report — SGA Backend</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --bg:#F0F4F9; --bg2:#FFFFFF; --bg3:#F8FAFC; --surface2:#F1F5F9;
+      --border:#E2E8F0; --border2:#CBD5E1;
+      --accent:#2563EB; --accent-h:#1D4ED8; --accent-light:#EFF6FF; --accent-mid:#BFDBFE;
+      --green:#059669; --green-bg:#ECFDF5; --green-border:#A7F3D0;
+      --blue:#0284C7; --blue-bg:#F0F9FF; --blue-border:#BAE6FD;
+      --amber:#D97706; --amber-bg:#FFFBEB; --amber-border:#FDE68A;
+      --red:#DC2626; --red-bg:#FEF2F2; --red-border:#FECACA;
+      --purple:#7C3AED; --purple-bg:#F5F3FF; --purple-border:#DDD6FE;
+      --slate:#0F172A; --slate2:#1E293B; --text:#0F172A; --text2:#475569;
+      --text3:#94A3B8; --text4:#CBD5E1;
+      --font:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+      --radius:10px; --radius-sm:7px; --radius-lg:14px;
+      --shadow-sm:0 1px 3px rgba(15,23,42,.08); --shadow:0 4px 16px rgba(15,23,42,.10);
+      --sidebar-w:268px; --header-h:60px;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--font); background:var(--bg); color:var(--text);
+            min-height:100vh; -webkit-font-smoothing:antialiased; }
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:var(--bg3); }
+    ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+    /* HEADER */
+    .header {
+      position:fixed; top:0; left:0; right:0; height:var(--header-h);
+      background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 24px; z-index:1000; box-shadow:var(--shadow-sm);
+    }
+    .header-left { display:flex; align-items:center; gap:12px; }
+    .logo-mark {
+      width:34px; height:34px; background:var(--amber); border-radius:9px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; font-weight:800; color:#fff;
+      box-shadow:0 2px 8px rgba(217,119,6,.35); flex-shrink:0;
+    }
+    .header-title { font-size:14px; font-weight:700; color:var(--slate);
+                     white-space:nowrap; max-width:380px; overflow:hidden; text-overflow:ellipsis; }
+    .header-divider { width:1px; height:18px; background:var(--border); }
+    .header-subtitle { font-size:12px; color:var(--text3); }
+    .header-right { display:flex; align-items:center; gap:8px; }
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
+              border-radius:20px; font-size:11px; font-weight:600; font-family:var(--mono); }
+    .badge-branch { background:var(--purple-bg); color:var(--purple); border:1px solid var(--purple-border); }
+    .badge-ok   { background:var(--green-bg); color:var(--green); border:1px solid var(--green-border); }
+    .badge-ok::before { content:''; width:6px; height:6px; background:var(--green);
+                         border-radius:50%; animation:pulse 2s infinite; }
+    .badge-warn { background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-border); }
+    .badge-fail { background:var(--red-bg); color:var(--red); border:1px solid var(--red-border); }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+
+    /* LAYOUT */
+    .layout { display:flex; padding-top:var(--header-h); min-height:100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width:var(--sidebar-w); flex-shrink:0; background:var(--bg2);
+      border-right:1px solid var(--border);
+      position:fixed; top:var(--header-h); bottom:0; left:0;
+      overflow-y:auto; padding:16px 0;
+    }
+    .sidebar-label { padding:0 16px 6px; font-size:10px; font-weight:700;
+                      letter-spacing:.08em; text-transform:uppercase; color:var(--text3); }
+    .sidebar-item { display:flex; align-items:center; gap:9px; padding:7px 16px; cursor:pointer;
+                     font-size:13px; font-weight:500; color:var(--text2);
+                     border-left:2px solid transparent; transition:all .14s; margin:1px 0;
+                     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sidebar-item:hover { color:var(--accent); background:var(--accent-light); border-left-color:var(--accent-mid); }
+    .sidebar-item.active { color:var(--accent); background:var(--accent-light); border-left-color:var(--accent); font-weight:600; }
+    .method-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .sidebar-divider { height:1px; background:var(--border); margin:8px 16px; }
+    .sev-counter { margin-left:auto; font-size:11px; font-weight:700; font-family:var(--mono);
+                    padding:1px 7px; border-radius:10px; flex-shrink:0; }
+
+    .search-wrap { padding:12px 12px 8px; }
+    .search-box { position:relative; }
+    .search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%);
+                    color:var(--text3); pointer-events:none; }
+    .search-input {
+      width:100%; background:var(--bg3); border:1px solid var(--border);
+      border-radius:var(--radius-sm); padding:8px 12px 8px 32px;
+      font-size:12px; color:var(--text); font-family:var(--font);
+      outline:none; transition:border-color .15s;
+    }
+    .search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+    .search-input::placeholder { color:var(--text3); }
+
+    /* MAIN */
+    .main { flex:1; margin-left:var(--sidebar-w); }
+
+    /* HERO */
+    .hero {
+      background:var(--bg2); border-bottom:1px solid var(--border);
+      padding:40px 48px 36px; position:relative; overflow:hidden;
+    }
+    .hero::after {
+      content:''; position:absolute; top:0; right:0; bottom:0; width:340px;
+      background:linear-gradient(135deg, var(--amber-bg) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:6px; padding:4px 10px;
+      border-radius:20px; background:var(--surface2); border:1px solid var(--border2);
+      font-size:10px; font-weight:700; color:var(--text2);
+      letter-spacing:.07em; text-transform:uppercase; margin-bottom:14px;
+    }
+    .hero h1 { font-size:28px; font-weight:800; color:var(--slate);
+               line-height:1.15; margin-bottom:10px; letter-spacing:-.5px; }
+    .hero h1 em { font-style:normal; color:var(--amber); }
+    .hero-sub { font-size:14px; color:var(--text2); line-height:1.65; max-width:560px; margin-bottom:24px; }
+    .hero-pills { display:flex; flex-wrap:wrap; gap:8px; }
+    .hero-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 12px;
+                  border-radius:6px; font-size:11px; font-weight:500; color:var(--text2);
+                  background:var(--bg3); border:1px solid var(--border); }
+
+    /* STATUS BANNER */
+    .status-banner {
+      display:flex; align-items:center; gap:14px; margin:0 48px;
+      padding:14px 20px; border-radius:var(--radius); border:1px solid var(--border);
+      background:var(--bg2); transform:translateY(20px); box-shadow:var(--shadow-sm);
+    }
+    .status-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center;
+                    justify-content:center; font-size:15px; font-weight:800; flex-shrink:0; }
+    .si-ok   { background:var(--green-bg); color:var(--green); border:2px solid var(--green-border); }
+    .si-warn { background:var(--amber-bg); color:var(--amber); border:2px solid var(--amber-border); }
+    .si-fail { background:var(--red-bg);   color:var(--red);   border:2px solid var(--red-border);   }
+    .status-text h2 { font-size:14px; font-weight:700; color:var(--slate); margin-bottom:1px; }
+    .status-text p  { font-size:12px; color:var(--text3); }
+    .status-meta { margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+    /* STATS */
+    .stats { display:grid; grid-template-columns:repeat(5,1fr);
+              border-bottom:1px solid var(--border); background:var(--bg2); margin-top:28px; }
+    .stat-item { padding:18px 20px; display:flex; flex-direction:column; gap:3px;
+                  border-right:1px solid var(--border); }
+    .stat-item:last-child { border-right:none; }
+    .stat-value { font-size:22px; font-weight:800; font-family:var(--mono);
+                   line-height:1; letter-spacing:-1px; }
+    .c-green  { color:var(--green);  }
+    .c-amber  { color:var(--amber);  }
+    .c-red    { color:var(--red);    }
+    .c-accent { color:var(--accent); }
+    .c-slate  { color:var(--slate);  }
+    .stat-label { font-size:10px; color:var(--text3); font-weight:600;
+                   text-transform:uppercase; letter-spacing:.06em; }
+
+    /* RATING CARD — igual que SonarQube */
+    .rating-section {
+      background:var(--bg2); border-bottom:1px solid var(--border);
+      padding:24px 48px; display:flex; gap:32px; align-items:center; flex-wrap:wrap;
+    }
+    .rating-card {
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      padding:20px 28px; border-radius:var(--radius-lg);
+      border:2px solid; min-width:120px;
+    }
+    .rating-letter { font-size:48px; font-weight:800; font-family:var(--mono); line-height:1; }
+    .rating-label  { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+    .rating-desc   { font-size:11px; color:var(--text3); margin-top:2px; }
+    .rating-metrics { display:flex; flex-direction:column; gap:12px; }
+    .rating-metric  { display:flex; flex-direction:column; gap:2px; }
+    .rating-metric-val { font-size:24px; font-weight:800; font-family:var(--mono);
+                          color:var(--slate); line-height:1; }
+    .rating-metric-lbl { font-size:10px; color:var(--text3); font-weight:600;
+                          text-transform:uppercase; letter-spacing:.06em; }
+    .threshold-info { font-size:12px; color:var(--text3); padding:12px 16px;
+                       background:var(--bg3); border:1px solid var(--border);
+                       border-radius:var(--radius-sm); }
+
+    /* CONTENT */
+    .content { padding:32px 48px 64px; display:flex; flex-direction:column; gap:24px; }
+
+    /* SECTION CARD */
+    .section-card {
+      background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
+      padding:24px; box-shadow:var(--shadow-sm);
+    }
+    .section-title { font-size:14px; font-weight:800; color:var(--slate);
+                      margin-bottom:16px; text-transform:uppercase; letter-spacing:.5px; }
+
+    /* BLOCK CARDS */
+    .blocks-list { display:flex; flex-direction:column; gap:12px; }
+    .block-card {
+      background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
+      padding:18px 20px; box-shadow:var(--shadow-sm);
+      border-left:4px solid var(--amber); transition:box-shadow .15s;
+    }
+    .block-card:hover { box-shadow:var(--shadow); }
+    .block-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .block-meta   { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .block-idx    { font-size:11px; color:var(--text4); font-family:var(--mono); }
+
+    .lines-badge {
+      font-size:11px; font-weight:700; padding:2px 9px; border-radius:12px;
+      background:var(--amber-bg); color:var(--amber); border:1px solid var(--amber-border);
+      font-family:var(--mono);
+    }
+    .tokens-badge {
+      font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px;
+      background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-border);
+      font-family:var(--mono);
+    }
+    .module-badge {
+      font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px;
+      font-family:var(--mono);
+    }
+    .same-file-badge {
+      font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px;
+      background:var(--red-bg); color:var(--red); border:1px solid var(--red-border);
+      font-family:var(--mono);
+    }
+    .rating-badge {
+      font-size:11px; font-weight:700; padding:2px 9px; border-radius:12px;
+      font-family:var(--mono);
+    }
+
+    .files-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px; }
+    .file-entry { background:var(--bg3); border:1px solid var(--border);
+                   border-radius:var(--radius-sm); padding:10px 12px; }
+    .file-label { font-size:10px; font-weight:700; color:var(--text3);
+                   text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+    .file-path  { display:flex; align-items:center; gap:5px; font-size:11px;
+                   font-family:var(--mono); color:var(--accent); flex-wrap:wrap; }
+    .line-range { font-size:10px; color:var(--text3); background:var(--bg2);
+                   border:1px solid var(--border); padding:1px 6px; border-radius:4px;
+                   margin-left:4px; }
+
+    .code-fragment {
+      background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm);
+      font-family:var(--mono); font-size:11px; color:var(--slate2);
+      padding:12px 14px; overflow-x:auto; margin-top:10px;
+      white-space:pre; max-height:160px; overflow-y:auto;
+    }
+
+    /* TABLES */
+    .table-container { overflow-x:auto; }
+    .data-table { width:100%; border-collapse:collapse; }
+    .data-table th { background:var(--bg3); color:var(--text3); font-size:10px; font-weight:700;
+                      padding:8px 14px; border-bottom:1px solid var(--border);
+                      text-transform:uppercase; letter-spacing:.04em; text-align:left; }
+    .data-table td { padding:10px 14px; border-bottom:1px solid var(--bg3);
+                      font-size:13px; color:var(--text); }
+    .data-table tr:last-child td { border-bottom:none; }
+    .data-table tr:hover td { background:var(--bg3); }
+
+    /* MODULE BARS */
+    .modules-bars { display:flex; flex-direction:column; gap:10px; }
+    .module-bar-item { display:flex; align-items:center; gap:12px; }
+    .module-bar-label { display:flex; align-items:center; gap:6px; font-size:13px;
+                         color:var(--text2); min-width:150px; }
+    .module-bar-track { flex:1; height:8px; background:var(--border);
+                         border-radius:4px; overflow:hidden; }
+    .module-bar-fill  { height:100%; border-radius:4px; transition:width .3s; }
+    .module-bar-val   { font-size:11px; font-family:var(--mono); color:var(--text3);
+                         min-width:70px; text-align:right; }
+
+    /* TOOLBAR */
+    .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .toolbar-label { font-size:13px; font-weight:600; color:var(--text2); }
+    .filter-btn {
+      padding:5px 14px; border-radius:20px; font-size:12px; font-weight:600;
+      cursor:pointer; border:1px solid var(--border); background:var(--bg2);
+      color:var(--text2); transition:all .14s; font-family:var(--font);
+    }
+    .filter-btn:hover { border-color:var(--border2); background:var(--bg3); }
+    .filter-btn.active { border-color:var(--accent); background:var(--accent-light); color:var(--accent); }
+
+    /* EMPTY STATE */
+    .empty-state { display:flex; flex-direction:column; align-items:center;
+                    padding:64px 24px; text-align:center; }
+    .empty-state h3 { font-size:17px; font-weight:700; color:var(--slate); margin-bottom:8px; }
+    .empty-state p  { font-size:14px; color:var(--text3); }
+
+    /* FOOTER */
+    .footer { background:var(--bg2); border-top:1px solid var(--border);
+               padding:18px 48px; display:flex; align-items:center;
+               justify-content:space-between; font-size:11px; color:var(--text3); }
+    .footer a { color:var(--text3); text-decoration:none; }
+    .footer a:hover { color:var(--accent); }
+
+    @media (max-width:900px) {
+      :root { --sidebar-w:0px; } .sidebar { display:none; }
+      .hero, .content, .rating-section, .footer { padding-left:20px; padding-right:20px; }
+      .status-banner { margin:0 20px; } .stats { grid-template-columns:repeat(3,1fr); }
+      .files-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark">SGA</div>
+      <span class="header-title">TALLER-PROYECTOS-2026-I/SGA_BACKEND</span>
+      <div class="header-divider" style="width:1px;height:18px;background:var(--border);"></div>
+      <span class="header-subtitle">Code Duplication Report</span>
+    </div>
+    <div class="header-right">
+      <span class="badge" style="background:var(--amber-bg);color:var(--amber);
+            border:1px solid var(--amber-border);font-size:10px;">jscpd</span>
+      <span class="badge badge-branch">⎇ dev</span>
+      <span class="badge badge-ok">A — Clean</span>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input class="search-input" type="text" id="searchInput" placeholder="Buscar en bloques..."/>
+        </div>
+      </div>
+
+      <div class="sidebar-label" style="margin-top:8px;">Filtrar</div>
+      <div class="sidebar-item active" onclick="filterAll()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Todos los bloques
+        <span class="sev-counter" style="background:var(--surface2);color:var(--text2);
+              border:1px solid var(--border);">0</span>
+      </div>
+      <div class="sidebar-item" onclick="filterSameFile()">
+        <span class="method-dot" style="background:var(--red)"></span>
+        Mismo archivo
+      </div>
+      <div class="sidebar-item" onclick="filterDiffFile()">
+        <span class="method-dot" style="background:var(--amber)"></span>
+        Archivos distintos
+      </div>
+
+      
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">Configuración</div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">
+        Mín. líneas: 5
+      </div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">
+        Umbral: 0%
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">Análisis</div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+        TALLER-PROYECTOS-2026-I/SGA_BACKEND
+      </div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        11 Jun 2026 03:31 UTC
+      </div>
+      <div class="sidebar-item" style="cursor:default;font-size:11px;color:var(--text3);">Run #27321879942</div>
+    </aside>
+
+    <main class="main">
+
+      <section class="hero">
+        <div class="hero-eyebrow">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          jscpd · Code Duplication · SAST
+        </div>
+        <h1>Duplication <em>Report</em></h1>
+        <p class="hero-sub">
+          Análisis de código duplicado sobre <strong>SGA-BACKEND</strong> usando jscpd.
+          Detecta bloques de código copiado entre archivos TypeScript con métricas
+          equivalentes a SonarQube — rating A-E, % duplicación y vista de bloques.
+        </p>
+        <div class="hero-pills">
+          <span class="hero-pill">TypeScript · JavaScript</span>
+          <span class="hero-pill">Mín. 5 líneas</span>
+          <span class="hero-pill">Umbral 0%</span>
+          <span class="hero-pill">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            11 Jun 2026 03:31 UTC
+          </span>
+        </div>
+      </section>
+
+      <div class="status-banner">
+        <div class="status-icon si-ok">
+          ✓
+        </div>
+        <div class="status-text">
+          <h2>Sin duplicados detectados</h2>
+          <p>El código no tiene bloques duplicados con los umbrales configurados.</p>
+        </div>
+        <div class="status-meta">
+          <span class="badge" style="background:#ECFDF5;color:#059669;
+                border:1px solid #05966940;font-size:13px;font-weight:800;padding:4px 14px;">
+            Rating A
+          </span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-value" style="color:#059669;">0.0%</span>
+          <span class="stat-label">Duplicación</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" style="color:#059669;font-size:32px;">A</span>
+          <span class="stat-label">Rating</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value c-amber">0</span>
+          <span class="stat-label">Bloques</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value c-red">0</span>
+          <span class="stat-label">Líneas dup.</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value c-slate">0</span>
+          <span class="stat-label">Total líneas</span>
+        </div>
+      </div>
+
+      <!-- RATING CARD estilo SonarQube -->
+      <div class="rating-section">
+        <div class="rating-card"
+             style="background:#ECFDF5;border-color:#05966940;color:#059669;">
+          <span class="rating-letter">A</span>
+          <span class="rating-label">Excelente</span>
+          <span class="rating-desc">Duplicación</span>
+        </div>
+        <div class="rating-metrics">
+          <div class="rating-metric">
+            <span class="rating-metric-val" style="color:#059669;">0.0%</span>
+            <span class="rating-metric-lbl">Porcentaje duplicado</span>
+          </div>
+          <div class="rating-metric">
+            <span class="rating-metric-val">0</span>
+            <span class="rating-metric-lbl">Líneas duplicadas de 0</span>
+          </div>
+          <div class="rating-metric">
+            <span class="rating-metric-val">0</span>
+            <span class="rating-metric-lbl">Bloques duplicados detectados</span>
+          </div>
+        </div>
+        <div class="threshold-info">
+          <strong>Escala de rating (como SonarQube):</strong><br>
+          A ≤ 3% · B ≤ 5% · C ≤ 10% · D ≤ 20% · E &gt; 20%<br><br>
+          <strong>Umbral configurado:</strong> 0%
+          <br><span style="color:var(--green)">✓ Por debajo del umbral</span>
+        </div>
+      </div>
+
+      <div class="content">
+
+        
+        
+        
+
+        <!-- BLOQUES DUPLICADOS -->
+        <div class="section-card">
+          <div class="toolbar">
+            <h3 class="section-title" style="margin-bottom:0;">🔁 Bloques duplicados</h3>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <button class="filter-btn active" onclick="filterBtnBlocks(this,'all')">Todos (0)</button>
+              <button class="filter-btn" onclick="filterBtnBlocks(this,'same')">Mismo archivo</button>
+              <button class="filter-btn" onclick="filterBtnBlocks(this,'diff')">Distintos</button>
+            </div>
+          </div>
+          <div class="blocks-list" id="blocksList" style="margin-top:16px;">
+            
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" style="color:var(--green);margin-bottom:12px;">
+        <polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <h3>Sin código duplicado detectado</h3>
+      <p>No se encontraron bloques duplicados con los umbrales configurados.</p>
+    </div>
+          </div>
+        </div>
+
+      </div>
+
+      <footer class="footer">
+        <span>TALLER-PROYECTOS-2026-I/SGA_BACKEND · 11 Jun 2026 03:31 UTC</span>
+        <span>Powered by <a href="https://github.com/kucherenko/jscpd" target="_blank">jscpd</a></span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function filterAll() {
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.block-card').forEach(c => c.style.display = '');
+    }
+
+    function filterSameFile() {
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.block-card').forEach(function(c) {
+        const f1 = c.querySelector('.file-entry:first-child .file-path');
+        const f2 = c.querySelector('.file-entry:last-child .file-path');
+        const same = f1 && f2 && f1.textContent.trim() === f2.textContent.trim();
+        c.style.display = same ? '' : 'none';
+      });
+    }
+
+    function filterDiffFile() {
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.block-card').forEach(function(c) {
+        const f1 = c.querySelector('.file-entry:first-child .file-path');
+        const f2 = c.querySelector('.file-entry:last-child .file-path');
+        const diff = f1 && f2 && f1.textContent.trim() !== f2.textContent.trim();
+        c.style.display = diff ? '' : 'none';
+      });
+    }
+
+    function filterModule(mod) {
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.block-card').forEach(function(c) {
+        const m1 = c.dataset.module1;
+        const m2 = c.dataset.module2;
+        c.style.display = (m1 === mod || m2 === mod) ? '' : 'none';
+      });
+    }
+
+    function filterBtnBlocks(btn, type) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.block-card').forEach(function(c) {
+        if (type === 'all') { c.style.display = ''; return; }
+        const f1 = c.querySelector('.file-entry:first-child .file-path');
+        const f2 = c.querySelector('.file-entry:last-child .file-path');
+        const same = f1 && f2 && f1.textContent.trim() === f2.textContent.trim();
+        c.style.display = (type === 'same' ? same : !same) ? '' : 'none';
+      });
+    }
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      document.querySelectorAll('.block-card').forEach(function(c) {
+        c.style.display = !q || c.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
